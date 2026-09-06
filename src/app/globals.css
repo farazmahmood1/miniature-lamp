@@ -1,0 +1,226 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@source "./";
+
+/* Tailwind theme: color tokens (so bg-primary/text-foreground resolve to our vars) +
+   breakpoints. @theme inline keeps the var() reference (theme-swappable at runtime). */
+@theme inline {
+  --breakpoint-vp375: 375px;
+  --breakpoint-vp768: 768px;
+  --breakpoint-vp1280: 1280px;
+  --breakpoint-vp1920: 1920px;
+  --breakpoint-md: 572px;
+  --breakpoint-lg: 1025px;
+  --breakpoint-2xl: 1601px;
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-primary: var(--primary);
+  --color-clr-0: var(--clr-0);
+  --color-surface-2: var(--surface-2);
+  --color-color-002: var(--color-002);
+  --color-color-001: var(--color-001);
+  --color-color-003: var(--color-003);
+  --color-clr-1: var(--clr-1);
+  --color-clr-2: var(--clr-2);
+  --color-clr-3: var(--clr-3);
+  --color-clr-4: var(--clr-4);
+  --color-accent: var(--accent);
+  --color-surface: var(--surface);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-clr-5: var(--clr-5);
+  --color-clr-6: var(--clr-6);
+  --color-clr-7: var(--clr-7);
+  --color-clr-8: var(--clr-8);
+  --color-clr-9: var(--clr-9);
+}
+
+/* Design tokens (values). */
+:root {
+  --background: rgb(255, 255, 255);
+  --foreground: rgb(23, 43, 118);
+  --primary: rgb(255, 72, 139);
+  --accent: rgb(198, 206, 224);
+  --muted-foreground: rgb(88, 100, 144);
+  --surface: rgb(238, 242, 245);
+  --surface-2: rgb(219, 229, 237);
+  --color-001: rgb(16, 20, 33);
+  --color-002: rgb(207, 215, 231);
+  --color-003: oklab(0.193972 0.000298157 -0.0271356 / 0.35);
+}
+
+:root {
+  /* fonts */
+  --font-body: "Suisse Int'l", sans-serif;
+  --font-001: "Suisse Int'l Mono", monospace;
+  --font-002: "ABC Favorit Trial", sans-serif;
+  /* fontSizes */
+  --font-size-001: 13px;
+  --font-size-002: 15px;
+  --font-size-003: 16px;
+  --font-size-004: 17px;
+  --font-size-005: 18px;
+  --font-size-006: 20.7645px;
+  --font-size-007: 25.5277px;
+  --font-size-008: 41.0298px;
+  --font-size-009: 53.217px;
+  --font-size-010: 67.6397px;
+  --font-size-011: 79.8256px;
+  --font-size-012: 128px;
+  /* fontWeights */
+  --font-weight-001: 300;
+  --font-weight-002: 400;
+  --font-weight-003: 500;
+  /* lineHeights */
+  --line-height-001: 24px;
+  --line-height-002: 13.91px;
+  --line-height-003: 34.4624px;
+  --line-height-004: 19.5px;
+  --line-height-005: 71.0217px;
+  --line-height-006: 22.95px;
+  --line-height-007: 13px;
+  --line-height-008: 79.8256px;
+  --line-height-009: 128px;
+  --line-height-010: 55.8778px;
+  --line-height-011: 28px;
+  --line-height-012: 47.1842px;
+  --line-height-013: 27px;
+  --line-height-014: 28.032px;
+  /* spacing */
+  --space-001: -60px;
+  --space-002: -5.41117px;
+  --space-003: -1px;
+  --space-004: 2px;
+  --space-005: 4px;
+  --space-006: 5.41117px;
+  --space-007: 6px;
+  --space-008: 8px;
+  --space-009: 10px;
+  --space-010: 14px;
+  --space-011: 16px;
+  --space-012: 20px;
+  --space-013: 24px;
+  --space-014: 28px;
+  --space-015: 30px;
+  --space-016: 40px;
+  --space-017: 50px;
+  --space-018: 78.112px;
+  --space-019: 80px;
+  --space-020: 88.5px;
+  --space-021: 120.908px;
+  /* radii */
+  --radius-001: 6px;
+  --radius-002: 7px;
+  --radius-003: 10px;
+  --radius-004: 15px;
+  --radius-005: 32px;
+  --radius-006: 100%;
+  /* zIndices */
+  --z-001: 1;
+  --z-002: 2;
+  --z-003: 3;
+  /* breakpoints */
+  --bp-375: 375px;
+  --bp-768: 768px;
+  --bp-1280: 1280px;
+  --bp-1920: 1920px;
+}
+
+:root {
+  --clr-0: rgba(34, 39, 62, 0.45);
+  --clr-1: rgba(255, 255, 255, 0.95);
+  --clr-2: oklab(0.95889 -0.00291494 -0.00507063 / 0.15);
+  --clr-3: rgba(0, 0, 0, 0);
+  --clr-4: rgb(227, 58, 219);
+  --clr-5: oklab(0.999994 0.0000455678 0.0000200868 / 0.9);
+  --clr-6: rgb(122, 127, 178);
+  --clr-7: rgb(144, 170, 222);
+  --clr-8: oklab(0.999994 0.0000455678 0.0000200868 / 0.2);
+  --clr-9: rgb(16, 16, 16);
+}
+
+@layer base {
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; border: 0 solid currentColor; }
+html { -webkit-text-size-adjust: 100%; line-height: normal; }
+body { margin: 0; }
+ul, ol, menu { list-style: none; }
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea, optgroup { font: inherit; color: inherit; background: transparent; border: 0; padding: 0; margin: 0; text-align: inherit; letter-spacing: inherit; }
+button { cursor: pointer; }
+table { border-collapse: separate; border-spacing: 0; }
+img, picture, video, canvas, svg { display: inline-block; }
+/* Lottie runtime fit: the player re-mounts its svg/canvas into an absolute overlay that fills
+   the host's captured (per-viewport, definite) box. Force that runtime media to fit the box so
+   an aspect-mismatched viewBox (e.g. a portrait animation in a shorter, letterboxed source box)
+   can't inflate past the pinned height. Scoped to the runtime-marked host only. */
+[data-ditto-lottie] > div > svg, [data-ditto-lottie] > div > canvas { width: 100%; height: 100%; display: block; }
+h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd { margin: 0; }
+/* Neutralize UA text defaults to inherit so the generator's default-skipping is
+   correct: a property equal to its inherited value is simply not emitted. */
+h1, h2, h3, h4, h5, h6 { font-size: inherit; font-weight: inherit; }
+b, strong, th { font-weight: inherit; }
+em, i, cite, var, dfn, address, q { font-style: inherit; }
+small, big, sub, sup { font-size: inherit; }
+sub, sup { vertical-align: inherit; }
+code, kbd, samp, pre, tt, var { font-family: inherit; font-size: inherit; }
+mark { background-color: transparent; color: inherit; }
+abbr[title] { text-decoration: none; }
+fieldset, legend { min-width: 0; }
+
+/* fonts */
+@font-face {
+  font-family: "ABC Favorit Trial";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/assets/cloned/fonts/2c476f4f1405.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Suisse Int'l Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/cloned/fonts/7341d8a09a5c.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Suisse Int'l";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/cloned/fonts/bd5b1c26cb62.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Suisse Int'l";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/assets/cloned/fonts/457315b197b4.woff2") format("woff2");
+}
+html { background: rgb(16, 20, 33); }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+html, body { overflow-x: clip; }
+
+/* Header dropdown: the live site blurs and dims the page behind the open panel.
+   The header itself sits above this layer, so only the page content is affected. */
+html[data-ditto-dropdown-open] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+  background: rgba(6, 9, 20, 0.28);
+  animation: ditto-dropdown-scrim 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) both;
+}
+@keyframes ditto-dropdown-scrim {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-ditto-dropdown-open] body::after { animation: none; }
+}
+}
