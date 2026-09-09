@@ -4,6 +4,7 @@ import DittoScroll from "./ditto/DittoScroll";
 import DittoScramble from "./ditto/DittoScramble";
 import DittoDots from "./ditto/DittoDots";
 import DittoCarousel from "./ditto/DittoCarousel";
+import DittoHeader from "./ditto/DittoHeader";
 import HeroSection from "./sections/hero-section";
 import FeatureGridSection from "./sections/feature-grid-section";
 import Footer from "./sections/footer";
@@ -15,6 +16,7 @@ export default function Page() {
       <DittoScramble />
       <DittoDots />
       <DittoCarousel />
+      <DittoHeader />
       <HeroSection />
       {" "}
       <div className="block relative" data-cid="n3" id="swup">

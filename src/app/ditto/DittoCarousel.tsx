@@ -48,8 +48,17 @@ export default function DittoCarousel() {
       };
 
       let index = 0;
+      // Below lg the arrows are hidden and ditto.css hands the track to native scroll
+      // with snap, so the button-driven transform must stand down or it fights the
+      // user's scroll position.
+      const arrowsDrive = window.matchMedia("(min-width: 1025px)");
 
       const render = () => {
+        if (!arrowsDrive.matches) {
+          index = 0;
+          track.style.removeProperty("transform");
+          return;
+        }
         index = Math.max(0, Math.min(index, maxIndex()));
         track.style.transform = "translate3d(" + -(index * step()) + "px, 0, 0)";
         // Reflect the ends on the buttons: disabled stops the click AND the capture's
@@ -69,16 +78,25 @@ export default function DittoCarousel() {
       const onNext = go(1);
       // A resize can change both the slide width and how many fit, so re-clamp.
       const onResize = () => render();
+      // Crossing the breakpoint swaps which mechanism owns the track; reset so the
+      // reader lands at the start of the row rather than mid-way through it.
+      const onModeChange = () => {
+        index = 0;
+        track.scrollLeft = 0;
+        render();
+      };
 
       prev.addEventListener("click", onPrev);
       next.addEventListener("click", onNext);
       window.addEventListener("resize", onResize);
+      arrowsDrive.addEventListener("change", onModeChange);
       render();
 
       disposers.push(() => {
         prev.removeEventListener("click", onPrev);
         next.removeEventListener("click", onNext);
         window.removeEventListener("resize", onResize);
+        arrowsDrive.removeEventListener("change", onModeChange);
         track.style.removeProperty("transform");
         prev.style.removeProperty("opacity");
         next.style.removeProperty("opacity");
