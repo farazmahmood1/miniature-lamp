@@ -24,19 +24,49 @@ export const listRow2Data: ListRow2DataItem[] = [
 
 /**
  * Time from kickoff to a first production release, by delivery model.
- * `bar` is the drawn length as a percentage of the longest bar.
+ *
+ * Two series, one per tab on the benchmark card. `bar` is the drawn length as a
+ * percentage of the row width, so the fastest option fills the track.
  */
 export type FeatureCardDataItem = {
   title: string;
   description: string;
   bar?: number;
 };
-export const featureCardData: FeatureCardDataItem[] = [
-  { title: "Codilated", description: "4wk", bar: 100 },
-  { title: "Typical agency", description: "9wk", bar: 62 },
-  { title: "Offshore team", description: "14wk", bar: 40 },
-  { title: "New in-house hire", description: "22wk", bar: 24 },
+
+export type BenchmarkSeries = {
+  /** Tab label. */
+  label: string;
+  /** Caption under the chart, naming what is being measured. */
+  caption: string;
+  rows: FeatureCardDataItem[];
+};
+
+export const benchmarkSeries: BenchmarkSeries[] = [
+  {
+    label: "Web & SaaS",
+    caption: "Weeks to a first production release",
+    rows: [
+      { title: "Codilated", description: "4wk", bar: 100 },
+      { title: "Typical agency", description: "9wk", bar: 62 },
+      { title: "Offshore team", description: "14wk", bar: 40 },
+      { title: "New in-house hire", description: "22wk", bar: 24 },
+    ],
+  },
+  {
+    label: "AI automation",
+    caption: "Weeks to the first process running unattended",
+    rows: [
+      { title: "Codilated", description: "3wk", bar: 100 },
+      { title: "Typical agency", description: "8wk", bar: 48 },
+      { title: "Offshore team", description: "13wk", bar: 30 },
+      { title: "New in-house hire", description: "26wk", bar: 15 },
+    ],
+  },
 ];
+
+/** The default series, for anything that renders the chart without tabs. */
+export const featureCardData: FeatureCardDataItem[] = benchmarkSeries[0].rows;
 
 /** The four scramble cards in the capability grid. Each links to a service page. */
 export type CardsItem = {

@@ -2,8 +2,8 @@ import Illustration from "../svgs/svg-illustration";
 import Icon2 from "../svgs/svg-icon2";
 import TechRailItem, { type TechRailItemData } from "../components/tech-rail-item";
 import ListRow2 from "../components/list-row2";
-import FeatureCard from "../components/feature-card";
 import LottiePlayer from "../../components/motion/LottiePlayer";
+import BenchmarkTabs from "../components/benchmark-tabs";
 import Tile, { type TileData } from "../components/tile";
 import Illustration3 from "../svgs/svg-illustration3";
 import ListRow3, { type ListRow3Data } from "../components/list-row3";
@@ -23,25 +23,26 @@ import MediaTile2 from "../components/media-tile2";
 import FeatureGridItem from "../components/feature-grid-item";
 import { Logo_cids, Logo2_cids, ListRow2_cids, FeatureCard_cids, Tile_cids, ListRow3_cids, ListRow4_cids, MediaTile_cids, MediaCard_cids, MediaCard2_cids, MediaCard3_cids, MediaCard4_cids, MediaTile2_cids } from "../node-ids";
 import { Tile_styles, ListRow3_styles, ListRow4_styles, MediaCard_styles, MediaCard2_styles, MediaCard4_styles } from "../node-styles";
-import { listRow2Data as listRow2DataContent, featureCardData as featureCardDataContent, cards as cardsContent, mediaTile2Data as mediaTile2DataContent, features as featuresContent, homeCaseStudies } from "../content";
+import { listRow2Data as listRow2DataContent, cards as cardsContent, mediaTile2Data as mediaTile2DataContent, features as featuresContent, homeCaseStudies } from "../content";
 /** The rail runs the same list twice; the second track is the seamless-loop copy. */
+/** The rail runs two tracks; the second is the seamless-loop copy. */
 const techRail: TechRailItemData[] = [
-    { label: "Next.js" },
-    { label: "React" },
-    { label: "TypeScript" },
-    { label: "Node.js" },
-    { label: "Postgres" },
-    { label: "OpenAI" },
-    { label: "Anthropic" },
+    { name: "nextjs" },
+    { name: "react" },
+    { name: "typescript" },
+    { name: "nodejs" },
+    { name: "postgres" },
+    { name: "openai" },
+    { name: "tailwind" },
 ];
 const techRail2: TechRailItemData[] = [
-    { label: "Shopify" },
-    { label: "WordPress" },
-    { label: "React Native" },
-    { label: "Stripe" },
-    { label: "Figma" },
-    { label: "AWS" },
-    { label: "Vercel" },
+    { name: "shopify" },
+    { name: "wordpress" },
+    { name: "stripe" },
+    { name: "figma" },
+    { name: "vercel" },
+    { name: "aws" },
+    { name: "reactnative" },
 ];
 const Tile_data: TileData[] = [
     { text: "✓  Prepared 2 files" },
@@ -105,7 +106,7 @@ const MediaCard4_data: MediaCard4Data[] = homeCaseStudies;
  * four capability blocks with their sticky rail, the trust tiles, the case-study
  * carousel and the blog teasers.
  */
-export default function HomeSections({ listRow2Data = listRow2DataContent, featureCardData = featureCardDataContent, tileData = Tile_data, listRow3Data = ListRow3_data, listRow4Data = ListRow4_data, mediaTileData = MediaTile_data, cards = cardsContent, mediaCard2Data = MediaCard2_data, mediaCard3Data = MediaCard3_data, mediaCard4Data = MediaCard4_data, mediaTile2Data = mediaTile2DataContent, features = featuresContent } = {}) {
+export default function HomeSections({ listRow2Data = listRow2DataContent, tileData = Tile_data, listRow3Data = ListRow3_data, listRow4Data = ListRow4_data, mediaTileData = MediaTile_data, cards = cardsContent, mediaCard2Data = MediaCard2_data, mediaCard3Data = MediaCard3_data, mediaCard4Data = MediaCard4_data, mediaTile2Data = mediaTile2DataContent, features = featuresContent } = {}) {
   return (
     <main className="block" data-cid="n5">
       <div className="block" data-cid="n66">
@@ -581,32 +582,7 @@ export default function HomeSections({ listRow2Data = listRow2DataContent, featu
                         </c-inner-parallax>
                         {" "}
                         <div className="block relative z-2 w-full" data-cid="n343">
-                          <c-segmented-controls class="inline-flex flex-col gap-y-6 w-full max-w-full" data-cid="n344" id="segmentedcontrols-76">
-                            {" "}
-                            <div className="flex relative p-1 rounded-[7px] self-center shrink-0 overflow-x-auto overflow-y-hidden bg-surface" data-cid="n345" role="tablist">
-                              <div className="w-[8.4375rem] h-11 block absolute min-w-0 rounded-[7px] bg-muted-foreground pointer-events-none max-lg:w-[8.0625rem]" data-cid="n346" aria-hidden="true" />
-                              {" "}
-                              <c-segmented-tab class="min-h-11 flex relative z-1 py-2 px-5 rounded-[7px] justify-center items-center shrink-0 text-background text-[1.0625rem] font-normal leading-[1.4375rem] tracking-[0.17px] text-center cursor-pointer max-lg:leading-[1.375rem] max-lg:tracking-[0.16px] max-lg:[font-size:inherit] before:content-[''] before:block before:absolute before:inset-0 before:-z-1 before:w-[8.4375rem] before:h-11 before:bg-muted-foreground before:opacity-0 before:rounded-tl-[7px] max-lg:before:w-[129.5px]" data-cid="n347" aria-controls="segmentedcontrols-76-panel-0" aria-selected="true" id="segmentedcontrols-76-tab-0" role="tab">
-                                {" Web & SaaS build "}
-                              </c-segmented-tab>
-                              <c-segmented-tab class="min-h-11 flex relative z-1 py-2 px-5 rounded-[7px] justify-center items-center shrink-0 text-[1.0625rem] font-normal leading-[1.4375rem] tracking-[0.17px] text-center cursor-pointer max-lg:leading-[1.375rem] max-lg:tracking-[0.16px] max-lg:[font-size:inherit] before:content-[''] before:block before:absolute before:inset-0 before:-z-1 before:h-11 before:bg-color-002 before:opacity-0 before:rounded-tl-[7px]" data-cid="n348" aria-controls="segmentedcontrols-76-panel-1" aria-selected="false" id="segmentedcontrols-76-tab-1" role="tab">
-                                {" AI automation "}
-                              </c-segmented-tab>
-                              {" "}
-                            </div>
-                            {" "}
-                            <div className="w-[460.7px] block my-[78.1px] mx-auto rounded-[10px] overflow-hidden bg-clr-5 [backdrop-filter:blur(50px)] max-md:w-[18.5625rem] max-md:my-14 md:max-lg:w-[586.5px] md:max-lg:my-[4.0875rem] 2xl:w-153 2xl:relative 2xl:my-[5.875rem]" data-cid="n349">
-                              <c-segmented-panel class="flex flex-col h-full 2xl:hidden" data-cid="n350" aria-labelledby="segmentedcontrols-76-tab-0" id="segmentedcontrols-76-panel-0" role="tabpanel">
-                                <div className="flex p-6 flex-col gap-4" data-cid="n351">
-                                  {featureCardData.map((d, i) => <FeatureCard key={i} d={d} cids={FeatureCard_cids[i]} />)}
-                                  {" "}
-                                </div>
-                                {" "}
-                              </c-segmented-panel>
-                              {" "}
-                            </div>
-                            {" "}
-                          </c-segmented-controls>
+                          <BenchmarkTabs cids={FeatureCard_cids} />
                           {" "}
                         </div>
                         {" "}
