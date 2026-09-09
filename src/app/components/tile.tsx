@@ -1,4 +1,4 @@
-import type { TileStyles } from "../_styles";
+import type { TileStyles } from "../node-styles";
 import { cn } from "../../lib/utils";
 export type TileData = {
   text: string;

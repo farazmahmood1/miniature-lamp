@@ -1,4 +1,4 @@
-import type { ListRow4Styles } from "../_styles";
+import type { ListRow4Styles } from "../node-styles";
 import { cn } from "../../lib/utils";
 export type ListRow4Data = {
   text: string;

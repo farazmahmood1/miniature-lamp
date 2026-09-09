@@ -1,11 +1,12 @@
 {
-  "name": "cloned-app",
-  "version": "0.1.0",
+  "name": "codilated-website",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "npx serve out",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "gsap": "^3.15.0",
@@ -24,5 +25,6 @@
     "@types/three": "0.183.0",
     "tailwindcss": "^4",
     "typescript": "5.7.3"
-  }
+  },
+  "description": "Codilated — AI-first software studio. Marketing site, statically exported."
 }

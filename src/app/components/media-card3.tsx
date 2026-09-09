@@ -1,5 +1,6 @@
+import type { CSSProperties } from "react";
 export type MediaCard3Data = {
-  style: string;
+  style: CSSProperties;
   imgSrc: string;
   title: string;
   description: string;
@@ -48,7 +49,7 @@ export default function MediaCard3({ d, cids }: { d: MediaCard3Data; cids: strin
             <span data-cid={cids[14]} className="block min-w-0 text-muted-foreground [font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] font-normal leading-3.5 tracking-[-0.32px] uppercase underline">
               {" "}
               <c-scramble-text data-cid={cids[15]} class="inline" id={d.id}>
-                {" Try now "}
+                {" Read more "}
               </c-scramble-text>
               {" "}
             </span>

@@ -1,7 +1,77 @@
+/**
+ * /llms.txt — a plain-text summary of the site for language models and AI crawlers.
+ *
+ * Generated from the same config the pages read, so it cannot drift out of date when
+ * a service, case study or post is added.
+ */
+
+import { site, SITE_ORIGIN, socials } from "../../config/site";
+import { services, serviceGroups } from "../../config/services";
+import { caseStudies } from "../../config/work";
+import { sortedPosts } from "../../config/blog";
+import { routes } from "../../config/navigation";
+
 export const dynamic = "force-static";
 
+const url = (path: string) => `${SITE_ORIGIN}${path}`;
+
 export function GET() {
-  return new Response("# Cerebrium\n\n> Cerebrium is serverless GPU infrastructure for real-time AI — voice agents, video models, LLMs, and custom ML apps. Sub-second cold starts, pay-per-second billing, no Kubernetes.\n\n## What we do\n\n- **Voice AI**: Real-time end-to-end pipelines for voice agents (STT + LLM + TTS).\n- **Video & generative media**: Low-latency inference for video generation, image diffusion, and avatars.\n- **LLMs**: Serverless deployment for OpenAI-compatible endpoints, open-source models (DeepSeek, Llama, Orpheus), and custom fine-tunes.\n- **General ML**: Any Python workload, any GPU (L4, L40s, A100, H100, H200), pay only for compute-time used.\n\n## Key Facts\n\n- Product: serverless GPU infrastructure for real-time AI inference — voice, video, LLMs, and custom ML.\n- Supported GPUs: L4, L40s, A100, H100, H200 — billed per-second of compute used, no idle charges or minimum reservations.\n- Cold starts: sub-second on the largest models (H100/H200 inference).\n- Voice pipelines: sub-500ms end-to-end latency (STT + LLM + TTS).\n- Deployment: multi-region (US + EU) for data residency; bring-your-own-code (any Python script or container, no lock-in).\n- Compliance: SOC 2, HIPAA, GDPR, ISO.\n- Reference customers: Resemble AI, Camb AI, Telli, Amira Learning, Invofox, Creatium.\n- Open source: github.com/CerebriumAI — 522-star examples repo (voice agents, LLMs, video, RAG).\n\n## Key pages\n\n- [Serverless GPU Infrastructure for Real-Time AI](https://cerebrium.ai/): Deploy voice agents, video models, and LLMs on serverless GPUs with sub-second cold starts. Pay-per-second pricing. No Kubernetes.\n- [Pay-Per-Second Pricing for Serverless AI](https://cerebrium.ai/pricing): Pay for compute by the second, not the hour. Transparent serverless GPU pricing for voice, LLMs, and video. No commitment, no idle costs.\n- [Our Mission — Real-Time AI Infrastructure](https://cerebrium.ai/about): Cerebrium is the team building global serverless GPU infrastructure for real-time AI model applications.\n- [Book a Demo — Technical Architecture Review](https://cerebrium.ai/book-demo): See the technical architecture behind AI teams deploying real-time voice agents, LLMs, and video models on Cerebrium. 30-minute demo with our team.\n- [Contact — Sales, Support, Partnerships](https://cerebrium.ai/contact): Get in touch with Cerebrium for sales, partnerships, support, or enterprise inquiries. Real-time replies during business hours.\n- [Brand Assets — Logos & Guidelines](https://cerebrium.ai/brand-assets): Download Cerebrium logos, color palette, typography, and brand guidelines for press, partnerships, and media coverage.\n\n## Use cases\n\n- [Large Language Models](https://cerebrium.ai/use-cases/large-language-models): Run and deploy LLMs at scale\n- [Voice](https://cerebrium.ai/use-cases/voice): Infrastructure built for low-latency voice at scale\n- [Image & Video](https://cerebrium.ai/use-cases/image-and-video): Run image and video pipelines at scale\n\n## Documentation\n\n- [Documentation home](https://docs.cerebrium.ai/getting-started/introduction): Full developer docs (hosted on docs.cerebrium.ai).\n- [Cerebrium examples](https://github.com/CerebriumAI/examples): 522-star reference repo covering voice agents, LLMs, video, RAG.\n\n## For AI agents\n\n- [Agent Skill](https://cerebrium.ai/skill.md): Cerebrium packaged as an Agent Skill — deploying serverless GPU workloads, cold starts, scaling, and the CLI. Generated from the docs, so it tracks them rather than going stale.\n- Install it: `npx skills add https://cerebrium.ai -y` — works with Claude Code, Cursor, and other tools that read the agent-skills discovery index.\n- [Discovery index](https://cerebrium.ai/.well-known/agent-skills/index.json): agentskills.io discovery document, served with an [A2A agent card](https://cerebrium.ai/.well-known/agent-card.json) alongside it.\n- [MCP server](https://cerebrium.mintlify.dev/docs/mcp): Model Context Protocol endpoint for searching and querying the Cerebrium documentation.\n\n## Blog (selected high-value posts)\n\n- [How much does a H100 cost? Cost comparision](https://cerebrium.ai/blog/how-much-does-a-h100-cost-cost-comparision): GPU cost comparison.\n- [How much does a H200 cost? 2025 Guide](https://cerebrium.ai/blog/how-much-does-a-h200-cost-2025-guide): H200 pricing breakdown.\n- [Top 5 Serverless GPU providers](https://cerebrium.ai/blog/top-5-serverless-gpu-providers): Competitive landscape.\n- [Creating a realtime RAG voice agent](https://cerebrium.ai/blog/creating-a-realtime-rag-voice-agent): Tutorial.\n- [Deploying DeepSeek-R1: A Guide to a Serverless, High-Performaning OpenAI-Compatible Endpoint](https://cerebrium.ai/blog/deploying-deepseek-r1-a-guide-to-a-serverless-high-performaning-openai-compatible-endpoint): OpenAI-compatible endpoint guide.\n- [Orpheus TTS: How to Deploy Orpheus at Scale for Production Inference](https://cerebrium.ai/blog/orpheus-tts-how-to-deploy-orpheus-at-scale-for-production-inference): Production TTS deployment.\n- [Deploying Sesame CSM: The Most Realistic Voice Model as an API](https://cerebrium.ai/blog/deploying-sesame-csm-the-most-realistic-voice-model): Voice model guide.\n- [Launch Week Day 3: Annoucing Multi-Region Deployments](https://cerebrium.ai/blog/launch-week-day-3-annoucing-multi-region-deployments): Product announcement.\n- [Rethinking Container Image Distribution to eliminate cold starts](https://cerebrium.ai/blog/rethinking-container-image-distribution-to-eliminate-cold-starts): Engineering deep dive.\n- [The Shortcomings of Celery + Redis for ML Workloads and How Cerebrium Solves It](https://cerebrium.ai/blog/celery-redis-vs-cerebrium): Migration comparison.\n- [Faster Whisper Transcription: How to Maximize Performance for Real-Time Audio-to-Text](https://cerebrium.ai/blog/faster-whisper-transcription-how-to-maximize-performance-for-real-time-audio-to-text): Real-time STT.\n- [Integrating PayPal’s Model Context Protocol (MCP) into a Real-time Voice Agent](https://cerebrium.ai/blog/integrating-paypal-s-model-context-protocol-mcp-into-a-real-time-voice-agent): MCP integration.\n- [Introducing Cerebrium run: The Fastest Way to Execute Cloud Code](https://cerebrium.ai/blog/introducing-cerebrium-run-the-fastest-way-to-execute-cloud-code): Cloud-code execution.\n- [Blog index](https://cerebrium.ai/blog): All posts.\n\n## Resources\n\n- [LLM Inference Cost at Scale: The Tokens-Per-Minute Math](https://cerebrium.ai/resources/llm-inference-cost-at-scale): Convert tokens per minute into an actual LLM inference bill: measured instance counts, per-minute rates and why utilisation decides it.\n- [Where Latency Goes in an AI Inference Pipeline](https://cerebrium.ai/resources/network-latency-ai-inference-pipeline): Where latency really goes in an AI inference pipeline: measured region, API-hop, broker and routing costs, ranked by size.\n- [NVIDIA B200 Inference: Measured Throughput and TTFT](https://cerebrium.ai/resources/nvidia-b200-inference-throughput-ttft): Measured NVIDIA B200 inference throughput and TTFT from a production pipeline, plus why cross-GPU tokens/sec comparisons mislead.\n- [Concurrent Voice Sessions Per GPU: The Real Numbers](https://cerebrium.ai/resources/concurrent-voice-sessions-per-gpu): How many concurrent voice sessions fit on one GPU: measured A10 concurrency, per-stage latency budgets and the cost arithmetic.\n- [AWS Alternatives for AI Workloads: What Actually Changes](https://cerebrium.ai/resources/aws-alternatives-ai-workloads): AWS alternatives for AI workloads, compared on the number that decides cost: provisioning time. Measured cold starts, Inferentia benchmarks and when to stay.\n- [What a Voice AI Agent Really Costs Per Minute](https://cerebrium.ai/resources/voice-ai-agent-cost-per-minute): A measured per-minute cost breakdown for a production voice AI agent: $0.02932 per call minute, and the concurrency maths that changes it.\n- [Modal Alternatives for Serverless GPU Inference](https://cerebrium.ai/resources/modal-alternatives-serverless-gpu-inference): Compare Modal alternatives for serverless GPU inference on cold starts, tail latency, GPU breadth and pricing model, using measured restore-time benchmarks.\n- [Serverless GPU Cold Starts: Killing Voice AI Latency](https://cerebrium.ai/resources/serverless-gpu-cold-starts-voice-ai): Serverless GPU cold starts stack container pulls, weight loads, and CUDA warmup into 30-90s of delay. Here's how to kill each phase for real-time Voice AI.\n- [Resources index](https://cerebrium.ai/resources): All resources.\n\n## Contact\n\n- Website: https://cerebrium.ai/\n- Book a demo: https://cerebrium.ai/book-demo\n- General inquiries: https://cerebrium.ai/contact\n\n## Optional\n\n- [GitHub @CerebriumAI](https://github.com/CerebriumAI): Open-source examples and tools.\n- [Privacy policy](https://cerebrium.ai/privacy)\n- [Terms of service](https://cerebrium.ai/terms-of-service)\n", {
+  const lines: string[] = [
+    `# ${site.name}`,
+    "",
+    `> ${site.description}`,
+    "",
+    "## What we do",
+    "",
+    ...serviceGroups.map(
+      (group) =>
+        `- **${group.title}** (${group.caption}): ${group.items
+          .map((s) => s.shortName)
+          .join(", ")}.`,
+    ),
+    "",
+    "## Key facts",
+    "",
+    `- Positioning: ${site.tagline}. Strategy, design, development, launch and growth, delivered by one team.`,
+    "- Engagement model: fixed-scope sprints, monthly retainers, or an outcome-based agreement.",
+    "- Ownership: clients own the code and the infrastructure accounts from the first commit.",
+    `- Contact: ${site.contact.email}, ${site.contact.phoneDisplay}.`,
+    `- Area served: ${site.contact.areaServed}.`,
+    "",
+    "## Services",
+    "",
+    ...services.map((s) => `- [${s.name}](${url(s.href)}): ${s.summary}`),
+    "",
+    "## Selected work",
+    "",
+    ...caseStudies.map(
+      (c) =>
+        `- [${c.title}](${url(`/work/${c.slug}`)}): ${c.summary} (${c.industry}, ${c.year})`,
+    ),
+    "",
+    "## Writing",
+    "",
+    ...sortedPosts.map((p) => `- [${p.title}](${url(`/blog/${p.slug}`)}): ${p.excerpt}`),
+    "",
+    "## Key pages",
+    "",
+    `- [Home](${url(routes.home)}): ${site.shortDescription}`,
+    `- [Services](${url(routes.services)}): The full catalogue, grouped into AI and everything around it.`,
+    `- [Work](${url(routes.work)}): Case studies, each with the numbers the engagement was measured on.`,
+    `- [About](${url(routes.about)}): How an engagement runs, and what a client can hold us to.`,
+    `- [Pricing](${url(routes.pricing)}): How the work is priced and what each model suits.`,
+    `- [Blog](${url(routes.blog)}): Working notes on shipping software and AI.`,
+    `- [Contact](${url(routes.contact)}): Start a project, or reach us directly.`,
+    "",
+    "## Elsewhere",
+    "",
+    ...socials.map((s) => `- [${s.label}](${s.href})`),
+    `- [Privacy policy](${url(routes.privacy)})`,
+    `- [Terms of service](${url(routes.terms)})`,
+    "",
+  ];
+
+  return new Response(lines.join("\n"), {
     headers: { "content-type": "text/plain; charset=utf-8" },
   });
 }

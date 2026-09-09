@@ -1,9 +1,10 @@
-import type { MediaCard4Styles } from "../_styles";
+import type { CSSProperties } from "react";
+import type { MediaCard4Styles } from "../node-styles";
 import { cn } from "../../lib/utils";
 export type MediaCard4Data = {
   text: string;
   text2: string;
-  style: string;
+  style: CSSProperties;
   kind?: string;
   height: string;
   imgSrc: string;

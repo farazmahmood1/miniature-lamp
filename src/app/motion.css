@@ -1,0 +1,297 @@
+/* Interactive dot grids ------------------------------------------------------
+   <c-interactive-dots> shipped from the capture as a dead custom element. Every
+   cell's ::before (the 34px primary-coloured dot) is frozen at
+   matrix(0,0,0,0,0,0) — scale 0 — which is the RESTING frame of a
+   cursor-proximity effect that never had any code behind it. The 2px ::after
+   dot is the always-visible part, so the grid reads as a field of pin-pricks.
+
+   A pseudo-element can't be touched from JS, so InteractiveDots writes --dot-s on the
+   cell and this rule forwards it to the ::before.
+
+   Gated on [data-dots-live], which InteractiveDots sets: with JS off the static export
+   keeps exactly the captured look. Unlayered on purpose — it therefore wins over
+   Tailwind's @layer utilities without an !important. */
+c-interactive-dots[data-dots-live] > div::before {
+  transform: scale(var(--dot-s, 0));
+}
+
+/* Hero backdrop coverage ------------------------------------------------------
+   <c-background-canvas> is position:fixed, but the capture baked in the viewport
+   it was recorded at rather than sizing to the real one: w-320/h-200 is a literal
+   1280x800, and 2xl:w-480/h-270 a literal 1920x1080. On any viewport taller than
+   that box the backdrop simply stops and the page background shows through — and
+   the hero parallax then slides it further, opening a strip along the top.
+
+   min-* costs nothing when the captured size is already big enough and rescues
+   every case where it isn't. Percentages (not vw/vh) because this element is
+   fixed, so they resolve against the viewport without counting the scrollbar.
+
+   --bg-overscan is the slack the parallax is allowed to move within; SmoothScroll
+   reads it, so the travel can never exceed the cover this rule provides.
+   HeroCanvas's ResizeObserver picks the new size up and refills the canvas. */
+c-background-canvas {
+  --bg-overscan: 120px;
+  min-width: 100%;
+  min-height: calc(100% + var(--bg-overscan));
+}
+
+/* Interactive dot grid width --------------------------------------------------
+   Same capture-time hardcoding as the backdrop above: the grid template is a
+   literal pixel run — 20x64px = 1280px (20x96px = 1920px at 2xl), the widths of
+   the viewport the page was recorded at. On anything wider the dots simply stop
+   short and leave a dead strip down the right-hand side.
+
+   Keep the designed column COUNT per breakpoint (that is what sets the rhythm and
+   the row count) but let the columns share the real width, so the field always
+   reaches both edges. minmax(0,1fr) rather than 1fr so a cell can never be forced
+   wider than its share. */
+c-interactive-dots {
+  grid-template-columns: repeat(20, minmax(0, 1fr));
+}
+@media (max-width: 571.98px) {
+  c-interactive-dots {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+/* Feature-rail scroll spy ------------------------------------------------------
+   The four labels beside the feature cards are all painted --accent (the pale
+   lavender) in the capture, with no active state at all — the rail is sticky while
+   the cards scroll past it, so there was meant to be one. SmoothScroll marks the
+   label whose card is in front of the reader; this lifts it to the same navy as
+   the surrounding copy. */
+a[data-spy-active] {
+  color: var(--foreground);
+  transition: color 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Case-study carousel ---------------------------------------------------------
+   CaseStudyCarousel writes the track transform; the easing lives here so the motion
+   survives a re-render and stays out of the JS. */
+c-carousel-tile > :last-child {
+  transition: transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+c-carousel-tile button[disabled] {
+  cursor: default;
+}
+@media (prefers-reduced-motion: reduce) {
+  c-carousel-tile > :last-child {
+    transition: none;
+  }
+}
+
+/* Aspect-ratio media boxes ----------------------------------------------------
+   The capture pairs a fluid aspect box (overflow-hidden + aspect-[w/h]) with
+   children given LITERAL pixel heights measured on the capture viewport. As the
+   box narrows its height shrinks with the ratio, the child's does not, and the
+   logo or artwork inside is cut off — 86px of it on a 375px phone.
+
+   Constraining children to the box makes them shrink with it. Scoped to elements
+   that are BOTH an aspect box and clipping, which is exactly the broken pairing. */
+[class*="aspect-"][class*="overflow-hidden"] > * {
+  max-height: 100%;
+}
+
+/* The logo rail clips the same way on mobile: the track drops to 40px there while
+   the logo anchors keep the desktop 52px. */
+c-rail img,
+c-rail a {
+  max-height: 100%;
+}
+
+/* Case-study carousel below lg ------------------------------------------------
+   The prev/next buttons are max-lg:hidden, and nothing replaced them — so on a
+   tablet or phone slides 2..5 sat off-screen with no way to reach them. Native
+   scroll with snap is the right control at that size; CaseStudyCarousel stands down
+   here (and the !important guarantees a stale inline transform can't fight the
+   scroll position). */
+@media (max-width: 1024.98px) {
+  c-carousel-tile > :last-child {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    transform: none !important;
+    transition: none;
+  }
+  c-carousel-tile > :last-child > * {
+    scroll-snap-align: start;
+  }
+  c-carousel-tile > :last-child::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Sticky navbar ---------------------------------------------------------------
+   The capture left <header> as position:absolute, so it scrolled away with the
+   page and never came back. Revealing it on an upward scroll means it has to be
+   fixed; StickyHeader then slides it out of the way on the way down. */
+c-header > header {
+  position: fixed;
+  top: 0;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+c-header > header[data-nav-hidden] {
+  transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  c-header > header {
+    transition: none;
+  }
+}
+
+/* Services mega-panel scrim ---------------------------------------------------
+   Matches the treatment the design uses behind an open header panel: the page
+   dims and blurs while the header itself stays above the layer. */
+html[data-menu-open] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+  background: rgba(6, 9, 20, 0.28);
+  animation: menu-scrim 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) both;
+}
+@keyframes menu-scrim {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-menu-open] body::after { animation: none; }
+}
+
+/* Preloader -------------------------------------------------------------------
+   First-load curtain. Rendered on the server so there is no flash of the page
+   before it appears, and removed from the DOM once it has left. */
+.ct-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-001, rgb(16, 20, 33));
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ct-preloader[data-leaving] {
+  opacity: 0;
+  transform: translateY(-2%);
+  pointer-events: none;
+}
+
+.ct-preloader__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 0 20px;
+  text-align: center;
+  color: #fff;
+}
+
+/* The three-bar mark, drawn at rest and animated in sequence. */
+.ct-preloader__mark {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 6px;
+}
+.ct-preloader__mark span {
+  display: block;
+  height: 6px;
+  border-radius: 6px;
+  background: var(--primary, rgb(255, 72, 139));
+  transform-origin: right center;
+  animation: preloader-bar 1.1s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+.ct-preloader__mark span:nth-child(1) { width: 26px; margin-left: auto; }
+.ct-preloader__mark span:nth-child(2) { width: 18px; animation-delay: 0.14s; transform-origin: left center; }
+.ct-preloader__mark span:nth-child(3) { width: 26px; margin-left: auto; animation-delay: 0.28s; }
+@keyframes preloader-bar {
+  0%, 100% { transform: scaleX(0.4); opacity: 0.45; }
+  45%      { transform: scaleX(1);   opacity: 1; }
+}
+
+.ct-preloader__word {
+  font-family: "ABC Favorit Trial", sans-serif;
+  font-size: 2rem;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+}
+.ct-preloader__tagline {
+  font-family: "Suisse Int'l Mono", monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+.ct-preloader__bar {
+  width: min(220px, 60vw);
+  height: 2px;
+  margin-top: 18px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.14);
+}
+.ct-preloader__bar span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary, rgb(255, 72, 139));
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 220ms linear;
+}
+
+.ct-preloader__count {
+  font-family: "Suisse Int'l Mono", monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  opacity: 0.45;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-preloader { transition: opacity 250ms linear; }
+  .ct-preloader[data-leaving] { transform: none; }
+  .ct-preloader__mark span { animation: none; opacity: 1; transform: none; }
+}
+
+/* Skip link ------------------------------------------------------------------
+   Off-screen until focused, then pinned top-left over the header. */
+.ct-skip-link {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1001;
+  padding: 14px 20px;
+  border-radius: 0 0 7px 0;
+  background: var(--primary, rgb(255, 72, 139));
+  color: var(--color-001, rgb(16, 20, 33));
+  font-family: "Suisse Int'l Mono", monospace;
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  transform: translateY(-110%);
+  transition: transform 160ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ct-skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* Focus ring ------------------------------------------------------------------
+   The captured design never showed one. Keyboard users need it, and pointer
+   users should not see it, hence :focus-visible rather than :focus. */
+:focus-visible {
+  outline: 2px solid var(--primary, rgb(255, 72, 139));
+  outline-offset: 3px;
+  border-radius: 2px;
+}

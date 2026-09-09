@@ -1,5 +1,16 @@
+# Dependencies
 node_modules
+
+# Build output
 .next
 out
 dist
+
+# TypeScript incremental build state
+*.tsbuildinfo
+
+# Tooling
 .gstack/
+
+# Local environment
+.env*.local

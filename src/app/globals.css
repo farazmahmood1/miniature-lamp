@@ -154,7 +154,7 @@ img, picture, video, canvas, svg { display: inline-block; }
    the host's captured (per-viewport, definite) box. Force that runtime media to fit the box so
    an aspect-mismatched viewBox (e.g. a portrait animation in a shorter, letterboxed source box)
    can't inflate past the pinned height. Scoped to the runtime-marked host only. */
-[data-ditto-lottie] > div > svg, [data-ditto-lottie] > div > canvas { width: 100%; height: 100%; display: block; }
+[data-lottie] > div > svg, [data-lottie] > div > canvas { width: 100%; height: 100%; display: block; }
 h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd { margin: 0; }
 /* Neutralize UA text defaults to inherit so the generator's default-skipping is
    correct: a property equal to its inherited value is simply not emitted. */
@@ -174,7 +174,7 @@ fieldset, legend { min-width: 0; }
   font-style: normal;
   font-weight: 300;
   font-display: swap;
-  src: url("/assets/cloned/fonts/2c476f4f1405.woff2") format("woff2");
+  src: url("/assets/site/fonts/2c476f4f1405.woff2") format("woff2");
 }
 
 @font-face {
@@ -182,7 +182,7 @@ fieldset, legend { min-width: 0; }
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("/assets/cloned/fonts/7341d8a09a5c.woff2") format("woff2");
+  src: url("/assets/site/fonts/7341d8a09a5c.woff2") format("woff2");
 }
 
 @font-face {
@@ -190,7 +190,7 @@ fieldset, legend { min-width: 0; }
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("/assets/cloned/fonts/bd5b1c26cb62.woff2") format("woff2");
+  src: url("/assets/site/fonts/bd5b1c26cb62.woff2") format("woff2");
 }
 
 @font-face {
@@ -198,30 +198,10 @@ fieldset, legend { min-width: 0; }
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url("/assets/cloned/fonts/457315b197b4.woff2") format("woff2");
+  src: url("/assets/site/fonts/457315b197b4.woff2") format("woff2");
 }
 html { background: rgb(16, 20, 33); }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
 html, body { overflow-x: clip; }
 
-/* Header dropdown: the live site blurs and dims the page behind the open panel.
-   The header itself sits above this layer, so only the page content is affected. */
-html[data-ditto-dropdown-open] body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 40;
-  pointer-events: none;
-  backdrop-filter: blur(9px);
-  -webkit-backdrop-filter: blur(9px);
-  background: rgba(6, 9, 20, 0.28);
-  animation: ditto-dropdown-scrim 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) both;
-}
-@keyframes ditto-dropdown-scrim {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-@media (prefers-reduced-motion: reduce) {
-  html[data-ditto-dropdown-open] body::after { animation: none; }
-}
 }

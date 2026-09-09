@@ -1,8 +1,10 @@
 export type FeatureCardData = {
   title: string;
   description: string;
+  /** Drawn bar length as a percentage of the row width. Defaults to a full bar. */
+  bar?: number;
 };
-/** A feature card. */
+/** One row of the comparison chart: a label, a proportional bar and a value. */
 export default function FeatureCard({ d, cids }: { d: FeatureCardData; cids: string[] }) {
   return (
     <div data-cid={cids[0]} className="block">
@@ -11,7 +13,7 @@ export default function FeatureCard({ d, cids }: { d: FeatureCardData; cids: str
       </h3>
       {" "}
       <div data-cid={cids[2]} className="flex items-center gap-2">
-        <div data-cid={cids[3]} className="block rounded-[10px] bg-background h-[0.3125rem] w-full">
+        <div data-cid={cids[3]} className="block rounded-[10px] bg-background h-[0.3125rem] w-full" style={d.bar == null ? undefined : { width: d.bar + "%" }}>
           {" "}
         </div>
         {" "}

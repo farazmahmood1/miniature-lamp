@@ -1,50 +1,57 @@
-import DittoMotion from "./ditto/DittoMotion";
-import DropdownMenu from "./ditto/DropdownMenu";
-import HeroSection from "./sections/hero-section";
-import FeatureGridSection from "./sections/feature-grid-section";
-import Footer from "./sections/footer";
+import type { Metadata } from "next";
 
-export const metadata = {
-  "title": "Engineering Blog — AI Infrastructure | Cerebrium",
-  "description": "Engineering deep dives, deployment tutorials, customer case studies, and industry analysis on serverless AI infrastructure from the Cerebrium team.",
-  "alternates": {
-    "canonical": "/blog"
-  },
-  "openGraph": {
-    "title": "Engineering Blog — AI Infrastructure",
-    "description": "Engineering deep dives, deployment tutorials, customer case studies, and industry analysis on serverless AI infrastructure from the Cerebrium team.",
-    "type": "website",
-    "siteName": "Cerebrium | Real-time serverless AI infrastructure",
-    "images": [
-      "https://www.datocms-assets.com/180613/1774904124-og-image.png?auto=format&fit=max&w=1200"
-    ]
-  },
-  "twitter": {
-    "card": "summary_large_image",
-    "title": "Engineering Blog — AI Infrastructure",
-    "description": "Engineering deep dives, deployment tutorials, customer case studies, and industry analysis on serverless AI infrastructure from the Cerebrium team.",
-    "images": [
-      "https://www.datocms-assets.com/180613/1774904124-og-image.png?auto=format&fit=max&w=1200"
-    ]
-  }
-};
+import { sortedPosts, formatPostDate } from "../../config/blog";
+import { pageMetadata } from "../../lib/metadata";
+import PageHero from "../../components/ui/PageHero";
+import ContentCard from "../../components/ui/ContentCard";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Blog",
+  description:
+    "Notes from the Codilated studio on shipping AI features, automation audits, performance budgets and the parts of a build that decide whether it survives launch.",
+  path: "/blog",
+});
 
 export default function Page() {
+  const [lead, ...rest] = sortedPosts;
+
   return (
-    <>
-      <HeroSection />
-      {" "}
-      <div className="block relative" id="swup">
-        <div className="block">
-          {" "}
+    <div className="block relative" id="content">
+      <PageHero
+        eyebrow="Blog"
+        title="What we learned building it"
+        gradient={{ from: 1, to: 2 }}
+        intro="Working notes rather than thought leadership. Most of these started as an argument inside a project."
+      />
+
+      <main className="block bg-clr-1 pb-[10.2125rem] pt-20 text-foreground max-lg:pb-14 max-lg:pt-14">
+        <div className="block max-w-500 px-10 max-lg:px-[0.9375rem]">
+          {/* The newest post gets the wide card; the rest run three up. */}
+          <div className="mb-5 max-lg:mb-[0.9375rem]">
+            <ContentCard
+              href={`/blog/${lead.slug}`}
+              eyebrow={`${lead.category} · Latest`}
+              title={lead.title}
+              description={lead.excerpt}
+              meta={`${formatPostDate(lead.date)} · ${lead.readingMinutes} min read`}
+            />
+          </div>
+
+          <ul className="grid gap-5 grid-cols-3 max-lg:gap-[0.9375rem] max-lg:grid-cols-1 md:max-lg:grid-cols-2 [list-style-type:none] list-outside">
+            {rest.map((post) => (
+              <li className="list-item" key={post.slug}>
+                <ContentCard
+                  href={`/blog/${post.slug}`}
+                  eyebrow={post.category}
+                  title={post.title}
+                  description={post.excerpt}
+                  meta={`${formatPostDate(post.date)} · ${post.readingMinutes} min`}
+                />
+              </li>
+            ))}
+          </ul>
         </div>
-        <FeatureGridSection />
-        <Footer />
-        {" "}
-      </div>
-      {" "}
-      <DittoMotion spec={{"waapi":[],"rotators":[],"reveals":[{"anchor":"motion-backgroundcanvas-35","opacity":"0","transform":"none","transition":"opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)"}],"marquees":[]}} />
-      <DropdownMenu menus={[{"trigger":"menu-trigger-link","hoverOpen":true,"gap":456,"align":"left","html":"<div style=\"position:absolute;margin:0;display:flex;box-sizing:border-box;width:384px;height:285.75px;min-width:0px;max-width:384px;min-height:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;border-top-width:0px;border-right-width:0px;border-bottom-width:0px;border-left-width:0px;border-top-style:none;border-right-style:none;border-bottom-style:none;border-left-style:none;border-top-color:rgb(23, 43, 118);border-right-color:rgb(23, 43, 118);border-bottom-color:rgb(23, 43, 118);border-left-color:rgb(23, 43, 118);border-top-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;border-bottom-left-radius:8px;background-color:rgb(255, 255, 255);color:rgb(23, 43, 118);box-shadow:rgba(0, 0, 2, 0.3) 0px 10px 30px 0px;opacity:0;font-family:-apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;;font-size:16px;font-weight:400;font-style:normal;line-height:18.4px;letter-spacing:normal;text-align:start;text-transform:none;text-decoration-line:none;white-space:normal;flex-direction:column;flex-wrap:nowrap;justify-content:normal;align-items:normal;gap:normal;row-gap:normal;column-gap:normal;grid-template-columns:none;grid-template-rows:none;list-style-type:disc;vertical-align:baseline;object-fit:fill;cursor:auto;overflow:hidden\"></div>"}]} />
-    </>
+      </main>
+    </div>
   );
 }
