@@ -1276,15 +1276,17 @@ c-inner-parallax img {
   --cs-dim: rgba(255, 255, 255, 0.62);
   --cs-mono: var(--font-001, "Suisse Int'l Mono", monospace);
   --cs-display: var(--font-002, "ABC Favorit Trial", sans-serif);
+  /* Named so a hero can pull itself up into this padding and still stay in step */
+  --cs-pad-top: 168px;
 
   display: block;
   position: relative;
-  padding-block: 168px 140px;
+  padding-block: var(--cs-pad-top) 140px;
   background: var(--color-001, rgb(16, 20, 33));
   color: #fff;
 }
 @media (max-width: 1024.98px) {
-  .cs { --cs-gutter: 15px; padding-block: 124px 90px; }
+  .cs { --cs-gutter: 15px; --cs-pad-top: 124px; padding-block: var(--cs-pad-top) 90px; }
 }
 
 .cs__head,
@@ -1985,11 +1987,10 @@ c-inner-parallax img {
   to   { opacity: 1; transform: none; }
 }
 
-/* Every other card drops a little, so the grid reads as a portfolio rather than a
-   table. Only where there is room for the offset to be legible. */
-@media (min-width: 1025px) {
-  .pf__card:nth-child(even) { margin-top: 56px; }
-}
+/* Cards in a row line up. An earlier version dropped every other card by 56px for
+   an editorial feel, but grid stretch then gave the pair different heights, and the
+   foot row is pinned to the bottom — so one title sat 72px clear of its meta line
+   and its neighbour 16px, which read as a bug rather than as a rhythm. */
 
 .pf__frame {
   position: relative;
@@ -2051,8 +2052,11 @@ c-inner-parallax img {
   color: rgba(255, 255, 255, 0.62);
 }
 
+/* Two lines minimum, so a short title cannot pull its meta row out of step with the
+   card beside it. */
 .pf__title {
   display: block;
+  min-height: 2.32em;
   max-width: 26ch;
   font-family: var(--cs-display, "ABC Favorit Trial", sans-serif);
   font-size: clamp(1.375rem, 2.1vw, 1.875rem);
@@ -2858,4 +2862,104 @@ c-inner-parallax img {
   .pr-card--featured:hover,
   .pr-calc__cta:hover { transform: none; }
   .pr-toggle__pill { transition: none; }
+}
+
+/* Voice visualiser --------------------------------------------------------------
+   The waveform rail on the conversational AI page. Every bar carries its own stops,
+   duration and negative delay as custom properties, set once on the server, so the
+   rail animates entirely on the compositor with no script behind it. */
+.vv {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.vv__bar {
+  display: block;
+  flex: 0 0 auto;
+  width: 1px;
+  height: 100%;
+  background: var(--background, #fff);
+  transform: scaleY(var(--a, 0.5));
+  transform-origin: 50% 100%;
+  will-change: transform;
+  animation: vv-wave var(--dur, 1.8s) ease-in-out var(--delay, 0s) infinite;
+}
+.vv__bar--accent { background: var(--primary, rgb(255, 72, 139)); }
+
+/* Four stops rather than two: a straight A-to-B alternate reads as a metronome,
+   and four uneven stops per bar reads as sound. */
+@keyframes vv-wave {
+  0%   { transform: scaleY(var(--a, 0.5)); }
+  25%  { transform: scaleY(var(--b, 0.7)); }
+  50%  { transform: scaleY(var(--c, 0.4)); }
+  75%  { transform: scaleY(var(--d, 0.8)); }
+  100% { transform: scaleY(var(--a, 0.5)); }
+}
+
+/* The capture thinned the rail out at narrower widths rather than crowding it.
+   Same idea, expressed as a rule instead of as hidden markup. */
+@media (max-width: 1535.98px) {
+  .vv__bar:nth-child(n + 29) { display: none; }
+}
+@media (max-width: 767.98px) {
+  .vv__bar:nth-child(n + 19) { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vv__bar { animation: none; }
+}
+
+/* Work hero ---------------------------------------------------------------------
+   Full-bleed rectangle field behind the page title. The band pulls itself up into
+   the shell's top padding so the field runs behind the site header, the way the
+   copy sits over it rather than beside it. */
+.wk-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: min(74vh, 680px);
+  margin-top: calc(var(--cs-pad-top) * -1);
+  padding-top: var(--cs-pad-top);
+  padding-bottom: 80px;
+  /* Its own stacking context, so the canvas cannot escape behind the page ground. */
+  isolation: isolate;
+}
+@media (max-width: 767.98px) {
+  .wk-hero { min-height: auto; padding-bottom: 40px; }
+}
+
+.wk-hero__field {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  /* Dissolves into the ground at the bottom instead of ending on a hard edge. */
+  mask-image: linear-gradient(180deg, #000 0%, #000 52%, transparent 96%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 52%, transparent 96%);
+}
+
+.wk-hero__copy {
+  position: relative;
+  z-index: 1;
+}
+
+/* A soft scrim under the text only. The shapes are already low-alpha, but a large
+   one passing directly behind the title would otherwise cost some contrast. */
+.wk-hero__copy::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -60px -30px;
+  background: radial-gradient(
+    58% 62% at 26% 50%,
+    rgba(16, 20, 33, 0.86),
+    rgba(16, 20, 33, 0) 72%
+  );
+  pointer-events: none;
 }

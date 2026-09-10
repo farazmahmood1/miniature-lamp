@@ -6,6 +6,7 @@ import { SITE_ORIGIN } from "../../config/site";
 import { primaryCta } from "../../config/navigation";
 import { pageMetadata } from "../../lib/metadata";
 import RevealOnScroll from "../../components/motion/RevealOnScroll";
+import ZoomField from "../../components/motion/ZoomField";
 import WorkIndex from "./work-index";
 
 export const metadata: Metadata = pageMetadata({
@@ -39,19 +40,23 @@ export default function Page() {
       <RevealOnScroll />
 
       <main className="cs" id="content">
-        <header className="cs__head">
-          <p className="cs__kicker">
-            <span className="cs__dot" aria-hidden="true" />
-            Work
-          </p>
+        <div className="wk-hero">
+          <ZoomField className="wk-hero__field" />
 
-          <h1 className="cs__title">Projects, and what they changed</h1>
+          <header className="cs__head wk-hero__copy">
+            <p className="cs__kicker">
+              <span className="cs__dot" aria-hidden="true" />
+              Work
+            </p>
 
-          <p className="cs__intro">
-            Each of these is written up the same way: the situation we walked into, what we
-            built, and the numbers afterwards.
-          </p>
-        </header>
+            <h1 className="cs__title">Projects, and what they changed</h1>
+
+            <p className="cs__intro">
+              Each of these is written up the same way: the situation we walked into, what
+              we built, and the numbers afterwards.
+            </p>
+          </header>
+        </div>
 
         <section data-reveal className="cs__section" aria-label="Case studies">
           <WorkIndex />
