@@ -3337,3 +3337,33 @@ c-inner-parallax img {
   .sv__plates figure:hover img,
   .sv__button:hover { transform: none; }
 }
+
+/* Footer field ------------------------------------------------------------------
+   The same WebGL ribbon field as the home hero, filling the footer behind the copy.
+   The footer already had `text-background` and sat on the page's dark ground; this
+   gives it the artwork the reference carries. */
+.ft { isolation: isolate; }
+
+.ft__field {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: #000;
+  pointer-events: none;
+}
+
+/* The copy already carries z-1 from the captured markup, so it sits over the field.
+   This only has to keep the field itself underneath. */
+.ft > .block.relative { position: relative; z-index: 1; }
+
+/* Fades the field into the page above rather than starting on a hard seam, and
+   keeps the copy legible over the brightest part of the ribbons. */
+.ft__field::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, var(--color-001, rgb(16, 20, 33)) 0%, rgba(16, 20, 33, 0) 22%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.15) 55%, rgba(0, 0, 0, 0) 100%);
+}

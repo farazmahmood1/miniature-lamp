@@ -206,7 +206,15 @@ const GLOW_VERT = /* glsl */ `
   }
 `;
 
-export default function HeroCanvas() {
+export default function HeroCanvas({
+  /**
+   * What to watch for visibility. The home hero's canvas is position:fixed and never
+   * leaves the viewport on its own terms, so it watches the hero block instead. A
+   * canvas that sits inside normal flow, like the footer's, passes `null` and watches
+   * its own host.
+   */
+  watch = "c-hero-home",
+}: { watch?: string | null } = {}) {
   const hostRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -417,8 +425,8 @@ export default function HeroCanvas() {
       document.addEventListener("visibilitychange", onVis);
 
       // The hero block itself is the thing worth watching: once it is past, the
-      // backdrop is covered.
-      const hero = document.querySelector("c-hero-home") ?? host;
+      // backdrop is covered. A canvas in normal flow watches its own host.
+      const hero = (watch && document.querySelector(watch)) || host;
       const heroIO = new IntersectionObserver(
         ([entry]) => {
           onScreen = entry.isIntersecting;
@@ -451,7 +459,7 @@ export default function HeroCanvas() {
       disposed = true;
       cleanup?.();
     };
-  }, []);
+  }, [watch]);
 
   return <div ref={hostRef} aria-hidden="true" className="absolute inset-0 h-full w-full" />;
 }

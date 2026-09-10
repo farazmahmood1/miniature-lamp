@@ -11,6 +11,7 @@ import { site, socials } from "../../config/site";
 import { footerColumns, legalLinks, primaryCta, secondaryCta } from "../../config/navigation";
 import Wordmark from "../brand/Wordmark";
 import SocialIcon from "../brand/SocialIcon";
+import HeroCanvas from "../motion/HeroCanvas";
 
 const MONO =
   "[font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] font-normal leading-3.5 tracking-[-0.32px] uppercase";
@@ -22,7 +23,14 @@ export default function SiteFooter({
   ctaHeading?: string;
 } = {}) {
   return (
-    <footer className="block relative -mt-7.5 pt-7.5 text-background">
+    <footer className="ft block relative -mt-7.5 pt-7.5 text-background">
+      {/* The same ribbon field as the home hero, scoped to the footer. It watches its
+          own host rather than the hero block, so it only runs while the footer is in
+          view — which on most pages is a few seconds of the visit. */}
+      <div className="ft__field" aria-hidden="true">
+        <HeroCanvas watch={null} />
+      </div>
+
       <div className="block relative">
         <div className="flex relative z-1 max-w-500 pt-10 px-10 flex-col gap-20 max-lg:pt-7 max-lg:px-[0.9375rem] max-lg:gap-12">
           <div className="grid gap-5 grid-cols-2 max-lg:gap-10 max-lg:grid-cols-1">
