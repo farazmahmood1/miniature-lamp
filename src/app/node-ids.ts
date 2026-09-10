@@ -41,12 +41,6 @@ export const FeatureCard_cids: string[][] = [
     ["n362", "n363", "n364", "n365", "n366"],
     ["n367", "n368", "n369", "n370", "n371"]
 ];
-export const Tile_cids: string[][] = [
-    ["n401", "n402"],
-    ["n403", "n404"],
-    ["n405", "n406"],
-    ["n407", "n408"]
-];
 export const ListRow3_cids: string[][] = [
     ["n447", "n448"],
     ["n449", "n450"],

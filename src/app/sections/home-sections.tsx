@@ -4,7 +4,7 @@ import TechRailItem, { type TechRailItemData } from "../components/tech-rail-ite
 import ListRow2 from "../components/list-row2";
 import ReflowPreview from "../components/reflow-preview";
 import BenchmarkTabs from "../components/benchmark-tabs";
-import Tile, { type TileData } from "../components/tile";
+import PipelinePreview from "../components/pipeline-preview";
 import Illustration3 from "../svgs/svg-illustration3";
 import ListRow3, { type ListRow3Data } from "../components/list-row3";
 import Icon3 from "../svgs/svg-icon3";
@@ -21,8 +21,8 @@ import Icon8 from "../svgs/svg-icon8";
 import MediaCard4, { type MediaCard4Data } from "../components/media-card4";
 import MediaTile2 from "../components/media-tile2";
 import FeatureGridItem from "../components/feature-grid-item";
-import { Logo_cids, Logo2_cids, ListRow2_cids, FeatureCard_cids, Tile_cids, ListRow3_cids, ListRow4_cids, MediaTile_cids, MediaCard_cids, MediaCard2_cids, MediaCard3_cids, MediaCard4_cids, MediaTile2_cids } from "../node-ids";
-import { Tile_styles, ListRow3_styles, ListRow4_styles, MediaCard_styles, MediaCard2_styles, MediaCard4_styles } from "../node-styles";
+import { Logo_cids, Logo2_cids, ListRow2_cids, FeatureCard_cids, ListRow3_cids, ListRow4_cids, MediaTile_cids, MediaCard_cids, MediaCard2_cids, MediaCard3_cids, MediaCard4_cids, MediaTile2_cids } from "../node-ids";
+import { ListRow3_styles, ListRow4_styles, MediaCard_styles, MediaCard2_styles, MediaCard4_styles } from "../node-styles";
 import { listRow2Data as listRow2DataContent, cards as cardsContent, mediaTile2Data as mediaTile2DataContent, features as featuresContent, homeCaseStudies } from "../content";
 /** The rail runs the same list twice; the second track is the seamless-loop copy. */
 /** The rail runs two tracks; the second is the seamless-loop copy. */
@@ -43,12 +43,6 @@ const techRail2: TechRailItemData[] = [
     { name: "vercel" },
     { name: "aws" },
     { name: "reactnative" },
-];
-const Tile_data: TileData[] = [
-    { text: "✓  Prepared 2 files" },
-    { text: "✓  Built 42 routes (static export)" },
-    { text: "✓  Created archive (5.0 KB)" },
-    { text: "✓  Uploaded successfully" }
 ];
 const ListRow3_data: ListRow3Data[] = [
     { text: " P50 " },
@@ -106,7 +100,7 @@ const MediaCard4_data: MediaCard4Data[] = homeCaseStudies;
  * four capability blocks with their sticky rail, the trust tiles, the case-study
  * carousel and the blog teasers.
  */
-export default function HomeSections({ listRow2Data = listRow2DataContent, tileData = Tile_data, listRow3Data = ListRow3_data, listRow4Data = ListRow4_data, mediaTileData = MediaTile_data, cards = cardsContent, mediaCard2Data = MediaCard2_data, mediaCard3Data = MediaCard3_data, mediaCard4Data = MediaCard4_data, mediaTile2Data = mediaTile2DataContent, features = featuresContent } = {}) {
+export default function HomeSections({ listRow2Data = listRow2DataContent, listRow3Data = ListRow3_data, listRow4Data = ListRow4_data, mediaTileData = MediaTile_data, cards = cardsContent, mediaCard2Data = MediaCard2_data, mediaCard3Data = MediaCard3_data, mediaCard4Data = MediaCard4_data, mediaTile2Data = mediaTile2DataContent, features = featuresContent } = {}) {
   return (
     <main className="block" data-cid="n5">
       <div className="block" data-cid="n66">
@@ -566,7 +560,7 @@ export default function HomeSections({ listRow2Data = listRow2DataContent, tileD
                 <div className="grid gap-[78.1px] grid-cols-1 max-lg:max-w-3xl lg:ml-auto lg:w-full lg:max-w-[590px] 2xl:max-w-[910px] max-md:gap-14 md:max-lg:gap-[4.0875rem] 2xl:gap-[5.875rem]" data-cid="n334">
                   <div className="block" data-cid="n335" id="strategy">
                     <c-feature-card-range-chart class="flex flex-col gap-6" data-cid="n336" id="featurecardrangechart-56">
-                      <div className="h-[569.7px] min-h-125 flex relative p-6 rounded-[15px] justify-center gap-6 overflow-hidden bg-color-001 max-md:h-[30.975rem] max-lg:min-h-0 md:max-lg:h-[32.9375rem] 2xl:h-125" data-cid="n337">
+                      <div className="aspect-[707/600] flex relative p-6 rounded-[15px] justify-center items-center gap-6 overflow-hidden bg-color-001 max-md:aspect-square" data-cid="n337">
                         <c-inner-parallax class="w-147.5 h-[569.7px] block absolute top-0 left-0 min-w-0 overflow-hidden max-md:w-[21.5625rem] max-md:h-[30.975rem] md:max-lg:w-184.5 md:max-lg:h-[32.9375rem] 2xl:w-192 2xl:h-125" data-cid="n338">
                           <c-dato-image class="inline" data-cid="n339" id="datoimage-64">
                             {" "}
@@ -616,8 +610,8 @@ export default function HomeSections({ listRow2Data = listRow2DataContent, tileD
                           {" "}
                         </div>
                         {" "}
-                        <div className="h-[1.875rem] block absolute bottom-3 inset-x-3 z-2 md:max-lg:top-6 md:max-lg:bottom-auto md:max-lg:right-6 md:max-lg:left-[21.5625rem] md:max-lg:max-w-[50%] 2xl:top-6 2xl:bottom-auto 2xl:right-6 2xl:left-90 2xl:max-w-[50%]" data-cid="n382">
-                          <span className="block p-2 rounded-[7px] overflow-hidden [font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] font-normal leading-3.5 tracking-[-0.32px] uppercase whitespace-nowrap text-nowrap bg-background" data-cid="n383">
+                        <div className="h-[1.875rem] block absolute top-3 right-3 z-2 max-w-[62%] md:max-lg:top-6 md:max-lg:right-6 2xl:top-6 2xl:right-6" data-cid="n382">
+                          <span className="inline-block p-2 rounded-[7px] overflow-hidden whitespace-nowrap [font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] font-normal leading-3.5 tracking-[-0.32px] uppercase whitespace-nowrap text-nowrap bg-background" data-cid="n383">
                             {" Same components, every breakpoint "}
                           </span>
                           {" "}
@@ -652,63 +646,15 @@ export default function HomeSections({ listRow2Data = listRow2DataContent, tileD
                   </div>
                   <div className="block" data-cid="n392" id="build">
                     <c-feature-card-terminal class="flex flex-col gap-6" data-cid="n393" id="featurecardterminal-63">
-                      <div className="grid relative p-6 rounded-[15px] justify-center content-center gap-6 overflow-hidden bg-color-001 grid-cols-1 md:max-lg:aspect-[707/600] 2xl:aspect-[707/600]" data-cid="n394">
-                        <div className="w-135.5 h-6 block relative inset-0 z-2 max-md:w-[18.5625rem] md:max-lg:w-[5.0375rem] md:max-lg:absolute md:max-lg:top-6 md:max-lg:left-6 md:max-lg:min-w-0 md:max-lg:right-auto md:max-lg:bottom-auto 2xl:w-[5.0375rem] 2xl:absolute 2xl:top-6 2xl:left-6 2xl:min-w-0 2xl:right-auto 2xl:bottom-auto" data-cid="n395">
+                      <div className="aspect-[707/600] grid relative p-6 rounded-[15px] justify-center content-center gap-6 overflow-hidden bg-color-001 grid-cols-1 max-md:aspect-square" data-cid="n394">
+                        <div className="h-6 block absolute top-6 left-6 z-2" data-cid="n395">
                           <span className="inline p-2 rounded-[7px] text-color-001 [font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] font-normal leading-3.5 tracking-[-0.32px] uppercase bg-accent" data-cid="n396">
                             {" Deploy "}
                           </span>
                           {" "}
                         </div>
                         {" "}
-                        <div className="block relative z-2 rounded-[10px] flex-col bg-clr-5 [backdrop-filter:blur(50px)]" data-cid="n397">
-                          <div className="h-full block p-4 flex-1 [font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] leading-[1.25rem]" data-cid="n398">
-                            <div className="min-h-[0.8125rem] block leading-3.5" data-cid="n399">
-                              {" codilated@studio northwind-quotes % npm run deploy -- --env production "}
-                            </div>
-                            <div className="h-3.5 min-h-[0.8125rem] block leading-3.5" data-cid="n400" />
-                            {tileData.map((d, i) => <Tile key={i} d={d} cids={Tile_cids[i]} styles={Tile_styles[i]} />)}
-                            <div className="h-3.5 min-h-[0.8125rem] block leading-3.5" data-cid="n409" />
-                            <div className="min-h-[0.8125rem] block leading-3.5" data-cid="n410">
-                              {" Checks "}
-                            </div>
-                            <div className="min-h-[0.8125rem] block leading-3.5" data-cid="n411">
-                              {" Types      [████████░░░░░░░░░░░░░░░░░░░░] "}
-                            </div>
-                            <div className="min-h-[0.8125rem] block leading-3.5" data-cid="n412">
-                              {" 28%  checking 214 files      00:12 "}
-                            </div>
-                            <div className="h-3.5 min-h-[0.8125rem] block leading-3.5" data-cid="n413" />
-                            <div className="min-h-[0.8125rem] block leading-3.5 max-md:opacity-0" data-cid="n414">
-                              {" Tests      [██████████████░░░░░░░░░░░░░░] "}
-                            </div>
-                            <div className="min-h-[0.8125rem] block leading-3.5 max-md:opacity-0" data-cid="n415">
-                              {" 54%  186 passed, 0 failed    00:24 "}
-                            </div>
-                            <div className="h-3.5 min-h-[0.8125rem] block opacity-0 leading-3.5 md:max-lg:opacity-[initial]" data-cid="n416" />
-                            <div className="min-h-[0.8125rem] block opacity-0 leading-3.5 md:max-lg:opacity-[initial]" data-cid="n417">
-                              {" Bundle     [██████████████████████░░░░░░] "}
-                            </div>
-                            <div className="min-h-[0.8125rem] block opacity-0 leading-3.5 md:max-lg:opacity-[initial]" data-cid="n418">
-                              {" 83%  103 kB, under budget    00:37 "}
-                            </div>
-                            <div className="h-3.5 min-h-[0.8125rem] block opacity-0 leading-3.5 md:max-lg:opacity-[initial]" data-cid="n419" />
-                            <div className="min-h-[0.8125rem] block opacity-0 leading-3.5 md:max-lg:opacity-[initial]" data-cid="n420">
-                              {" Deploy     [████████████████████████████] "}
-                            </div>
-                            <div className="min-h-[0.8125rem] block opacity-0 leading-3.5 md:max-lg:opacity-[initial]" data-cid="n421">
-                              {" 100% live in 44s            00:44 "}
-                            </div>
-                            <div className="h-3.5 min-h-[0.8125rem] block opacity-0 leading-3.5 md:max-lg:opacity-[initial]" data-cid="n422" />
-                            <div className="h-7 min-h-[0.8125rem] block opacity-0 leading-3.5" data-cid="n423">
-                              <span className="inline text-primary" data-cid="n424">
-                                ✓ Released:
-                              </span>
-                              {" codilated.com — build 284 "}
-                            </div>
-                            {" "}
-                          </div>
-                          {" "}
-                        </div>
+                        <PipelinePreview />
                         {" "}
                       </div>
                       {" "}

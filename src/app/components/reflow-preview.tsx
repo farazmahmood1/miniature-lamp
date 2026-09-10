@@ -23,17 +23,11 @@ const TILES = [
 export default function ReflowPreview() {
   return (
     <div className="ct-reflow" aria-hidden="true">
-      {/* The breakpoint readout, one label per stop, cross-fading in sequence. */}
+      {/* Breakpoint readout, in the card's one free corner. */}
       <div className="ct-reflow__labels">
-        <span className="ct-reflow__label" data-stop="0">
-          1440
-        </span>
-        <span className="ct-reflow__label" data-stop="1">
-          768
-        </span>
-        <span className="ct-reflow__label" data-stop="2">
-          375
-        </span>
+        <span className="ct-reflow__label" data-stop="0">1440</span>
+        <span className="ct-reflow__label" data-stop="1">768</span>
+        <span className="ct-reflow__label" data-stop="2">375</span>
       </div>
 
       <div className="ct-reflow__frame">

@@ -15,9 +15,6 @@ export type Logo2Styles = {
   className: string;
   className2: string;
 };
-export type TileStyles = {
-  className: string;
-};
 export type ListRow3Styles = {
   className: string;
 };
@@ -65,12 +62,6 @@ export const Logo2_styles: Logo2Styles[] = [
     { className: "h-full left-0", className2: "aspect-[auto_443/192]" },
     { className: "h-full", className2: "aspect-[auto_610/94]" },
     { className: "h-full", className2: "aspect-[auto_874/151]" }
-];
-export const Tile_styles: TileStyles[] = [
-    { className: "h-3.5" },
-    { className: "h-7 md:max-lg:h-3.5 2xl:h-3.5" },
-    { className: "h-3.5" },
-    { className: "h-3.5" }
 ];
 export const ListRow3_styles: ListRow3Styles[] = [
     { className: "bg-clr-6" },

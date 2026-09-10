@@ -80,7 +80,7 @@ export default function BenchmarkTabs({ cids }: { cids: string[][] }) {
       </div>
 
       <div
-        className="w-[460.7px] block my-[78.1px] mx-auto rounded-[10px] overflow-hidden bg-clr-5 [backdrop-filter:blur(50px)] max-md:w-[18.5625rem] max-md:my-14 md:max-lg:w-[586.5px] md:max-lg:my-[4.0875rem] 2xl:w-153 2xl:my-[5.875rem]"
+        className="w-[460.7px] block my-6 mx-auto rounded-[10px] overflow-hidden bg-clr-5 [backdrop-filter:blur(50px)] max-md:w-[18.5625rem] max-md:my-4 md:max-lg:w-[586.5px] md:max-lg:my-6 2xl:w-153 2xl:my-10"
         data-cid="n349"
       >
         {/* Only the active panel is rendered, keyed by index. Switching tabs therefore
