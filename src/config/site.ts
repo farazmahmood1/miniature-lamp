@@ -16,6 +16,8 @@ export const site = {
   /** Used as the OpenGraph site name and the browser-tab suffix. */
   titleSuffix: "Codilated",
   tagline: "AI-first software studio",
+  /** The line under the mark on the preloader. Shorter than the description. */
+  shortTagline: "Building intelligent software for the AI era",
   /** One line. Used on the home hero and as the default meta description fallback. */
   shortDescription:
     "Codilated is an AI-first software studio. We design, build and ship web apps, AI automation and digital products for teams that need them working in production, not in a deck.",
