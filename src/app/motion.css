@@ -295,3 +295,202 @@ html[data-menu-open] body::after {
   outline-offset: 3px;
   border-radius: 2px;
 }
+
+/* Responsive reflow preview ---------------------------------------------------
+   The visual on the design block. Only the frame's width is animated; the tiles
+   inside are flex children, so the rewrap is real layout rather than a scripted
+   sequence. One 12s loop with three stops: desktop, tablet, phone.
+
+   Timing is shared by the frame and the breakpoint labels, so a label is only ever
+   on screen while the frame is actually at that width. */
+.ct-reflow {
+  --stage: 12s;
+  --ink: rgb(23, 43, 118);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(20px, 4%, 44px);
+  container-type: inline-size;
+}
+
+.ct-reflow__frame {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgba(9, 17, 48, 0.06),
+    0 18px 40px -18px rgba(9, 17, 48, 0.28);
+  animation: reflow-frame var(--stage) cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  will-change: width;
+}
+
+@keyframes reflow-frame {
+  0%,   20%  { width: 100%; }
+  28%,  48%  { width: 62%; }
+  56%,  76%  { width: 34%; }
+  84%,  100% { width: 100%; }
+}
+
+/* Browser chrome ------------------------------------------------------------- */
+.ct-reflow__chrome {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex: 0 0 auto;
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(23, 43, 118, 0.08);
+}
+.ct-reflow__chrome span {
+  width: 7px;
+  height: 7px;
+  border-radius: 100%;
+  background: rgba(23, 43, 118, 0.16);
+}
+.ct-reflow__bar {
+  flex: 1;
+  height: 7px;
+  margin-left: 8px;
+  border-radius: 4px;
+  background: rgba(23, 43, 118, 0.08);
+}
+
+/* Page inside the frame ------------------------------------------------------ */
+.ct-reflow__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  padding: 14px;
+}
+
+.ct-reflow__hero {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex: 0 0 auto;
+}
+.ct-reflow__line {
+  display: block;
+  height: 9px;
+  border-radius: 5px;
+  background: rgba(23, 43, 118, 0.14);
+}
+.ct-reflow__line--lg { width: 62%; height: 13px; }
+.ct-reflow__line--md { width: 40%; }
+.ct-reflow__cta {
+  display: block;
+  width: 74px;
+  height: 20px;
+  margin-top: 3px;
+  border-radius: 6px;
+  background: var(--primary, rgb(255, 72, 139));
+}
+
+/* The grid that does the rewrapping. Flex, not grid: flex-wrap is what makes the
+   reflow genuine, because the browser decides where the rows break. */
+.ct-reflow__grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 9px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.ct-reflow__tile {
+  flex: 1 1 118px;
+  min-width: 104px;
+  min-height: 46px;
+  border-radius: 8px;
+  background: rgba(23, 43, 118, 0.07);
+  transition: background 400ms ease;
+}
+.ct-reflow__tile[data-span="wide"] { flex-basis: 168px; }
+.ct-reflow__tile[data-accent] {
+  background: linear-gradient(
+    135deg,
+    var(--primary, rgb(255, 72, 139)) 0%,
+    var(--clr-4, rgb(227, 58, 219)) 100%
+  );
+  opacity: 0.85;
+}
+
+/* Breakpoint readout --------------------------------------------------------- */
+.ct-reflow__labels {
+  position: absolute;
+  top: clamp(14px, 3%, 26px);
+  right: clamp(14px, 3%, 26px);
+  z-index: 3;
+  display: grid;
+}
+.ct-reflow__label {
+  grid-area: 1 / 1;
+  padding: 6px 11px;
+  border-radius: 7px;
+  background: var(--ink);
+  color: #fff;
+  font-family: "Suisse Int'l Mono", monospace;
+  font-size: 0.75rem;
+  letter-spacing: -0.02em;
+  opacity: 0;
+  animation: reflow-label var(--stage) steps(1, end) infinite;
+}
+.ct-reflow__label[data-stop="0"] { animation-delay: calc(var(--stage) * -0.02); }
+.ct-reflow__label[data-stop="1"] { animation-delay: calc(var(--stage) * 0.26); }
+.ct-reflow__label[data-stop="2"] { animation-delay: calc(var(--stage) * 0.54); }
+
+@keyframes reflow-label {
+  0%      { opacity: 1; }
+  22%     { opacity: 1; }
+  23%,
+  100%    { opacity: 0; }
+}
+
+/* The resize handle, tracking the frame's right edge. */
+.ct-reflow__handle {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  width: 4px;
+  height: 42px;
+  margin-top: -21px;
+  border-radius: 3px;
+  background: var(--ink);
+  opacity: 0.45;
+  animation: reflow-handle var(--stage) cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+@keyframes reflow-handle {
+  0%,   20%  { left: calc(50% + 50% - 3px); }
+  28%,  48%  { left: calc(50% + 31% - 3px); }
+  56%,  76%  { left: calc(50% + 17% - 3px); }
+  84%,  100% { left: calc(50% + 50% - 3px); }
+}
+
+/* Below the medium breakpoint the card is square and the frame is already narrow,
+   so the loop would only shuffle a couple of tiles. Hold it at the phone stop. */
+@media (max-width: 571.98px) {
+  .ct-reflow__frame { animation: none; width: 84%; }
+  .ct-reflow__handle { animation: none; left: calc(50% + 42% - 3px); }
+  .ct-reflow__label[data-stop="2"] { opacity: 1; animation: none; }
+  .ct-reflow__label[data-stop="0"],
+  .ct-reflow__label[data-stop="1"] { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-reflow__frame,
+  .ct-reflow__handle,
+  .ct-reflow__label { animation: none; }
+  .ct-reflow__frame { width: 100%; }
+  .ct-reflow__handle { left: calc(100% - 3px); }
+  .ct-reflow__label[data-stop="0"] { opacity: 1; }
+  .ct-reflow__label[data-stop="1"],
+  .ct-reflow__label[data-stop="2"] { display: none; }
+}

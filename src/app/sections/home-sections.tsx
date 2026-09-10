@@ -2,7 +2,7 @@ import Illustration from "../svgs/svg-illustration";
 import Icon2 from "../svgs/svg-icon2";
 import TechRailItem, { type TechRailItemData } from "../components/tech-rail-item";
 import ListRow2 from "../components/list-row2";
-import LottiePlayer from "../../components/motion/LottiePlayer";
+import ReflowPreview from "../components/reflow-preview";
 import BenchmarkTabs from "../components/benchmark-tabs";
 import Tile, { type TileData } from "../components/tile";
 import Illustration3 from "../svgs/svg-illustration3";
@@ -611,21 +611,21 @@ export default function HomeSections({ listRow2Data = listRow2DataContent, tileD
                       <div className="block relative" data-cid="n379">
                         <div className="w-[9.075rem] h-6 block absolute top-3 left-3 z-2 md:max-lg:top-6 md:max-lg:left-6 2xl:top-6 2xl:left-6" data-cid="n380">
                           <span className="inline p-2 rounded-[7px] text-background [font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] font-normal leading-3.5 tracking-[-0.32px] uppercase bg-foreground" data-cid="n381">
-                            Uptime : 99.98%
+                            Design system
                           </span>
                           {" "}
                         </div>
                         {" "}
-                        <div className="h-[1.875rem] block absolute top-[28.675rem] inset-x-3 z-2 max-md:top-[18.9375rem] md:max-lg:top-6 md:max-lg:right-6 md:max-lg:left-[21.5625rem] md:max-lg:max-w-[50%] 2xl:top-6 2xl:right-6 2xl:left-90 2xl:max-w-[50%]" data-cid="n382">
+                        <div className="h-[1.875rem] block absolute bottom-3 inset-x-3 z-2 md:max-lg:top-6 md:max-lg:bottom-auto md:max-lg:right-6 md:max-lg:left-[21.5625rem] md:max-lg:max-w-[50%] 2xl:top-6 2xl:bottom-auto 2xl:right-6 2xl:left-90 2xl:max-w-[50%]" data-cid="n382">
                           <span className="block p-2 rounded-[7px] overflow-hidden [font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] font-normal leading-3.5 tracking-[-0.32px] uppercase whitespace-nowrap text-nowrap bg-background" data-cid="n383">
-                            {" Clients across the UK, EU, US and the Gulf "}
+                            {" Same components, every breakpoint "}
                           </span>
                           {" "}
                         </div>
                         {" "}
                         <div className="block relative rounded-[15px] overflow-hidden bg-surface-2 aspect-[707/600] max-md:aspect-square" data-cid="n384">
-                          <div className="h-[500.7px] block absolute top-0 inset-x-0 max-md:h-103.5 max-md:top-[-34.5px] max-md:inset-x-[-34.5px] md:max-lg:h-[626.3px] 2xl:h-[40.7375rem]" data-cid="n385">
-                            <LottiePlayer cid={"n386"} src="/assets/site/lottie/a0ccad2baba8.json" />
+                          <div className="block absolute inset-0" data-cid="n385">
+                            <ReflowPreview />
                           </div>
                           {" "}
                         </div>
