@@ -585,3 +585,78 @@ html[data-menu-open] body::after {
 @media (prefers-reduced-motion: reduce) {
   .ct-preloader__fill::after { animation: none; opacity: 0; }
 }
+
+/* Feature-card artwork --------------------------------------------------------
+   `c-inner-parallax` wraps the artwork behind a feature card. The capture gave the
+   layer, its <picture> and its <img> fixed pixel boxes measured at one viewport,
+   plus a translate that pushed the artwork down. On any wider or taller card the
+   artwork stops short and the card's own dark background shows through as a band
+   along the top and right.
+
+   Nothing drives these from JavaScript — the parallax was captured as a static
+   transform — so letting the layer fill its card is safe, and fixes all six
+   instances at once. Unlayered on purpose: it therefore wins over Tailwind's
+   @layer utilities without an !important. */
+c-inner-parallax {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
+}
+c-inner-parallax picture {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: none;
+}
+c-inner-parallax img {
+  position: absolute;
+  inset: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Comparison bars -------------------------------------------------------------
+   Each row's bar grows from its left edge, staggered down the list, and the value
+   fades in behind it. Transform rather than width, so it runs on the compositor.
+   The animation replays whenever the chart mounts, which is what makes switching
+   tabs feel like the chart redrawing rather than swapping. */
+.ct-bar {
+  transform-origin: left center;
+  animation: bar-grow 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes bar-grow {
+  from { transform: scaleX(0); opacity: 0.35; }
+  to   { transform: scaleX(1); opacity: 1; }
+}
+
+.ct-bar-value {
+  animation: bar-value 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes bar-value {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-bar,
+  .ct-bar-value { animation: none; }
+}
+
+/* The chart caption fades in after the last row, and settles at the muted opacity
+   the design uses. Its own keyframes, because a Tailwind opacity utility would be
+   overridden by an animation that finishes at full opacity. */
+.ct-bar-caption {
+  opacity: 0.55;
+  animation: bar-caption 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes bar-caption {
+  from { opacity: 0; }
+  to   { opacity: 0.55; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ct-bar-caption { animation: none; }
+}

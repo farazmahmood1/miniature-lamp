@@ -68,7 +68,7 @@ export default function BenchmarkTabs({ cids }: { cids: string[][] }) {
             class={`${TAB_BASE} whitespace-nowrap ${i === active ? "text-background" : ""}`}
             role="tab"
             id={`${baseId}-tab-${i}`}
-            aria-controls={`${baseId}-panel-${i}`}
+            aria-controls={`${baseId}-panel`}
             aria-selected={i === active ? "true" : "false"}
             tabIndex={i === active ? 0 : -1}
             style={{ flex: `1 1 ${100 / benchmarkSeries.length}%` }}
@@ -83,27 +83,28 @@ export default function BenchmarkTabs({ cids }: { cids: string[][] }) {
         className="w-[460.7px] block my-[78.1px] mx-auto rounded-[10px] overflow-hidden bg-clr-5 [backdrop-filter:blur(50px)] max-md:w-[18.5625rem] max-md:my-14 md:max-lg:w-[586.5px] md:max-lg:my-[4.0875rem] 2xl:w-153 2xl:my-[5.875rem]"
         data-cid="n349"
       >
-        {benchmarkSeries.map((s, i) => (
-          <c-segmented-panel
-            key={s.label}
-            /* Display is switched by class, not by the hidden attribute: a Tailwind
-               display utility outranks the user-agent [hidden] rule, so the two
-               would fight and both panels would show. */
-            class={i === active ? "flex flex-col h-full" : "hidden"}
-            role="tabpanel"
-            id={`${baseId}-panel-${i}`}
-            aria-labelledby={`${baseId}-tab-${i}`}
-          >
-            <div className="flex p-6 flex-col gap-4">
-              {s.rows.map((row, j) => (
-                <FeatureCard key={row.title} d={row} cids={cids[j] ?? cids[0]} />
-              ))}
-              <p className="mt-2 block [font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] font-normal leading-3.5 tracking-[-0.32px] uppercase opacity-55">
-                {s.caption}
-              </p>
-            </div>
-          </c-segmented-panel>
-        ))}
+        {/* Only the active panel is rendered, keyed by index. Switching tabs therefore
+            remounts the rows, which replays their entrance and makes the chart read
+            as redrawing rather than swapping. */}
+        <c-segmented-panel
+          key={active}
+          class="flex flex-col h-full"
+          role="tabpanel"
+          id={`${baseId}-panel`}
+          aria-labelledby={`${baseId}-tab-${active}`}
+        >
+          <div className="flex p-6 flex-col gap-4">
+            {benchmarkSeries[active].rows.map((row, j) => (
+              <FeatureCard key={row.title} d={row} cids={cids[j] ?? cids[0]} index={j} />
+            ))}
+            <p
+              className="ct-bar-caption mt-2 block [font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] font-normal leading-3.5 tracking-[-0.32px] uppercase"
+              style={{ animationDelay: `${benchmarkSeries[active].rows.length * 90}ms` }}
+            >
+              {benchmarkSeries[active].caption}
+            </p>
+          </div>
+        </c-segmented-panel>
       </div>
     </c-segmented-controls>
   );
