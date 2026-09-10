@@ -39,9 +39,10 @@ export default function Page() {
 
       <RevealOnScroll />
 
-      <main className="cs" id="content">
+      <main className="cs cs--dark-hero" id="content">
         <div className="wk-hero">
           <ZoomField className="wk-hero__field" />
+          <span className="wk-hero__rule" aria-hidden="true" />
 
           <header className="cs__head wk-hero__copy">
             <p className="cs__kicker">
@@ -58,11 +59,15 @@ export default function Page() {
           </header>
         </div>
 
-        <section data-reveal className="cs__section" aria-label="Case studies">
-          <WorkIndex />
-        </section>
+        {/* The grid sits on the light ground, so the hero reads as a separate band
+            rather than as the top of one long dark page. */}
+        <div className="wk-panel">
+          <section data-reveal className="wk-panel__inner" aria-label="Case studies">
+            <WorkIndex />
+          </section>
+        </div>
 
-        <section data-reveal className="cs__next" aria-labelledby="work-cta">
+        <section data-reveal className="cs__next wk-cta" aria-labelledby="work-cta">
           <p className="cs__label" id="work-cta">
             Start yours
           </p>

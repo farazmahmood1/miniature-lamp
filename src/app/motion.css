@@ -1909,13 +1909,15 @@ c-inner-parallax img {
 }
 
 /* Portfolio index -------------------------------------------------------------
-   /work. Shares the case-study page's dark ground and tokens, so the index and the
-   detail pages read as one section rather than two designs. */
+   The grid on /work. It sits inside the white panel below the hero, so the whole
+   block is on the light ground: this is the only place .pf is used, so the colours
+   are stated directly rather than themed. */
 .pf {
   display: flex;
   flex-direction: column;
   gap: 48px;
   width: 100%;
+  --pf-line: rgba(23, 43, 118, 0.14);
 }
 @media (max-width: 1024.98px) { .pf { gap: 32px; } }
 
@@ -1925,7 +1927,7 @@ c-inner-parallax img {
   align-self: flex-start;
   max-width: 100%;
   padding: 4px;
-  border: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12));
+  border: 1px solid var(--pf-line);
   border-radius: 999px;
   overflow-x: auto;
   scrollbar-width: none;
@@ -1937,7 +1939,7 @@ c-inner-parallax img {
   inset-block: 4px;
   left: 0;
   border-radius: 999px;
-  background: #fff;
+  background: var(--color-001, rgb(16, 20, 33));
   transition:
     transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
     width 380ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -1958,12 +1960,12 @@ c-inner-parallax img {
   letter-spacing: -0.32px;
   text-transform: uppercase;
   white-space: nowrap;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--muted-foreground, rgb(88, 100, 144));
   cursor: pointer;
   transition: color 280ms ease;
 }
-.pf__tab:hover { color: #fff; }
-.pf__tab[aria-selected="true"] { color: var(--color-001, rgb(16, 20, 33)); }
+.pf__tab:hover { color: var(--foreground, rgb(23, 43, 118)); }
+.pf__tab[aria-selected="true"] { color: #fff; }
 
 /* Cards ----------------------------------------------------------------------- */
 .pf__grid {
@@ -1976,6 +1978,10 @@ c-inner-parallax img {
   .pf__grid { grid-template-columns: minmax(0, 1fr); gap: 34px; }
 }
 
+/* Cards in a row line up. An earlier version dropped every other card by 56px for
+   an editorial feel, but grid stretch then gave the pair different heights, and the
+   foot row is pinned to the bottom — so one title sat 72px clear of its meta line
+   and its neighbour 16px, which read as a bug rather than as a rhythm. */
 .pf__card {
   display: flex;
   flex-direction: column;
@@ -1987,18 +1993,13 @@ c-inner-parallax img {
   to   { opacity: 1; transform: none; }
 }
 
-/* Cards in a row line up. An earlier version dropped every other card by 56px for
-   an editorial feel, but grid stretch then gave the pair different heights, and the
-   foot row is pinned to the bottom — so one title sat 72px clear of its meta line
-   and its neighbour 16px, which read as a bug rather than as a rhythm. */
-
 .pf__frame {
   position: relative;
   display: block;
   overflow: hidden;
-  border: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12));
+  border: 1px solid var(--pf-line);
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--surface, rgb(238, 242, 245));
 }
 .pf__frame img {
   display: block;
@@ -2009,16 +2010,18 @@ c-inner-parallax img {
 }
 .pf__card:hover .pf__frame img { transform: scale(1.05); }
 
+/* The scrim sits on the artwork, not on the page, so it stays dark on a light
+   ground: it is what keeps the year chip readable over a pale image. */
 .pf__frame::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 45%, rgba(16, 20, 33, 0.72));
-  opacity: 0.85;
+  background: linear-gradient(180deg, transparent 55%, rgba(16, 20, 33, 0.55));
+  opacity: 0.9;
   transition: opacity 380ms ease;
   pointer-events: none;
 }
-.pf__card:hover .pf__frame::after { opacity: 0.55; }
+.pf__card:hover .pf__frame::after { opacity: 0.6; }
 
 .pf__year {
   position: absolute;
@@ -2027,7 +2030,7 @@ c-inner-parallax img {
   right: 16px;
   padding: 7px 13px;
   border-radius: 999px;
-  background: rgba(16, 20, 33, 0.66);
+  background: rgba(16, 20, 33, 0.72);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
@@ -2043,13 +2046,13 @@ c-inner-parallax img {
 }
 .pf__tags span {
   padding: 6px 12px;
-  border: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12));
+  border: 1px solid var(--pf-line);
   border-radius: 999px;
   font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
   font-size: 0.8125rem;
   letter-spacing: -0.32px;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--muted-foreground, rgb(88, 100, 144));
 }
 
 /* Two lines minimum, so a short title cannot pull its meta row out of step with the
@@ -2063,7 +2066,7 @@ c-inner-parallax img {
   font-weight: 300;
   line-height: 1.16;
   letter-spacing: -0.7px;
-  color: #fff;
+  color: var(--foreground, rgb(23, 43, 118));
   text-wrap: balance;
   background-image: linear-gradient(currentColor, currentColor);
   background-repeat: no-repeat;
@@ -2084,14 +2087,14 @@ c-inner-parallax img {
   font-size: 0.8125rem;
   letter-spacing: -0.32px;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--muted-foreground, rgb(88, 100, 144));
 }
 .pf__more {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   white-space: nowrap;
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--muted-foreground, rgb(88, 100, 144));
   transition: color 240ms ease;
 }
 .pf__card:hover .pf__more { color: var(--primary, rgb(255, 72, 139)); }
@@ -2963,3 +2966,65 @@ c-inner-parallax img {
   );
   pointer-events: none;
 }
+
+/* Work page bands ---------------------------------------------------------------
+   The hero is a near-black band with the rectangle field running through it. The
+   grid then sits on a white panel that overlaps the band's lower edge, which is the
+   same dark-to-light hand-off the service pages use, so the two read as separate
+   sections rather than as one long dark page. */
+.cs--dark-hero {
+  /* Deeper than the page ground: the shapes need somewhere darker to emerge from,
+     and it is what separates the band from the panel below it. */
+  --cs-hero-ground: rgb(7, 6, 13);
+  padding-bottom: 0;
+  background: var(--color-001, rgb(16, 20, 33));
+}
+
+.wk-hero {
+  background: var(--cs-hero-ground);
+}
+
+/* The full-bleed hairline the reference runs across the hero, level with the
+   eyebrow. Sits above the field and below the copy. */
+.wk-hero__rule {
+  position: absolute;
+  z-index: 1;
+  inset-inline: 0;
+  top: calc(var(--cs-pad-top) + 88px);
+  height: 1px;
+  background: rgba(255, 255, 255, 0.14);
+  pointer-events: none;
+}
+@media (max-width: 767.98px) { .wk-hero__rule { display: none; } }
+
+/* White panel ------------------------------------------------------------------ */
+.wk-panel {
+  position: relative;
+  z-index: 1;
+  /* Overlaps the hero, so the rounded corners cut into the dark band. */
+  margin-top: -60px;
+  border-radius: 2rem;
+  background: var(--background, #fff);
+  color: var(--foreground, rgb(23, 43, 118));
+}
+@media (max-width: 1024.98px) { .wk-panel { margin-top: -30px; border-radius: 1.5rem; } }
+
+.wk-panel__inner {
+  width: 100%;
+  max-width: calc(var(--cs-max) + var(--cs-gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--cs-gutter);
+  padding-block: 78px;
+}
+@media (max-width: 1024.98px) { .wk-panel__inner { padding-block: 44px; } }
+
+/* Closing call to action ------------------------------------------------------- */
+/* Back on the dark ground below the panel, so it belongs with the footer rather
+   than trailing off the end of the white block. */
+.wk-cta {
+  margin-top: 0;
+  padding-top: 96px;
+  padding-bottom: 40px;
+  border-top: 0;
+}
+@media (max-width: 1024.98px) { .wk-cta { padding-top: 60px; } }
