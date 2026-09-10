@@ -1,7 +1,8 @@
-import type { MediaCard2Styles } from "../_styles";
+import type { CSSProperties } from "react";
+import type { MediaCard2Styles } from "../node-styles";
 import { cn } from "../../lib/utils";
 export type MediaCard2Data = {
-  style: string;
+  style: CSSProperties;
   height: string;
   imgSrc: string;
   width: string;
@@ -51,7 +52,7 @@ export default function MediaCard2({ d, cids, styles }: { d: MediaCard2Data; cid
             <span data-cid={cids[14]} className="block min-w-0 text-muted-foreground [font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] font-normal leading-3.5 tracking-[-0.32px] uppercase underline">
               {" "}
               <c-scramble-text data-cid={cids[15]} class="inline" id={d.id}>
-                {" Try now "}
+                {" Read more "}
               </c-scramble-text>
               {" "}
             </span>

@@ -1,44 +1,71 @@
 # AGENTS.md
 
-This is a generated ditto.site clone app for https://cerebrium.ai/. It is a static Next.js App Router project produced from captured DOM, CSS, assets, metadata, and interaction recipes.
+The Codilated marketing site: a statically exported Next.js 15 App Router project.
+Read `ARCHITECTURE.md` for the full layout; this file covers how to work in it safely.
 
 ## Run
 
 - `npm install`
-- `npm run dev`
-- `npm run build`
-- `npm run start`
+- `npm run dev` — development server
+- `npm run build` — production build and static export into `out/`
+- `npm run start` — serve the built `out/` folder
+- `npm run typecheck` — types only
 
-## Safe Edit Areas
+Type errors fail the build. The project is currently at zero, so a new error is one
+you introduced.
 
-- `src/app/content.ts` or `src/app/content.tsx`: editable structured content extracted from repeated components and sections when present.
-- `src/app/components/`: generated component modules. Edit copy, links, and simple JSX structure with care.
-- `src/app/sections/`: generated section modules for single-page section splits when present.
-- `src/app/svgs/`: hoisted inline SVG modules. Edit only when intentionally changing artwork.
-- `src/app/ditto.css`: fidelity CSS for captured layout, pseudos, keyframes, and interaction states. Small visual tweaks are reasonable; broad rewrites can break clone fidelity.
-- Root SEO/docs files such as `AGENTS.md`, `ARCHITECTURE.md`, and `src/app/robots.ts`, `src/app/sitemap.ts`, and `src/app/llms.txt/route.ts`.
+## Change content here first
 
-## Generated Runtime
+Almost every content change is a config edit, not a markup edit:
 
-`src/app/ditto` contains generated runtime utilities for captured interactions and motion. Current runtime utilities: DittoMotion, DittoWire. Do not casually rewrite these files; they are plumbing that maps captured recipes to stable `data-ditto-id` anchors in delivered apps.
+| To change | Edit |
+| --- | --- |
+| Company name, email, phone, socials | `src/config/site.ts` |
+| Nav, footer columns, CTA labels, routes | `src/config/navigation.ts` |
+| Services, their copy, FAQs, stack chips | `src/config/services.ts` |
+| Case studies | `src/config/work.ts` |
+| Blog posts | `src/config/blog.ts` |
+| Home page copy | `src/app/content.ts` |
+| Pricing plans, comparison table, FAQs | `src/app/pricing/content.ts` |
 
-## File Meanings
+Adding a service, case study or post generates its page and updates the nav, the
+relevant index, the sitemap, `llms.txt` and the structured data automatically.
 
-- `src/app/page.tsx` and nested route `page.tsx` files: generated route bodies.
-- `src/app/content.ts`: structured data extracted from repeated clone regions.
-- `src/app/components/`: reusable JSX components promoted from repeated captured subtrees.
-- `src/app/sections/`: page sections split from the captured body.
-- `src/app/svgs/`: inline SVGs hoisted out of page/section files.
-- `src/app/ditto.css`: generated CSS that preserves source layout and visual details not represented by Tailwind utilities.
-- `src/app/ditto-meta.ts`: delivered-app metadata for anchors that still need runtime or stylesheet targeting after validation-only ids are stripped.
+## Before launch
+
+`src/config/work.ts` holds placeholder case studies. The client names, figures and
+quotes are illustrative and must be replaced with real engagements, or removed,
+before the site goes live. The file says so at the top.
+
+## Handle with care
+
+- **`src/app/sections/home-sections.tsx`** and the three
+  `src/app/services/*/sections/capabilities-section.tsx` files came from a design
+  capture. Their long inline Tailwind class strings encode exact per-breakpoint
+  computed styles. Change copy freely; change classes only deliberately.
+- **`node-ids.ts` / `node-styles.ts` / `node-meta.ts`** map per-element ids and class
+  overrides onto that markup. Editing them by hand desynchronises the pair.
+- **`motion-spec.ts`** files are captured style snapshots replayed by the motion
+  runtimes. They are data. Do not hand-tune them.
+- **`src/components/motion/`** is plumbing that attaches behaviour to markup already
+  in the DOM. Each component renders nothing. Read the header comment before changing
+  one.
+- **`src/types/custom-elements.d.ts`** declares the design's `<c-*>` elements. A new
+  custom element in the markup needs an entry here or the build fails.
+
+## Conventions
+
+- Routes and route-specific markup live in `src/app`. Anything shared lives in
+  `src/components`.
+- Never hardcode the company name, a contact detail or a URL origin. Import from
+  `src/config/site.ts`.
+- Never hand-roll page metadata. Use a builder from `src/lib/metadata.ts`.
+- The site is a static export: no server actions, no API routes, no `next/image`
+  optimisation, and every dynamic segment needs `generateStaticParams`.
 
 ## Routes
 
-- / - Serverless GPU Infrastructure for Real-Time AI | Cerebrium
-
-## Do Not Edit Casually
-
-- `src/app/ditto/` runtime utilities.
-- Generated anchor metadata such as `ditto-meta.ts`.
-- Validation-only files in working captures, including `_cids.ts` and `_styles.ts` before export stripping.
-- Framework shell plumbing unless you are intentionally changing global metadata or page mounting behavior.
+`/`, `/services`, `/services/[slug]` (ten services, three with hand-built pages),
+`/work`, `/work/[slug]`, `/blog`, `/blog/[slug]`, `/about`, `/contact`, `/pricing`,
+`/privacy`, `/terms`, plus `/sitemap.xml`, `/robots.txt`, `/llms.txt` and a generated
+`/opengraph-image`.

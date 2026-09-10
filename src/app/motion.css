@@ -1,0 +1,2861 @@
+/* Interactive dot grids ------------------------------------------------------
+   <c-interactive-dots> shipped from the capture as a dead custom element. Every
+   cell's ::before (the 34px primary-coloured dot) is frozen at
+   matrix(0,0,0,0,0,0) — scale 0 — which is the RESTING frame of a
+   cursor-proximity effect that never had any code behind it. The 2px ::after
+   dot is the always-visible part, so the grid reads as a field of pin-pricks.
+
+   A pseudo-element can't be touched from JS, so InteractiveDots writes --dot-s on the
+   cell and this rule forwards it to the ::before.
+
+   Gated on [data-dots-live], which InteractiveDots sets: with JS off the static export
+   keeps exactly the captured look. Unlayered on purpose — it therefore wins over
+   Tailwind's @layer utilities without an !important. */
+c-interactive-dots[data-dots-live] > div::before {
+  transform: scale(var(--dot-s, 0));
+}
+
+/* Hero backdrop coverage ------------------------------------------------------
+   <c-background-canvas> is position:fixed, but the capture baked in the viewport
+   it was recorded at rather than sizing to the real one: w-320/h-200 is a literal
+   1280x800, and 2xl:w-480/h-270 a literal 1920x1080. On any viewport taller than
+   that box the backdrop simply stops and the page background shows through — and
+   the hero parallax then slides it further, opening a strip along the top.
+
+   min-* costs nothing when the captured size is already big enough and rescues
+   every case where it isn't. Percentages (not vw/vh) because this element is
+   fixed, so they resolve against the viewport without counting the scrollbar.
+
+   --bg-overscan is the slack the parallax is allowed to move within; SmoothScroll
+   reads it, so the travel can never exceed the cover this rule provides.
+   HeroCanvas's ResizeObserver picks the new size up and refills the canvas. */
+c-background-canvas {
+  --bg-overscan: 120px;
+  min-width: 100%;
+  min-height: calc(100% + var(--bg-overscan));
+}
+
+/* Interactive dot grid width --------------------------------------------------
+   Same capture-time hardcoding as the backdrop above: the grid template is a
+   literal pixel run — 20x64px = 1280px (20x96px = 1920px at 2xl), the widths of
+   the viewport the page was recorded at. On anything wider the dots simply stop
+   short and leave a dead strip down the right-hand side.
+
+   Keep the designed column COUNT per breakpoint (that is what sets the rhythm and
+   the row count) but let the columns share the real width, so the field always
+   reaches both edges. minmax(0,1fr) rather than 1fr so a cell can never be forced
+   wider than its share. */
+c-interactive-dots {
+  grid-template-columns: repeat(20, minmax(0, 1fr));
+}
+@media (max-width: 571.98px) {
+  c-interactive-dots {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+/* Feature-rail scroll spy ------------------------------------------------------
+   The four labels beside the feature cards are all painted --accent (the pale
+   lavender) in the capture, with no active state at all — the rail is sticky while
+   the cards scroll past it, so there was meant to be one. SmoothScroll marks the
+   label whose card is in front of the reader; this lifts it to the same navy as
+   the surrounding copy. */
+a[data-spy-active] {
+  color: var(--foreground);
+  transition: color 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Case-study carousel ---------------------------------------------------------
+   CaseStudyCarousel writes the track transform; the easing lives here so the motion
+   survives a re-render and stays out of the JS. */
+c-carousel-tile > :last-child {
+  transition: transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+c-carousel-tile button[disabled] {
+  cursor: default;
+}
+@media (prefers-reduced-motion: reduce) {
+  c-carousel-tile > :last-child {
+    transition: none;
+  }
+}
+
+/* Aspect-ratio media boxes ----------------------------------------------------
+   The capture pairs a fluid aspect box (overflow-hidden + aspect-[w/h]) with
+   children given LITERAL pixel heights measured on the capture viewport. As the
+   box narrows its height shrinks with the ratio, the child's does not, and the
+   logo or artwork inside is cut off — 86px of it on a 375px phone.
+
+   Constraining children to the box makes them shrink with it. Scoped to elements
+   that are BOTH an aspect box and clipping, which is exactly the broken pairing. */
+[class*="aspect-"][class*="overflow-hidden"] > * {
+  max-height: 100%;
+}
+
+/* The logo rail clips the same way on mobile: the track drops to 40px there while
+   the logo anchors keep the desktop 52px. */
+c-rail img,
+c-rail a {
+  max-height: 100%;
+}
+
+/* Case-study carousel below lg ------------------------------------------------
+   The prev/next buttons are max-lg:hidden, and nothing replaced them — so on a
+   tablet or phone slides 2..5 sat off-screen with no way to reach them. Native
+   scroll with snap is the right control at that size; CaseStudyCarousel stands down
+   here (and the !important guarantees a stale inline transform can't fight the
+   scroll position). */
+@media (max-width: 1024.98px) {
+  c-carousel-tile > :last-child {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    transform: none !important;
+    transition: none;
+  }
+  c-carousel-tile > :last-child > * {
+    scroll-snap-align: start;
+  }
+  c-carousel-tile > :last-child::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Sticky navbar ---------------------------------------------------------------
+   The capture left <header> as position:absolute, so it scrolled away with the
+   page and never came back. Revealing it on an upward scroll means it has to be
+   fixed; StickyHeader then slides it out of the way on the way down. */
+c-header > header {
+  position: fixed;
+  top: 0;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+c-header > header[data-nav-hidden] {
+  transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  c-header > header {
+    transition: none;
+  }
+}
+
+/* Services mega-panel scrim ---------------------------------------------------
+   Matches the treatment the design uses behind an open header panel: the page
+   dims and blurs while the header itself stays above the layer. */
+html[data-menu-open] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+  background: rgba(6, 9, 20, 0.28);
+  animation: menu-scrim 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) both;
+}
+@keyframes menu-scrim {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-menu-open] body::after { animation: none; }
+}
+
+/* Skip link ------------------------------------------------------------------
+   Off-screen until focused, then pinned top-left over the header. */
+.ct-skip-link {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1001;
+  padding: 14px 20px;
+  border-radius: 0 0 7px 0;
+  background: var(--primary, rgb(255, 72, 139));
+  color: var(--color-001, rgb(16, 20, 33));
+  font-family: "Suisse Int'l Mono", monospace;
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  transform: translateY(-110%);
+  transition: transform 160ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ct-skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* Focus ring ------------------------------------------------------------------
+   The captured design never showed one. Keyboard users need it, and pointer
+   users should not see it, hence :focus-visible rather than :focus. */
+:focus-visible {
+  outline: 2px solid var(--primary, rgb(255, 72, 139));
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Responsive reflow preview ---------------------------------------------------
+   The visual on the design block. Only the frame's width is animated; the tiles
+   inside are flex children, so the rewrap is real layout rather than a scripted
+   sequence. One 12s loop with three stops: desktop, tablet, phone.
+
+   Timing is shared by the frame and the breakpoint labels, so a label is only ever
+   on screen while the frame is actually at that width. */
+.ct-reflow {
+  --stage: 12s;
+  --ink: rgb(23, 43, 118);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(20px, 4%, 44px);
+  container-type: inline-size;
+}
+
+.ct-reflow__frame {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgba(9, 17, 48, 0.06),
+    0 18px 40px -18px rgba(9, 17, 48, 0.28);
+  animation: reflow-frame var(--stage) cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  will-change: width;
+}
+
+@keyframes reflow-frame {
+  0%,   20%  { width: 100%; }
+  28%,  48%  { width: 62%; }
+  56%,  76%  { width: 34%; }
+  84%,  100% { width: 100%; }
+}
+
+/* Browser chrome ------------------------------------------------------------- */
+.ct-reflow__chrome {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex: 0 0 auto;
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(23, 43, 118, 0.08);
+}
+.ct-reflow__chrome span {
+  width: 7px;
+  height: 7px;
+  border-radius: 100%;
+  background: rgba(23, 43, 118, 0.16);
+}
+.ct-reflow__bar {
+  flex: 1;
+  height: 7px;
+  margin-left: 8px;
+  border-radius: 4px;
+  background: rgba(23, 43, 118, 0.08);
+}
+
+/* Page inside the frame ------------------------------------------------------ */
+.ct-reflow__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  padding: 14px;
+}
+
+.ct-reflow__hero {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex: 0 0 auto;
+}
+.ct-reflow__line {
+  display: block;
+  height: 9px;
+  border-radius: 5px;
+  background: rgba(23, 43, 118, 0.14);
+}
+.ct-reflow__line--lg { width: 62%; height: 13px; }
+.ct-reflow__line--md { width: 40%; }
+.ct-reflow__cta {
+  display: block;
+  width: 74px;
+  height: 20px;
+  margin-top: 3px;
+  border-radius: 6px;
+  background: var(--primary, rgb(255, 72, 139));
+}
+
+/* The grid that does the rewrapping. Flex, not grid: flex-wrap is what makes the
+   reflow genuine, because the browser decides where the rows break. */
+.ct-reflow__grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 9px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.ct-reflow__tile {
+  flex: 1 1 118px;
+  min-width: 104px;
+  min-height: 46px;
+  border-radius: 8px;
+  background: rgba(23, 43, 118, 0.07);
+  transition: background 400ms ease;
+}
+.ct-reflow__tile[data-span="wide"] { flex-basis: 168px; }
+.ct-reflow__tile[data-accent] {
+  background: linear-gradient(
+    135deg,
+    var(--primary, rgb(255, 72, 139)) 0%,
+    var(--clr-4, rgb(227, 58, 219)) 100%
+  );
+  opacity: 0.85;
+}
+
+/* Breakpoint readout --------------------------------------------------------- */
+.ct-reflow__labels {
+  position: absolute;
+  bottom: clamp(14px, 3%, 26px);
+  left: clamp(14px, 3%, 26px);
+  z-index: 3;
+  display: grid;
+}
+.ct-reflow__label {
+  grid-area: 1 / 1;
+  /* The mono face ships at 400 only; inheriting 500 makes the browser fake a bold. */
+  font-weight: 400;
+  padding: 6px 11px;
+  border-radius: 7px;
+  background: var(--ink);
+  color: #fff;
+  line-height: 1;
+  font-family: "Suisse Int'l Mono", monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  animation: reflow-label var(--stage) steps(1, end) infinite;
+}
+.ct-reflow__label[data-stop="0"] { animation-delay: calc(var(--stage) * -0.02); }
+.ct-reflow__label[data-stop="1"] { animation-delay: calc(var(--stage) * 0.26); }
+.ct-reflow__label[data-stop="2"] { animation-delay: calc(var(--stage) * 0.54); }
+
+@keyframes reflow-label {
+  0%      { opacity: 1; }
+  22%     { opacity: 1; }
+  23%,
+  100%    { opacity: 0; }
+}
+
+/* The resize handle, tracking the frame's right edge. */
+.ct-reflow__handle {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  width: 4px;
+  height: 42px;
+  margin-top: -21px;
+  border-radius: 3px;
+  background: var(--ink);
+  opacity: 0.45;
+  animation: reflow-handle var(--stage) cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+@keyframes reflow-handle {
+  0%,   20%  { left: calc(50% + 50% - 3px); }
+  28%,  48%  { left: calc(50% + 31% - 3px); }
+  56%,  76%  { left: calc(50% + 17% - 3px); }
+  84%,  100% { left: calc(50% + 50% - 3px); }
+}
+
+/* Below the medium breakpoint the card is square and the frame is already narrow,
+   so the loop would only shuffle a couple of tiles. Hold it at the phone stop. */
+@media (max-width: 571.98px) {
+  .ct-reflow__frame { animation: none; width: 84%; }
+  .ct-reflow__handle { animation: none; left: calc(50% + 42% - 3px); }
+  .ct-reflow__label[data-stop="2"] { opacity: 1; animation: none; }
+  .ct-reflow__label[data-stop="0"],
+  .ct-reflow__label[data-stop="1"] { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-reflow__frame,
+  .ct-reflow__handle,
+  .ct-reflow__label { animation: none; }
+  .ct-reflow__frame { width: 100%; }
+  .ct-reflow__handle { left: calc(100% - 3px); }
+  .ct-reflow__label[data-stop="0"] { opacity: 1; }
+  .ct-reflow__label[data-stop="1"],
+  .ct-reflow__label[data-stop="2"] { display: none; }
+}
+
+/* Preloader -------------------------------------------------------------------
+   First-load curtain. Server-rendered, so it covers the page from the first paint
+   rather than flashing the content underneath.
+
+   The mark sits centred over a soft glow with the wordmark beneath it; the foot
+   carries the tagline, the count and a progress bar spanning the full width. The
+   bar is driven by real load progress, not a timer — see Preloader.tsx. */
+.ct-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  transition:
+    opacity 800ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ct-preloader[data-leaving] {
+  opacity: 0;
+  transform: scale(1.02);
+  pointer-events: none;
+}
+
+/* Centre lockup -------------------------------------------------------------- */
+.ct-preloader__lockup {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  padding: 0 24px;
+}
+
+/* The glow behind the mark. Breathes slowly so the screen is never quite static. */
+.ct-preloader__glow {
+  position: absolute;
+  top: -46px;
+  left: 50%;
+  width: 240px;
+  height: 240px;
+  margin-left: -120px;
+  border-radius: 100%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 72, 139, 0.28) 0%,
+    rgba(255, 72, 139, 0.10) 38%,
+    transparent 68%
+  );
+  pointer-events: none;
+  animation: preloader-glow 3.2s ease-in-out infinite;
+}
+@keyframes preloader-glow {
+  0%, 100% { opacity: 0.7; transform: scale(0.94); }
+  50%      { opacity: 1;   transform: scale(1.06); }
+}
+
+/* The three-bar mark, scaled up from its 24px lockup size.
+   The wrapper reserves the scaled box, because transform does not affect layout and
+   the wordmark would otherwise ride up under the mark. */
+.ct-preloader__mark {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+}
+.ct-preloader__mark > span {
+  transform: scale(2.6);
+  transform-origin: center;
+  animation: preloader-mark 3.2s ease-in-out infinite;
+}
+@keyframes preloader-mark {
+  0%, 100% { transform: scale(2.6); }
+  50%      { transform: scale(2.78); }
+}
+
+.ct-preloader__word {
+  position: relative;
+  color: #fff;
+  font-family: "ABC Favorit Trial", sans-serif;
+  font-size: 2.125rem;
+  font-weight: 300;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+/* Foot ----------------------------------------------------------------------- */
+.ct-preloader__foot {
+  position: absolute;
+  right: 0;
+  bottom: 26px;
+  left: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0 32px;
+}
+.ct-preloader__tagline {
+  color: rgba(255, 255, 255, 0.42);
+  font-family: "Suisse Int'l", sans-serif;
+  font-size: 0.8125rem;
+  letter-spacing: 0.01em;
+}
+.ct-preloader__count {
+  color: #fff;
+  font-family: "ABC Favorit Trial", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  /* Tabular figures, so the number does not jitter as it counts. */
+  font-variant-numeric: tabular-nums;
+}
+
+/* Progress bar across the very bottom edge. */
+.ct-preloader__track {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.10);
+}
+.ct-preloader__fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    var(--primary, rgb(255, 72, 139)) 0%,
+    var(--clr-4, rgb(227, 58, 219)) 100%
+  );
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (max-width: 571.98px) {
+  .ct-preloader__foot { padding: 0 20px; bottom: 20px; }
+  .ct-preloader__tagline { font-size: 0.75rem; max-width: 58%; }
+  .ct-preloader__count { font-size: 1.25rem; }
+  .ct-preloader__word { font-size: 1.75rem; }
+  .ct-preloader__mark > span { transform: scale(2.2); }
+  .ct-preloader__mark { width: 56px; height: 56px; }
+  @keyframes preloader-mark {
+    0%, 100% { transform: scale(2.2); }
+    50%      { transform: scale(2.36); }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-preloader { transition: opacity 300ms linear; }
+  .ct-preloader[data-leaving] { transform: none; }
+  .ct-preloader__glow { animation: none; opacity: 0.85; }
+  .ct-preloader__mark > span { animation: none; }
+  .ct-preloader__fill { transition: none; }
+}
+
+/* A travelling highlight over the filled portion of the bar.
+   When a slow resource blocks, the percentage is genuinely stuck; this shows the
+   loader is still working without inventing progress the page has not made. */
+.ct-preloader__fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 100%
+  );
+  animation: preloader-shimmer 1.5s linear infinite;
+}
+.ct-preloader__fill {
+  position: relative;
+  overflow: hidden;
+}
+.ct-preloader__track[data-complete] .ct-preloader__fill::after {
+  animation: none;
+  opacity: 0;
+}
+@keyframes preloader-shimmer {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ct-preloader__fill::after { animation: none; opacity: 0; }
+}
+
+/* Feature-card artwork --------------------------------------------------------
+   `c-inner-parallax` wraps the artwork behind a feature card. The capture gave the
+   layer, its <picture> and its <img> fixed pixel boxes measured at one viewport,
+   plus a translate that pushed the artwork down. On any wider or taller card the
+   artwork stops short and the card's own dark background shows through as a band
+   along the top and right.
+
+   Nothing drives these from JavaScript — the parallax was captured as a static
+   transform — so letting the layer fill its card is safe, and fixes all six
+   instances at once. Unlayered on purpose: it therefore wins over Tailwind's
+   @layer utilities without an !important. */
+c-inner-parallax {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
+}
+c-inner-parallax picture {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: none;
+}
+c-inner-parallax img {
+  position: absolute;
+  inset: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Comparison bars -------------------------------------------------------------
+   Each row's bar grows from its left edge, staggered down the list, and the value
+   fades in behind it. Transform rather than width, so it runs on the compositor.
+   The animation replays whenever the chart mounts, which is what makes switching
+   tabs feel like the chart redrawing rather than swapping. */
+.ct-bar {
+  transform-origin: left center;
+  animation: bar-grow 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes bar-grow {
+  from { transform: scaleX(0); opacity: 0.35; }
+  to   { transform: scaleX(1); opacity: 1; }
+}
+
+.ct-bar-value {
+  animation: bar-value 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes bar-value {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-bar,
+  .ct-bar-value { animation: none; }
+}
+
+/* The chart caption fades in after the last row, and settles at the muted opacity
+   the design uses. Its own keyframes, because a Tailwind opacity utility would be
+   overridden by an animation that finishes at full opacity. */
+.ct-bar-caption {
+  opacity: 0.55;
+  animation: bar-caption 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes bar-caption {
+  from { opacity: 0; }
+  to   { opacity: 0.55; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ct-bar-caption { animation: none; }
+}
+
+/* Pipeline preview ------------------------------------------------------------
+   The visual on the build block. Stages fill in sequence, tick over, and end in a
+   released badge. State comes from the component; everything here is the look and
+   the transitions between steps. */
+.ct-pipe {
+  --ink: #fff;
+  --dim: rgba(255, 255, 255, 0.42);
+  --hair: rgba(255, 255, 255, 0.12);
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: min(100%, 500px);
+  margin: auto;
+  padding: 24px;
+  border: 1px solid var(--hair);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  color: var(--ink);
+  font-family: "Suisse Int'l Mono", monospace;
+  /* The mono face ships at 400 only, and the body sets 500. Without this the
+     browser falls back to a system monospace. */
+  font-weight: 400;
+  font-size: 0.75rem;
+  letter-spacing: -0.01em;
+}
+
+/* Commit line ---------------------------------------------------------------- */
+.ct-pipe__head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--hair);
+}
+.ct-pipe__branch {
+  padding: 3px 8px;
+  border-radius: 5px;
+  background: var(--primary, rgb(255, 72, 139));
+  color: var(--color-001, rgb(16, 20, 33));
+  text-transform: uppercase;
+  font-size: 0.625rem;
+  letter-spacing: 0.04em;
+}
+.ct-pipe__sha { color: var(--dim); }
+.ct-pipe__msg {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--dim);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Stages --------------------------------------------------------------------- */
+.ct-pipe__stages {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ct-pipe__stage {
+  display: grid;
+  grid-template-columns: 18px 62px 1fr auto;
+  align-items: center;
+  gap: 11px;
+}
+
+/* The dot: an empty ring, then a filled pulse, then a tick. */
+.ct-pipe__dot {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--hair);
+  border-radius: 100%;
+  color: var(--color-001, rgb(16, 20, 33));
+  transition:
+    background 300ms ease,
+    border-color 300ms ease;
+}
+.ct-pipe__dot svg {
+  opacity: 0;
+  transform: scale(0.5);
+  transition:
+    opacity 260ms ease,
+    transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.ct-pipe__stage[data-state="run"] .ct-pipe__dot {
+  border-color: var(--primary, rgb(255, 72, 139));
+  animation: pipe-pulse 1.1s ease-in-out infinite;
+}
+.ct-pipe__stage[data-state="done"] .ct-pipe__dot {
+  border-color: var(--primary, rgb(255, 72, 139));
+  background: var(--primary, rgb(255, 72, 139));
+}
+.ct-pipe__stage[data-state="done"] .ct-pipe__dot svg {
+  opacity: 1;
+  transform: scale(1);
+}
+@keyframes pipe-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 72, 139, 0.45); }
+  50%      { box-shadow: 0 0 0 5px rgba(255, 72, 139, 0); }
+}
+
+.ct-pipe__name {
+  color: var(--dim);
+  transition: color 300ms ease;
+}
+.ct-pipe__stage[data-state="run"] .ct-pipe__name,
+.ct-pipe__stage[data-state="done"] .ct-pipe__name {
+  color: var(--ink);
+}
+
+/* The bar. Transform rather than width, so it runs on the compositor. */
+.ct-pipe__track {
+  height: 3px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--hair);
+}
+.ct-pipe__fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(
+    to right,
+    var(--primary, rgb(255, 72, 139)),
+    var(--clr-4, rgb(227, 58, 219))
+  );
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 1000ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+.ct-pipe__stage[data-state="run"] .ct-pipe__fill { transform: scaleX(0.72); }
+.ct-pipe__stage[data-state="done"] .ct-pipe__fill {
+  transform: scaleX(1);
+  transition-duration: 240ms;
+}
+
+.ct-pipe__detail {
+  color: transparent;
+  transition: color 300ms ease;
+}
+.ct-pipe__stage[data-state="done"] .ct-pipe__detail { color: var(--dim); }
+
+/* Foot ----------------------------------------------------------------------- */
+.ct-pipe__foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-top: 15px;
+  border-top: 1px solid var(--hair);
+}
+.ct-pipe__badge {
+  padding: 6px 11px;
+  border: 1px solid var(--hair);
+  border-radius: 6px;
+  color: var(--dim);
+  text-transform: uppercase;
+  font-size: 0.625rem;
+  letter-spacing: 0.05em;
+  transition:
+    background 400ms ease,
+    color 400ms ease,
+    border-color 400ms ease;
+}
+.ct-pipe__foot[data-complete] .ct-pipe__badge {
+  border-color: transparent;
+  background: var(--primary, rgb(255, 72, 139));
+  color: var(--color-001, rgb(16, 20, 33));
+}
+
+@media (max-width: 571.98px) {
+  .ct-pipe { padding: 16px; gap: 15px; font-size: 0.6875rem; }
+  .ct-pipe__stage { grid-template-columns: 16px 52px 1fr auto; gap: 9px; }
+  .ct-pipe__msg { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-pipe__dot,
+  .ct-pipe__dot svg,
+  .ct-pipe__fill,
+  .ct-pipe__name,
+  .ct-pipe__detail,
+  .ct-pipe__badge { transition: none; }
+  .ct-pipe__stage[data-state="run"] .ct-pipe__dot { animation: none; }
+}
+
+/* Monitoring chart ------------------------------------------------------------
+   The visual on the launch block. Everything is centred in the card on both axes,
+   and the lines draw themselves in whenever the chart mounts, which is what makes a
+   tab change read as a redraw. */
+.ct-chart {
+  --ink: rgb(23, 43, 118);
+  --muted: rgba(23, 43, 118, 0.45);
+  --hair: rgba(23, 43, 118, 0.13);
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  width: 100%;
+  height: 100%;
+  padding: 0 24px;
+  color: var(--ink);
+}
+
+/* Tabs ----------------------------------------------------------------------- */
+.ct-chart__tabs {
+  position: relative;
+  display: flex;
+  flex: 0 0 auto;
+  padding: 4px;
+  border-radius: 7px;
+  background: var(--background, #fff);
+}
+.ct-chart__pill {
+  position: absolute;
+  inset-block: 4px;
+  left: 0;
+  border-radius: 7px;
+  background: var(--muted-foreground, rgb(88, 100, 144));
+  transition:
+    transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 200ms ease;
+  pointer-events: none;
+}
+.ct-chart__tab {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 8px 18px;
+  border-radius: 7px;
+  color: var(--ink);
+  font-size: 0.9375rem;
+  line-height: 1.25;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 280ms ease;
+}
+.ct-chart__tab[aria-selected="true"] { color: var(--background, #fff); }
+
+/* Panel ---------------------------------------------------------------------- */
+.ct-chart__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 480px;
+}
+.ct-chart__caption {
+  font-family: "Suisse Int'l Mono", monospace;
+  font-weight: 400;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  animation: chart-fade 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.ct-chart__caption span { color: var(--muted); }
+
+.ct-chart__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* Grid ----------------------------------------------------------------------- */
+.ct-chart__grid line {
+  stroke: var(--hair);
+  stroke-width: 1;
+  stroke-dasharray: 4 5;
+}
+.ct-chart__grid text {
+  fill: var(--muted);
+  font-family: "Suisse Int'l Mono", monospace;
+  font-size: 10px;
+}
+.ct-chart__grid { animation: chart-fade 520ms ease both; }
+
+.ct-chart__xtick {
+  fill: var(--muted);
+  font-family: "Suisse Int'l Mono", monospace;
+  font-size: 10px;
+  animation: chart-fade 520ms ease both;
+}
+
+/* Lines ---------------------------------------------------------------------- */
+.ct-chart__area {
+  animation: chart-fade 900ms ease 500ms both;
+}
+.ct-chart__line {
+  fill: none;
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  /* Long enough to cover any path this chart draws, so the dash offset can hide it. */
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  animation: chart-draw 1200ms cubic-bezier(0.33, 1, 0.68, 1) both;
+}
+.ct-chart__line--p50 { stroke: var(--muted-foreground, rgb(88, 100, 144)); }
+.ct-chart__line--p90 { stroke: var(--clr-7, rgb(144, 170, 222)); }
+.ct-chart__line--max { stroke: var(--primary, rgb(255, 72, 139)); }
+
+@keyframes chart-draw {
+  from { stroke-dashoffset: 1400; }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes chart-fade {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Legend --------------------------------------------------------------------- */
+.ct-chart__legend {
+  display: flex;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: "Suisse Int'l Mono", monospace;
+  font-weight: 400;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.ct-chart__legend li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  animation: chart-fade 500ms ease both;
+}
+.ct-chart__swatch {
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+}
+.ct-chart__swatch.ct-chart__line--p50 { background: var(--muted-foreground, rgb(88, 100, 144)); }
+.ct-chart__swatch.ct-chart__line--p90 { background: var(--clr-7, rgb(144, 170, 222)); }
+.ct-chart__swatch.ct-chart__line--max { background: var(--primary, rgb(255, 72, 139)); }
+
+@media (max-width: 571.98px) {
+  .ct-chart { gap: 16px; padding: 0 14px; }
+  .ct-chart__tab { padding: 8px 11px; font-size: 0.8125rem; }
+  .ct-chart__legend { gap: 13px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-chart__line { stroke-dasharray: none; stroke-dashoffset: 0; animation: none; }
+  .ct-chart__grid,
+  .ct-chart__xtick,
+  .ct-chart__area,
+  .ct-chart__caption,
+  .ct-chart__legend li { animation: none; }
+  .ct-chart__pill { transition: none; }
+}
+
+/* Pipeline entrance and glow --------------------------------------------------
+   The panel and its rows arrive when the card is first scrolled to, rather than
+   appearing fully formed. The delay on each row is set inline; the row has no other
+   transition, so it only paces the entrance and never the run itself. */
+.ct-pipe {
+  opacity: 0;
+  transform: translateY(16px) scale(0.985);
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ct-pipe[data-entered] {
+  opacity: 1;
+  transform: none;
+}
+
+.ct-pipe__head,
+.ct-pipe__foot {
+  opacity: 0;
+  transition: opacity 520ms ease;
+}
+.ct-pipe[data-entered] .ct-pipe__head { opacity: 1; transition-delay: 140ms; }
+.ct-pipe[data-entered] .ct-pipe__foot { opacity: 1; transition-delay: 600ms; }
+
+.ct-pipe__stage {
+  opacity: 0;
+  transform: translateY(9px);
+  transition:
+    opacity 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ct-pipe[data-entered] .ct-pipe__stage {
+  opacity: 1;
+  transform: none;
+}
+
+/* A light travelling around the panel's edge. Drawn as a conic gradient masked to
+   the 1px border, so it costs one compositor layer and no layout. Browsers without
+   @property simply hold it still. */
+@property --pipe-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+.ct-pipe::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: 13px;
+  background: conic-gradient(
+    from var(--pipe-angle),
+    transparent 58%,
+    rgba(255, 72, 139, 0.7) 76%,
+    rgba(227, 58, 219, 0.35) 84%,
+    transparent 92%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: pipe-sweep 6s linear infinite;
+}
+@keyframes pipe-sweep {
+  to { --pipe-angle: 360deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-pipe,
+  .ct-pipe__head,
+  .ct-pipe__foot,
+  .ct-pipe__stage {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .ct-pipe::before { animation: none; }
+}
+
+/* Selected work grid ----------------------------------------------------------
+   Sits on the dark hero backdrop, so the cards are light and the chrome is white. */
+.ct-work {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 44px;
+  width: 100%;
+}
+
+.ct-work__tabs {
+  position: relative;
+  display: flex;
+  padding: 4px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+.ct-work__pill {
+  position: absolute;
+  inset-block: 4px;
+  left: 0;
+  border-radius: 6px;
+  background: #fff;
+  transition:
+    transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 200ms ease;
+  pointer-events: none;
+}
+.ct-work__tab {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  min-height: 38px;
+  padding: 0 20px;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.72);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 280ms ease;
+}
+.ct-work__tab[aria-selected="true"] { color: var(--color-001, rgb(16, 20, 33)); }
+
+/* Cards ---------------------------------------------------------------------- */
+.ct-work__grid {
+  display: grid;
+  gap: 20px;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (max-width: 1024.98px) {
+  .ct-work__grid { grid-template-columns: minmax(0, 1fr); gap: 15px; }
+  .ct-work { gap: 30px; }
+}
+
+.ct-work__card {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  background: var(--surface, rgb(238, 242, 245));
+  color: var(--foreground, rgb(23, 43, 118));
+  transition:
+    background 280ms ease,
+    transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
+  animation: work-in 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.ct-work__card:hover {
+  background: var(--surface-2, rgb(219, 229, 237));
+  transform: translateY(-3px);
+}
+@keyframes work-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ct-work__mark {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 96px;
+  height: 96px;
+  border-radius: 8px;
+  background: var(--surface-2, rgb(219, 229, 237));
+}
+.ct-work__glyph {
+  display: block;
+  width: 54px;
+  height: 34px;
+  background: var(--muted-foreground, rgb(88, 100, 144));
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.ct-work__body {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 9px;
+}
+.ct-work__tags {
+  display: flex;
+  gap: 14px;
+  color: var(--muted-foreground, rgb(88, 100, 144));
+}
+.ct-work__title {
+  font-size: 1.1875rem;
+  line-height: 1.55rem;
+  letter-spacing: -0.4px;
+  text-wrap: balance;
+}
+.ct-work__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 6px;
+  color: var(--muted-foreground, rgb(88, 100, 144));
+}
+.ct-work__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.ct-work__more svg {
+  opacity: 0;
+  transition: opacity 240ms ease, transform 240ms ease;
+  transform: translate(-3px, 3px);
+}
+.ct-work__card:hover .ct-work__more svg { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-work__card { animation: none; transition: background 200ms ease; }
+  .ct-work__card:hover { transform: none; }
+  .ct-work__pill { transition: none; }
+}
+/* Case study ------------------------------------------------------------------
+   /work/[slug]. An editorial layout on the dark ground: the page keeps the site's
+   own palette (--color-001 ground, white text, --primary accent) rather than the
+   light card treatment the rest of the section pages use.
+
+   Everything here is scoped under .cs, so none of it can reach the captured markup. */
+.cs {
+  --cs-gutter: 40px;
+  --cs-max: 1180px;
+  --cs-rule: rgba(255, 255, 255, 0.12);
+  --cs-dim: rgba(255, 255, 255, 0.62);
+  --cs-mono: var(--font-001, "Suisse Int'l Mono", monospace);
+  --cs-display: var(--font-002, "ABC Favorit Trial", sans-serif);
+
+  display: block;
+  position: relative;
+  padding-block: 168px 140px;
+  background: var(--color-001, rgb(16, 20, 33));
+  color: #fff;
+}
+@media (max-width: 1024.98px) {
+  .cs { --cs-gutter: 15px; padding-block: 124px 90px; }
+}
+
+.cs__head,
+.cs__section,
+.cs__next {
+  width: 100%;
+  max-width: calc(var(--cs-max) + var(--cs-gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--cs-gutter);
+}
+
+.cs__section { margin-top: 108px; }
+@media (max-width: 1024.98px) { .cs__section { margin-top: 68px; } }
+
+.cs__section--center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Shared type ---------------------------------------------------------------- */
+.cs__label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 26px;
+  font-family: var(--cs-mono);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: var(--cs-dim);
+}
+.cs__label::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary, rgb(255, 72, 139));
+  flex: 0 0 auto;
+}
+.cs__section--center .cs__label { justify-content: center; }
+
+.cs__display {
+  margin-bottom: 44px;
+  font-family: var(--cs-display);
+  font-size: clamp(2rem, 3.4vw, 3.25rem);
+  font-weight: 300;
+  line-height: 1.06;
+  letter-spacing: -1.1px;
+  text-wrap: balance;
+}
+
+/* Title block ---------------------------------------------------------------- */
+.cs__crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 34px;
+  font-family: var(--cs-mono);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+.cs__crumbs a { transition: color 200ms ease; }
+.cs__crumbs a:hover { color: #fff; }
+.cs__crumbs [aria-current] { color: rgba(255, 255, 255, 0.85); }
+
+.cs__kicker {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 26px;
+  font-family: var(--cs-mono);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: var(--cs-dim);
+}
+.cs__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary, rgb(255, 72, 139));
+}
+
+.cs__title {
+  max-width: 15ch;
+  font-family: var(--cs-display);
+  font-size: clamp(2.5rem, 6.2vw, 5.25rem);
+  font-weight: 300;
+  line-height: 1.03;
+  letter-spacing: -2px;
+  text-wrap: balance;
+}
+@media (max-width: 767.98px) { .cs__title { max-width: none; letter-spacing: -1px; } }
+
+/* Lead paragraph under a page title. */
+.cs__intro {
+  max-width: 54ch;
+  margin-top: 26px;
+  font-size: clamp(1.0625rem, 1.3vw, 1.25rem);
+  line-height: 1.55;
+  color: var(--cs-dim);
+  text-wrap: pretty;
+}
+
+.cs__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 34px;
+  list-style: none;
+}
+.cs__chips li {
+  padding: 9px 15px;
+  border: 1px solid var(--cs-rule);
+  border-radius: 999px;
+  font-family: var(--cs-mono);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: var(--cs-dim);
+}
+
+/* Hero ----------------------------------------------------------------------- */
+.cs__hero {
+  width: 100%;
+  max-width: calc(var(--cs-max) + var(--cs-gutter) * 2);
+  margin: 56px auto 0;
+  padding-inline: var(--cs-gutter);
+}
+.cs__hero img {
+  display: block;
+  width: 100%;
+  height: clamp(240px, 46vw, 560px);
+  border-radius: 16px;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Overview ------------------------------------------------------------------- */
+.cs__split {
+  display: grid;
+  gap: 56px;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  align-items: start;
+}
+@media (max-width: 1024.98px) {
+  .cs__split { grid-template-columns: minmax(0, 1fr); gap: 34px; }
+}
+
+.cs__lede {
+  font-size: clamp(1.125rem, 1.6vw, 1.5rem);
+  font-weight: 300;
+  line-height: 1.55;
+  letter-spacing: -0.2px;
+  color: rgba(255, 255, 255, 0.92);
+  text-wrap: pretty;
+}
+
+.cs__meta {
+  display: grid;
+  gap: 1px;
+  border-top: 1px solid var(--cs-rule);
+}
+.cs__meta > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--cs-rule);
+}
+.cs__meta dt {
+  font-family: var(--cs-mono);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: var(--cs-dim);
+}
+.cs__meta dd {
+  font-size: 1.0625rem;
+  line-height: 1.4;
+  text-align: right;
+}
+
+/* Phases --------------------------------------------------------------------- */
+.cs__phases {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  list-style: none;
+  counter-reset: none;
+}
+@media (max-width: 1024.98px) {
+  .cs__phases { grid-template-columns: minmax(0, 1fr); gap: 15px; }
+}
+
+.cs__phase {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 30px;
+  border: 1px solid var(--cs-rule);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.035);
+  overflow: hidden;
+  transition:
+    border-color 320ms ease,
+    background 320ms ease,
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cs__phase::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--primary, rgb(255, 72, 139)),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 320ms ease;
+}
+.cs__phase:hover {
+  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-4px);
+}
+.cs__phase:hover::after { opacity: 1; }
+
+.cs__phase-no {
+  font-family: var(--cs-mono);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  color: var(--primary, rgb(255, 72, 139));
+}
+.cs__phase-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--cs-rule);
+}
+.cs__phase-name {
+  font-family: var(--cs-display);
+  font-size: 1.625rem;
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.6px;
+}
+.cs__phase-time {
+  font-family: var(--cs-mono);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--cs-dim);
+}
+
+.cs__phase-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  list-style: none;
+}
+.cs__phase-items li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.78);
+}
+.cs__phase-items li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 8px;
+  height: 1px;
+  background: var(--primary, rgb(255, 72, 139));
+}
+
+/* Statement blocks ------------------------------------------------------------ */
+/* Holds a whole paragraph from the write-up, so it is sized to stay a pull
+   statement rather than becoming seven lines of display type. */
+.cs__statement {
+  max-width: 30ch;
+  font-family: var(--cs-display);
+  font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: -0.8px;
+  text-wrap: balance;
+}
+@media (max-width: 767.98px) { .cs__statement { max-width: none; } }
+
+.cs__ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 38px;
+  min-height: 46px;
+  padding: 0 22px;
+  border: 1px solid var(--cs-rule);
+  border-radius: 999px;
+  font-family: var(--cs-mono);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: #fff;
+  transition:
+    border-color 240ms ease,
+    background 240ms ease;
+}
+.cs__ghost:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+}
+.cs__ghost svg { transition: transform 240ms ease; }
+.cs__ghost:hover svg { transform: translate(2px, -2px); }
+
+/* Gallery -------------------------------------------------------------------- */
+.cs__gallery {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 100%;
+  max-width: calc(var(--cs-max) + var(--cs-gutter) * 2);
+  margin: 108px auto 0;
+  padding-inline: var(--cs-gutter);
+}
+@media (max-width: 1024.98px) {
+  .cs__gallery { grid-template-columns: minmax(0, 1fr); gap: 15px; margin-top: 68px; }
+}
+.cs__gallery img {
+  display: block;
+  width: 100%;
+  height: clamp(220px, 30vw, 380px);
+  border-radius: 14px;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.05);
+  transition: transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cs__gallery figure {
+  overflow: hidden;
+  border-radius: 14px;
+}
+.cs__gallery figure:hover img { transform: scale(1.04); }
+
+/* Results -------------------------------------------------------------------- */
+.cs__results {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+@media (max-width: 767.98px) {
+  .cs__results { grid-template-columns: minmax(0, 1fr); gap: 15px; }
+}
+.cs__results > div {
+  padding: 30px;
+  border: 1px solid var(--cs-rule);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.035);
+}
+.cs__results dt {
+  display: block;
+  margin-bottom: 12px;
+  font-family: var(--cs-display);
+  font-size: clamp(2.25rem, 4vw, 3.25rem);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -1.3px;
+}
+.cs__results dd {
+  font-family: var(--cs-mono);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: var(--cs-dim);
+}
+
+/* Write-up ------------------------------------------------------------------- */
+.cs__body {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+.cs__article {
+  display: grid;
+  gap: 40px;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+  padding-top: 40px;
+  border-top: 1px solid var(--cs-rule);
+}
+@media (max-width: 1024.98px) {
+  .cs__article { grid-template-columns: minmax(0, 1fr); gap: 20px; padding-top: 30px; }
+  .cs__body { gap: 40px; }
+}
+.cs__article h2 {
+  font-family: var(--cs-display);
+  font-size: clamp(1.5rem, 2.2vw, 2.125rem);
+  font-weight: 300;
+  line-height: 1.14;
+  letter-spacing: -0.86px;
+  text-wrap: balance;
+}
+.cs__article p {
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  letter-spacing: 0.1px;
+  color: rgba(255, 255, 255, 0.8);
+  text-wrap: pretty;
+}
+.cs__article p + p { margin-top: 20px; }
+
+/* Quote ---------------------------------------------------------------------- */
+.cs__quote {
+  padding: 56px;
+  border: 1px solid var(--cs-rule);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+}
+@media (max-width: 1024.98px) { .cs__quote { padding: 30px; } }
+.cs__quote p {
+  margin-bottom: 26px;
+  font-family: var(--cs-display);
+  font-size: clamp(1.375rem, 2.4vw, 2.125rem);
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: -0.86px;
+  text-wrap: balance;
+}
+.cs__quote footer {
+  font-family: var(--cs-mono);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: var(--cs-dim);
+}
+
+/* Stack ---------------------------------------------------------------------- */
+.cs__stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+}
+.cs__stack li {
+  padding: 11px 18px;
+  border: 1px solid var(--cs-rule);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.035);
+  font-family: var(--cs-mono);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  transition: border-color 240ms ease, background 240ms ease;
+}
+.cs__stack li:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+/* Next project --------------------------------------------------------------- */
+.cs__next {
+  margin-top: 130px;
+  padding-top: 60px;
+  border-top: 1px solid var(--cs-rule);
+}
+@media (max-width: 1024.98px) { .cs__next { margin-top: 80px; padding-top: 40px; } }
+
+.cs__next-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  padding-block: 10px;
+}
+@media (max-width: 767.98px) {
+  .cs__next-link { flex-direction: column; align-items: flex-start; gap: 24px; }
+}
+.cs__next-name {
+  font-family: var(--cs-display);
+  font-size: clamp(2.25rem, 5.4vw, 4.5rem);
+  font-weight: 300;
+  line-height: 1.04;
+  letter-spacing: -1.8px;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0 1px;
+  transition: background-size 460ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cs__next-link:hover .cs__next-name { background-size: 100% 1px; }
+
+.cs__next-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+  min-height: 52px;
+  padding: 0 24px;
+  border-radius: 999px;
+  background: var(--primary, rgb(255, 72, 139));
+  color: var(--color-001, rgb(16, 20, 33));
+  font-family: var(--cs-mono);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cs__next-link:hover .cs__next-badge { transform: translateX(6px); }
+.cs__next-badge svg { transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1); }
+.cs__next-link:hover .cs__next-badge svg { transform: translateX(3px); }
+
+.cs__next-title {
+  max-width: 46ch;
+  margin-top: 14px;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: var(--cs-dim);
+  text-wrap: pretty;
+}
+
+.cs__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 44px;
+}
+.cs__actions .cs__ghost { margin-top: 0; }
+
+.cs__cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 24px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--color-001, rgb(16, 20, 33));
+  font-family: var(--cs-mono);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  transition: background 240ms ease, transform 240ms ease;
+}
+.cs__cta:hover { background: var(--primary, rgb(255, 72, 139)); transform: translateY(-2px); }
+
+/* Entrance ------------------------------------------------------------------- */
+/* `RevealOnScroll` arms these from JavaScript, so a page without scripting shows
+   everything rather than nothing. */
+[data-reveal][data-reveal-armed] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 720ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 720ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+[data-reveal][data-reveal-in] {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* Children stagger within a revealed block. */
+[data-reveal][data-reveal-armed] .cs__phase,
+[data-reveal][data-reveal-armed] .cs__results > div,
+[data-reveal][data-reveal-armed] .cs__stack li,
+[data-reveal][data-reveal-armed] .cs__chips li {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 620ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-reveal][data-reveal-in] .cs__phase,
+[data-reveal][data-reveal-in] .cs__results > div,
+[data-reveal][data-reveal-in] .cs__stack li,
+[data-reveal][data-reveal-in] .cs__chips li {
+  opacity: 1;
+  transform: none;
+}
+[data-reveal][data-reveal-in] :is(.cs__phase, .cs__results > div):nth-child(1) { transition-delay: 90ms; }
+[data-reveal][data-reveal-in] :is(.cs__phase, .cs__results > div):nth-child(2) { transition-delay: 200ms; }
+[data-reveal][data-reveal-in] :is(.cs__phase, .cs__results > div):nth-child(3) { transition-delay: 310ms; }
+[data-reveal][data-reveal-in] :is(.cs__stack li, .cs__chips li):nth-child(1) { transition-delay: 40ms; }
+[data-reveal][data-reveal-in] :is(.cs__stack li, .cs__chips li):nth-child(2) { transition-delay: 90ms; }
+[data-reveal][data-reveal-in] :is(.cs__stack li, .cs__chips li):nth-child(3) { transition-delay: 140ms; }
+[data-reveal][data-reveal-in] :is(.cs__stack li, .cs__chips li):nth-child(4) { transition-delay: 190ms; }
+[data-reveal][data-reveal-in] :is(.cs__stack li, .cs__chips li):nth-child(5) { transition-delay: 240ms; }
+[data-reveal][data-reveal-in] :is(.cs__stack li, .cs__chips li):nth-child(n + 6) { transition-delay: 290ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  [data-reveal] * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .cs__phase:hover,
+  .cs__cta:hover,
+  .cs__next-link:hover .cs__next-badge,
+  .cs__gallery figure:hover img {
+    transform: none;
+  }
+}
+
+/* Portfolio index -------------------------------------------------------------
+   /work. Shares the case-study page's dark ground and tokens, so the index and the
+   detail pages read as one section rather than two designs. */
+.pf {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  width: 100%;
+}
+@media (max-width: 1024.98px) { .pf { gap: 32px; } }
+
+.pf__tabs {
+  position: relative;
+  display: flex;
+  align-self: flex-start;
+  max-width: 100%;
+  padding: 4px;
+  border: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12));
+  border-radius: 999px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.pf__tabs::-webkit-scrollbar { display: none; }
+
+.pf__pill {
+  position: absolute;
+  inset-block: 4px;
+  left: 0;
+  border-radius: 999px;
+  background: #fff;
+  transition:
+    transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 200ms ease;
+  pointer-events: none;
+}
+
+.pf__tab {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.65);
+  cursor: pointer;
+  transition: color 280ms ease;
+}
+.pf__tab:hover { color: #fff; }
+.pf__tab[aria-selected="true"] { color: var(--color-001, rgb(16, 20, 33)); }
+
+/* Cards ----------------------------------------------------------------------- */
+.pf__grid {
+  display: grid;
+  gap: 44px 20px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 100%;
+}
+@media (max-width: 767.98px) {
+  .pf__grid { grid-template-columns: minmax(0, 1fr); gap: 34px; }
+}
+
+.pf__card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: pf-in 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes pf-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Every other card drops a little, so the grid reads as a portfolio rather than a
+   table. Only where there is room for the offset to be legible. */
+@media (min-width: 1025px) {
+  .pf__card:nth-child(even) { margin-top: 56px; }
+}
+
+.pf__frame {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12));
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+}
+.pf__frame img {
+  display: block;
+  width: 100%;
+  height: clamp(220px, 30vw, 400px);
+  object-fit: cover;
+  transition: transform 720ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.pf__card:hover .pf__frame img { transform: scale(1.05); }
+
+.pf__frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 45%, rgba(16, 20, 33, 0.72));
+  opacity: 0.85;
+  transition: opacity 380ms ease;
+  pointer-events: none;
+}
+.pf__card:hover .pf__frame::after { opacity: 0.55; }
+
+.pf__year {
+  position: absolute;
+  z-index: 1;
+  top: 16px;
+  right: 16px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: rgba(16, 20, 33, 0.66);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  color: #fff;
+}
+
+.pf__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pf__tags span {
+  padding: 6px 12px;
+  border: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12));
+  border-radius: 999px;
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.pf__title {
+  display: block;
+  max-width: 26ch;
+  font-family: var(--cs-display, "ABC Favorit Trial", sans-serif);
+  font-size: clamp(1.375rem, 2.1vw, 1.875rem);
+  font-weight: 300;
+  line-height: 1.16;
+  letter-spacing: -0.7px;
+  color: #fff;
+  text-wrap: balance;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0 1px;
+  transition: background-size 460ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.pf__card:hover .pf__title { background-size: 100% 1px; }
+
+.pf__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: auto;
+  padding-top: 6px;
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+}
+.pf__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.62);
+  transition: color 240ms ease;
+}
+.pf__card:hover .pf__more { color: var(--primary, rgb(255, 72, 139)); }
+.pf__more svg {
+  opacity: 0;
+  transform: translate(-3px, 3px);
+  transition: opacity 240ms ease, transform 240ms ease;
+}
+.pf__card:hover .pf__more svg { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pf__card { animation: none; }
+  .pf__pill { transition: none; }
+  .pf__card:hover .pf__frame img { transform: none; }
+}
+
+/* Pricing ---------------------------------------------------------------------
+   /pricing. Extends the .cs shell, so the ground, gutters and type scale are the
+   same as the work section and nothing has to be restated. */
+.pr { --pr-radius: 16px; }
+
+/* Hero ------------------------------------------------------------------------ */
+.pr-hero {
+  display: grid;
+  gap: 48px;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.85fr);
+  align-items: center;
+}
+@media (max-width: 1024.98px) {
+  .pr-hero { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+}
+
+.pr-hero__intro {
+  max-width: 46ch;
+  margin-top: 26px;
+  font-size: clamp(1.0625rem, 1.3vw, 1.25rem);
+  line-height: 1.55;
+  color: var(--cs-dim, rgba(255, 255, 255, 0.62));
+  text-wrap: pretty;
+}
+.pr-hero__actions { margin-top: 38px; }
+
+/* The floating summary card. */
+.pr-rate {
+  position: relative;
+  padding: 30px;
+  border: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12));
+  border-radius: var(--pr-radius);
+  background: rgba(255, 255, 255, 0.045);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  animation: pr-float 7s ease-in-out infinite;
+}
+@keyframes pr-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+.pr-rate::before {
+  content: "";
+  position: absolute;
+  inset-inline: 30px;
+  top: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--primary, rgb(255, 72, 139)), transparent);
+}
+
+.pr-rate__label,
+.pr-rate__foot {
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: var(--cs-dim, rgba(255, 255, 255, 0.62));
+}
+.pr-rate__label { margin-bottom: 22px; }
+
+.pr-rate__list {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+}
+.pr-rate__list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12));
+}
+.pr-rate__name {
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: var(--cs-dim, rgba(255, 255, 255, 0.62));
+}
+.pr-rate__value {
+  font-family: var(--cs-display, "ABC Favorit Trial", sans-serif);
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: -0.6px;
+  white-space: nowrap;
+}
+.pr-rate__foot { margin-top: 22px; }
+
+/* Delivery-speed toggle -------------------------------------------------------- */
+.pr-plans {
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+}
+.pr-toggle-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.pr-toggle {
+  position: relative;
+  display: inline-flex;
+  padding: 4px;
+  border: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12));
+  border-radius: 999px;
+}
+.pr-toggle__pill {
+  position: absolute;
+  inset-block: 4px;
+  left: 0;
+  border-radius: 999px;
+  background: #fff;
+  transition:
+    transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 200ms ease;
+  pointer-events: none;
+}
+.pr-toggle__btn {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 0 24px;
+  border-radius: 999px;
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.65);
+  cursor: pointer;
+  transition: color 280ms ease;
+}
+.pr-toggle__btn:hover { color: #fff; }
+.pr-toggle__btn[aria-selected="true"] { color: var(--color-001, rgb(16, 20, 33)); }
+
+.pr-toggle__note {
+  max-width: 52ch;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--cs-dim, rgba(255, 255, 255, 0.62));
+  animation: pr-note 420ms ease both;
+}
+@keyframes pr-note {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Plan cards ------------------------------------------------------------------- */
+.pr-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  list-style: none;
+}
+@media (max-width: 1024.98px) {
+  .pr-grid { grid-template-columns: minmax(0, 1fr); gap: 15px; }
+}
+
+.pr-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 32px;
+  border: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12));
+  border-radius: var(--pr-radius);
+  background: rgba(255, 255, 255, 0.035);
+  transition:
+    border-color 320ms ease,
+    background 320ms ease,
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.pr-card:hover {
+  border-color: rgba(255, 255, 255, 0.26);
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-4px);
+}
+
+/* The recommended path reads as the filled card. */
+.pr-card--featured {
+  border-color: rgba(255, 72, 139, 0.45);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 72, 139, 0.14),
+    rgba(255, 255, 255, 0.04) 55%
+  );
+}
+@media (min-width: 1025px) {
+  .pr-card--featured { transform: translateY(-14px); }
+  .pr-card--featured:hover { transform: translateY(-20px); }
+}
+
+.pr-card__ribbon {
+  position: absolute;
+  top: -11px;
+  left: 32px;
+  padding: 5px 13px;
+  border-radius: 999px;
+  background: var(--primary, rgb(255, 72, 139));
+  color: var(--color-001, rgb(16, 20, 33));
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.pr-card__name {
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: var(--cs-dim, rgba(255, 255, 255, 0.62));
+}
+
+.pr-card__price {
+  display: block;
+  margin-top: 18px;
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.9375rem;
+  color: var(--cs-dim, rgba(255, 255, 255, 0.62));
+}
+.pr-card__price b {
+  display: inline-block;
+  font-family: var(--cs-display, "ABC Favorit Trial", sans-serif);
+  font-size: clamp(2.5rem, 3.6vw, 3.25rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -1.3px;
+  color: #fff;
+  animation: pr-price 460ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes pr-price {
+  from { opacity: 0; transform: translateY(8px); filter: blur(4px); }
+  to   { opacity: 1; transform: none; filter: none; }
+}
+
+.pr-card__note {
+  margin-top: 12px;
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: var(--cs-dim, rgba(255, 255, 255, 0.62));
+}
+
+.pr-card__desc {
+  margin-top: 22px;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  text-wrap: pretty;
+}
+
+.pr-card__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  margin-top: 28px;
+  padding: 0 22px;
+  border: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12));
+  border-radius: 10px;
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  transition: background 240ms ease, border-color 240ms ease, color 240ms ease;
+}
+.pr-card__cta:hover {
+  border-color: transparent;
+  background: #fff;
+  color: var(--color-001, rgb(16, 20, 33));
+}
+.pr-card--featured .pr-card__cta {
+  border-color: transparent;
+  background: var(--primary, rgb(255, 72, 139));
+  color: var(--color-001, rgb(16, 20, 33));
+}
+.pr-card--featured .pr-card__cta:hover { background: #fff; }
+
+.pr-card__rule {
+  display: block;
+  height: 1px;
+  margin: 28px 0;
+  background: var(--cs-rule, rgba(255, 255, 255, 0.12));
+}
+
+.pr-card__label {
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: var(--cs-dim, rgba(255, 255, 255, 0.62));
+}
+
+.pr-card__list {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  margin-top: 18px;
+  list-style: none;
+}
+.pr-card__list li {
+  display: flex;
+  gap: 11px;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.82);
+}
+.pr-card__list svg {
+  flex: 0 0 auto;
+  margin-top: 3px;
+  color: var(--primary, rgb(255, 72, 139));
+}
+
+.pr-card__best {
+  margin-top: auto;
+  padding-top: 28px;
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: var(--cs-dim, rgba(255, 255, 255, 0.62));
+}
+.pr-card__best b { color: #fff; font-weight: 400; }
+
+/* Comparison table ------------------------------------------------------------- */
+.pr-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12));
+  border-radius: var(--pr-radius);
+  background: rgba(255, 255, 255, 0.03);
+}
+.pr-table {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: collapse;
+  text-align: left;
+}
+.pr-table th,
+.pr-table td {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12));
+  vertical-align: top;
+}
+.pr-table tbody tr:last-child th,
+.pr-table tbody tr:last-child td { border-bottom: 0; }
+
+.pr-table thead th {
+  position: sticky;
+  top: 0;
+  background: rgba(16, 20, 33, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.pr-table__plan {
+  display: block;
+  font-family: var(--cs-display, "ABC Favorit Trial", sans-serif);
+  font-size: 1.375rem;
+  font-weight: 300;
+  letter-spacing: -0.5px;
+}
+.pr-table__price {
+  display: block;
+  margin-top: 5px;
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  color: var(--cs-dim, rgba(255, 255, 255, 0.62));
+}
+
+.pr-table tbody th {
+  width: 24%;
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: var(--cs-dim, rgba(255, 255, 255, 0.62));
+}
+.pr-table tbody td {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+}
+.pr-table tbody tr { transition: background 240ms ease; }
+.pr-table tbody tr:hover { background: rgba(255, 255, 255, 0.035); }
+
+.pr-table__cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 16px;
+  border: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12));
+  border-radius: 8px;
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background 240ms ease, border-color 240ms ease, color 240ms ease;
+}
+.pr-table__cta:hover {
+  border-color: transparent;
+  background: var(--primary, rgb(255, 72, 139));
+  color: var(--color-001, rgb(16, 20, 33));
+}
+
+/* Estimator -------------------------------------------------------------------- */
+.pr-calc {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  align-items: start;
+}
+@media (max-width: 1024.98px) {
+  .pr-calc { grid-template-columns: minmax(0, 1fr); }
+}
+
+.pr-calc__controls {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding: 32px;
+  border: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12));
+  border-radius: var(--pr-radius);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.pr-calc__row { display: flex; flex-direction: column; gap: 12px; }
+.pr-calc__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+}
+.pr-calc__head output {
+  min-width: 3ch;
+  text-align: right;
+  color: var(--primary, rgb(255, 72, 139));
+}
+.pr-calc__help {
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--cs-dim, rgba(255, 255, 255, 0.62));
+}
+
+/* Range input. Track is painted with a gradient stop at --pct so the filled part
+   reads as progress; both engines need their own thumb rule. */
+.pr-calc__slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--primary, rgb(255, 72, 139)) var(--pct, 0%),
+    rgba(255, 255, 255, 0.16) var(--pct, 0%)
+  );
+  cursor: pointer;
+}
+.pr-calc__slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(255, 72, 139, 0.24);
+  transition: box-shadow 200ms ease, transform 200ms ease;
+}
+.pr-calc__slider:hover::-webkit-slider-thumb,
+.pr-calc__slider:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 7px rgba(255, 72, 139, 0.3);
+  transform: scale(1.06);
+}
+.pr-calc__slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(255, 72, 139, 0.24);
+}
+
+.pr-calc__options {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 26px 0 0;
+  border: 0;
+  border-top: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12));
+}
+.pr-calc__options legend {
+  padding: 0;
+  margin-bottom: 4px;
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: var(--cs-dim, rgba(255, 255, 255, 0.62));
+}
+
+.pr-calc__opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+.pr-calc__opt input { position: absolute; opacity: 0; width: 0; height: 0; }
+.pr-calc__box {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  color: transparent;
+  transition: background 200ms ease, border-color 200ms ease, color 200ms ease;
+}
+.pr-calc__opt input:checked + .pr-calc__box {
+  border-color: transparent;
+  background: var(--primary, rgb(255, 72, 139));
+  color: var(--color-001, rgb(16, 20, 33));
+}
+.pr-calc__opt input:focus-visible + .pr-calc__box {
+  outline: 2px solid var(--primary, rgb(255, 72, 139));
+  outline-offset: 3px;
+}
+.pr-calc__opt-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--cs-dim, rgba(255, 255, 255, 0.62));
+}
+.pr-calc__opt-text b {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+.pr-calc__speeds { display: flex; flex-wrap: wrap; gap: 10px; }
+.pr-calc__speed { cursor: pointer; }
+.pr-calc__speed input { position: absolute; opacity: 0; width: 0; height: 0; }
+.pr-calc__speed span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 18px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: var(--cs-dim, rgba(255, 255, 255, 0.62));
+  transition: background 220ms ease, border-color 220ms ease, color 220ms ease;
+}
+.pr-calc__speed input:checked + span {
+  border-color: transparent;
+  background: #fff;
+  color: var(--color-001, rgb(16, 20, 33));
+}
+.pr-calc__speed input:focus-visible + span {
+  outline: 2px solid var(--primary, rgb(255, 72, 139));
+  outline-offset: 3px;
+}
+
+/* Output panel. */
+.pr-calc__out {
+  position: sticky;
+  top: 110px;
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  border: 1px solid rgba(255, 72, 139, 0.32);
+  border-radius: var(--pr-radius);
+  background: linear-gradient(180deg, rgba(255, 72, 139, 0.13), rgba(255, 255, 255, 0.035) 60%);
+}
+@media (max-width: 1024.98px) { .pr-calc__out { position: static; } }
+
+.pr-calc__out-label,
+.pr-calc__out-weeks {
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: var(--cs-dim, rgba(255, 255, 255, 0.62));
+}
+.pr-calc__out-value {
+  margin: 16px 0 10px;
+  font-family: var(--cs-display, "ABC Favorit Trial", sans-serif);
+  font-size: clamp(2rem, 3.2vw, 2.75rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -1.1px;
+  white-space: nowrap;
+}
+.pr-calc__out-note {
+  margin: 26px 0 0;
+  padding-top: 22px;
+  border-top: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12));
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--cs-dim, rgba(255, 255, 255, 0.62));
+}
+.pr-calc__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  margin-top: 24px;
+  padding: 0 22px;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--color-001, rgb(16, 20, 33));
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  transition: background 240ms ease, transform 240ms ease;
+}
+.pr-calc__cta:hover {
+  background: var(--primary, rgb(255, 72, 139));
+  transform: translateY(-2px);
+}
+
+/* Price factors ---------------------------------------------------------------- */
+.pr-factors {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  list-style: none;
+}
+@media (max-width: 767.98px) {
+  .pr-factors { grid-template-columns: minmax(0, 1fr); gap: 15px; }
+}
+.pr-factors li {
+  padding: 30px;
+  border: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12));
+  border-radius: var(--pr-radius);
+  background: rgba(255, 255, 255, 0.03);
+  transition: border-color 300ms ease, background 300ms ease;
+}
+.pr-factors li:hover {
+  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.055);
+}
+.pr-factors__no {
+  display: block;
+  margin-bottom: 18px;
+  font-family: var(--cs-mono, "Suisse Int'l Mono", monospace);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  color: var(--primary, rgb(255, 72, 139));
+}
+.pr-factors h3 {
+  margin-bottom: 12px;
+  font-family: var(--cs-display, "ABC Favorit Trial", sans-serif);
+  font-size: 1.375rem;
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  text-wrap: balance;
+}
+.pr-factors p {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.78);
+  text-wrap: pretty;
+}
+
+/* FAQ -------------------------------------------------------------------------- */
+.pr-faq {
+  border-top: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12));
+}
+.pr-faq__item { border-bottom: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12)); }
+.pr-faq__item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 26px 0;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--cs-display, "ABC Favorit Trial", sans-serif);
+  font-size: clamp(1.125rem, 1.7vw, 1.5rem);
+  font-weight: 300;
+  line-height: 1.25;
+  letter-spacing: -0.4px;
+  transition: color 220ms ease;
+}
+.pr-faq__item summary::-webkit-details-marker { display: none; }
+.pr-faq__item summary:hover { color: var(--primary, rgb(255, 72, 139)); }
+
+.pr-faq__sign {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--cs-rule, rgba(255, 255, 255, 0.12));
+  border-radius: 50%;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1), background 220ms ease;
+}
+.pr-faq__item[open] .pr-faq__sign {
+  transform: rotate(135deg);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.pr-faq__body {
+  padding-bottom: 28px;
+  animation: pr-faq-open 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes pr-faq-open {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: none; }
+}
+.pr-faq__body p {
+  max-width: 72ch;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.78);
+  text-wrap: pretty;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pr-rate { animation: none; }
+  .pr-card__price b,
+  .pr-toggle__note,
+  .pr-faq__body { animation: none; }
+  .pr-card:hover,
+  .pr-card--featured,
+  .pr-card--featured:hover,
+  .pr-calc__cta:hover { transform: none; }
+  .pr-toggle__pill { transition: none; }
+}
