@@ -61,8 +61,8 @@ export default function Page() {
 
         {/* The grid sits on the light ground, so the hero reads as a separate band
             rather than as the top of one long dark page. */}
-        <div className="wk-panel">
-          <section data-reveal className="wk-panel__inner" aria-label="Case studies">
+        <div className="ct-panel">
+          <section data-reveal className="ct-panel__inner" aria-label="Case studies">
             <WorkIndex />
           </section>
         </div>

@@ -27,11 +27,50 @@ const INK = "rgb(23, 43, 118)";
 const NAV_LABEL_CLASS =
   "h-full flex relative z-2 isolate px-3.5 justify-center items-center gap-1.5 [font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] font-normal leading-3.5 tracking-[-0.32px] uppercase before:content-[''] before:block before:absolute before:inset-0 before:-z-1 before:h-8.5 before:bg-surface-2 before:opacity-0 before:transform-[matrix(0.9,0,0,0.7,0,0)] before:rounded-tl-sm hover:before:opacity-15 before:transition-opacity before:duration-200 max-lg:before:w-auto max-lg:before:h-auto max-lg:before:transform-[none]";
 
+/**
+ * How long the services panel waits after the pointer leaves before closing.
+ *
+ * The panel is anchored below the trigger with a gap between them, so travelling
+ * from one to the other means leaving both for a frame or two. Closing immediately
+ * would snatch the menu away mid-reach.
+ */
+const HOVER_CLOSE_MS = 180;
+
 export default function SiteHeader() {
   const pathname = usePathname();
   const [servicesOpen, setServicesOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const servicesRef = useRef<HTMLLIElement>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const cancelClose = () => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  };
+
+  /**
+   * Hover only where hovering means something. On a touch screen the emulated
+   * pointer events would open the panel on the tap that was meant to follow a link.
+   */
+  const hoverCapable = () =>
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  const openOnHover = () => {
+    if (!hoverCapable()) return;
+    cancelClose();
+    setServicesOpen(true);
+  };
+
+  const closeOnHover = () => {
+    if (!hoverCapable()) return;
+    cancelClose();
+    closeTimer.current = setTimeout(() => setServicesOpen(false), HOVER_CLOSE_MS);
+  };
+
+  useEffect(() => cancelClose, []);
 
   // Any navigation closes both menus. Without this the panel survives a client-side
   // route change and hangs over the new page.
@@ -106,13 +145,24 @@ export default function SiteHeader() {
             {/* pointer-events-auto: the parent <nav> is pointer-events-none, as on the
                 captured design, and this <ul> opts back in. */}
             <ul className="h-full flex relative pl-2.5 rounded-[7px] [list-style-type:none] list-outside bg-clr-0 [backdrop-filter:blur(17.5px)] pointer-events-auto max-lg:hidden">
-              <li className="block" ref={servicesRef}>
+              {/* Hover opens the panel; the handlers sit on the <li> so the trigger
+                  and the panel below it count as one hover target. */}
+              <li
+                className="block"
+                ref={servicesRef}
+                onMouseEnter={openOnHover}
+                onMouseLeave={closeOnHover}
+              >
                 <button
                   className="h-13.5 inline-flex py-2.5 items-center text-center cursor-pointer"
                   type="button"
                   aria-expanded={servicesOpen}
                   aria-haspopup="true"
-                  onClick={() => setServicesOpen((v) => !v)}
+                  onClick={() => {
+                    cancelClose();
+                    setServicesOpen((v) => !v);
+                  }}
+                  onFocus={cancelClose}
                 >
                   <span className={NAV_LABEL_CLASS}>
                     <c-scramble-text class="block">{" Services "}</c-scramble-text>

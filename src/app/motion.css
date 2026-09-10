@@ -2998,7 +2998,7 @@ c-inner-parallax img {
 @media (max-width: 767.98px) { .wk-hero__rule { display: none; } }
 
 /* White panel ------------------------------------------------------------------ */
-.wk-panel {
+.ct-panel {
   position: relative;
   z-index: 1;
   /* Overlaps the hero, so the rounded corners cut into the dark band. */
@@ -3007,16 +3007,22 @@ c-inner-parallax img {
   background: var(--background, #fff);
   color: var(--foreground, rgb(23, 43, 118));
 }
-@media (max-width: 1024.98px) { .wk-panel { margin-top: -30px; border-radius: 1.5rem; } }
+@media (max-width: 1024.98px) { .ct-panel { margin-top: -30px; border-radius: 1.5rem; } }
 
-.wk-panel__inner {
+/* The panel is shared by two shells that name their own measure differently, so it
+   reads generic tokens and each shell aliases into them. Without this the padding
+   resolves to nothing and the copy runs to the panel's rounded edge. */
+.cs { --ct-max: var(--cs-max); --ct-gutter: var(--cs-gutter); }
+.sv { --ct-max: var(--sv-max); --ct-gutter: var(--sv-gutter); }
+
+.ct-panel__inner {
   width: 100%;
-  max-width: calc(var(--cs-max) + var(--cs-gutter) * 2);
+  max-width: calc(var(--ct-max, 1180px) + var(--ct-gutter, 40px) * 2);
   margin-inline: auto;
-  padding-inline: var(--cs-gutter);
+  padding-inline: var(--ct-gutter, 40px);
   padding-block: 78px;
 }
-@media (max-width: 1024.98px) { .wk-panel__inner { padding-block: 44px; } }
+@media (max-width: 1024.98px) { .ct-panel__inner { padding-block: 44px; } }
 
 /* Closing call to action ------------------------------------------------------- */
 /* Back on the dark ground below the panel, so it belongs with the footer rather
@@ -3028,3 +3034,303 @@ c-inner-parallax img {
   border-top: 0;
 }
 @media (max-width: 1024.98px) { .wk-cta { padding-top: 60px; } }
+
+/* Services --------------------------------------------------------------------
+   /services. A centred display opening on the dark band the header floats over, then
+   labelled bands on the white panel below it: mission, an imagery row, the catalogue
+   as two lists, how an engagement starts, where to write, and the stack. */
+.sv {
+  --sv-gutter: 40px;
+  --sv-max: 1180px;
+  --sv-line: rgba(23, 43, 118, 0.14);
+  --sv-mono: var(--font-001, "Suisse Int'l Mono", monospace);
+  --sv-display: var(--font-002, "ABC Favorit Trial", sans-serif);
+
+  display: block;
+  position: relative;
+  padding-bottom: 130px;
+  background: var(--color-001, rgb(16, 20, 33));
+  color: #fff;
+}
+@media (max-width: 1024.98px) {
+  .sv { --sv-gutter: 15px; padding-bottom: 80px; }
+}
+
+
+/* The panel supplies the measure and the gutters for everything inside it. */
+.sv .ct-panel__inner { padding-block: 86px 96px; }
+.sv__band:first-child { margin-top: 0; }
+
+/* Hero ------------------------------------------------------------------------ */
+/* Sits on the dark page ground the header floats over, then hands off to white. */
+.sv__hero {
+  width: 100%;
+  max-width: calc(var(--sv-max) + var(--sv-gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--sv-gutter);
+  padding-block: 190px 96px;
+  text-align: center;
+}
+@media (max-width: 1024.98px) { .sv__hero { padding-block: 132px 60px; } }
+
+.sv__display {
+  max-width: 18ch;
+  margin-inline: auto;
+  font-family: var(--sv-display);
+  font-size: clamp(2.25rem, 5vw, 4.25rem);
+  font-weight: 300;
+  line-height: 1.06;
+  letter-spacing: -1.7px;
+  text-wrap: balance;
+}
+
+/* Bands ------------------------------------------------------------------------ */
+.sv__band { margin-top: 104px; }
+.sv .ct-panel__inner > .sv__band:first-child { margin-top: 0; }
+@media (max-width: 1024.98px) { .sv__band { margin-top: 64px; } }
+
+.sv__label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 26px;
+  font-family: var(--sv-mono);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: var(--muted-foreground, rgb(88, 100, 144));
+}
+.sv__label::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary, rgb(255, 72, 139));
+}
+
+.sv__heading {
+  max-width: 24ch;
+  margin-bottom: 40px;
+  font-family: var(--sv-display);
+  font-size: clamp(1.75rem, 3.2vw, 2.875rem);
+  font-weight: 300;
+  line-height: 1.12;
+  letter-spacing: -1px;
+  text-wrap: balance;
+}
+
+/* Two-column prose, the way the reference sets its long copy. */
+.sv__lede,
+.sv__copy {
+  display: grid;
+  gap: 20px 44px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (max-width: 767.98px) {
+  .sv__lede,
+  .sv__copy { grid-template-columns: minmax(0, 1fr); }
+}
+.sv__lede p {
+  font-size: clamp(1.125rem, 1.7vw, 1.5rem);
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -0.2px;
+  text-wrap: pretty;
+}
+.sv__copy p {
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--muted-foreground, rgb(88, 100, 144));
+  text-wrap: pretty;
+}
+
+/* Imagery row ------------------------------------------------------------------ */
+.sv__plates {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 48px;
+}
+@media (max-width: 767.98px) {
+  .sv__plates { grid-template-columns: minmax(0, 1fr); gap: 15px; }
+}
+.sv__plates figure {
+  overflow: hidden;
+  border: 1px solid var(--sv-line);
+  border-radius: 16px;
+  background: var(--surface, rgb(238, 242, 245));
+}
+.sv__plates img {
+  display: block;
+  width: 100%;
+  height: clamp(200px, 22vw, 280px);
+  object-fit: cover;
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sv__plates figure:hover img { transform: scale(1.04); }
+
+/* Catalogue -------------------------------------------------------------------- */
+.sv__group-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 8px;
+}
+@media (max-width: 767.98px) {
+  .sv__group-head { flex-direction: column; gap: 6px; }
+}
+.sv__group-head .sv__heading { margin-bottom: 0; }
+.sv__group-head .sv__label { margin-bottom: 0; }
+
+.sv__list {
+  margin-top: 32px;
+  border-top: 1px solid var(--sv-line);
+  list-style: none;
+}
+.sv__list li { border-bottom: 1px solid var(--sv-line); }
+
+.sv__list a {
+  display: grid;
+  align-items: baseline;
+  gap: 12px 40px;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 7fr) auto;
+  padding: 26px 0;
+  transition: color 240ms ease;
+}
+@media (max-width: 767.98px) {
+  .sv__list a { grid-template-columns: minmax(0, 1fr) auto; gap: 8px 16px; }
+  .sv__list-body { grid-column: 1 / -1; }
+}
+.sv__list a:hover { color: var(--primary, rgb(255, 72, 139)); }
+
+.sv__list-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--sv-display);
+  font-size: clamp(1.25rem, 1.9vw, 1.625rem);
+  font-weight: 300;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+}
+.sv__list-name em {
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: var(--primary, rgb(255, 72, 139));
+  color: #fff;
+  font-family: var(--sv-mono);
+  font-size: 10px;
+  font-style: normal;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.sv__list-body {
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--muted-foreground, rgb(88, 100, 144));
+  text-wrap: pretty;
+}
+.sv__list-go {
+  display: inline-flex;
+  align-items: center;
+  opacity: 0;
+  transform: translate(-4px, 4px);
+  transition: opacity 240ms ease, transform 240ms ease;
+}
+.sv__list a:hover .sv__list-go { opacity: 1; transform: none; }
+
+/* Button ----------------------------------------------------------------------- */
+.sv__button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  margin-top: 40px;
+  padding: 0 24px;
+  border-radius: 999px;
+  background: var(--color-001, rgb(16, 20, 33));
+  color: #fff;
+  font-family: var(--sv-mono);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  transition: background 240ms ease, transform 240ms ease;
+}
+.sv__button:hover {
+  background: var(--primary, rgb(255, 72, 139));
+  transform: translateY(-2px);
+}
+
+/* Routes ------------------------------------------------------------------------ */
+.sv__routes {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  list-style: none;
+}
+@media (max-width: 767.98px) {
+  .sv__routes { grid-template-columns: minmax(0, 1fr); gap: 15px; }
+}
+.sv__routes li {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  border: 1px solid var(--sv-line);
+  border-radius: 16px;
+  transition: border-color 260ms ease, background 260ms ease;
+}
+.sv__routes li:hover {
+  border-color: rgba(23, 43, 118, 0.26);
+  background: var(--surface, rgb(238, 242, 245));
+}
+.sv__routes h3 {
+  margin-bottom: 14px;
+  font-family: var(--sv-display);
+  font-size: 1.375rem;
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+.sv__routes p {
+  margin-bottom: 22px;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--muted-foreground, rgb(88, 100, 144));
+  text-wrap: pretty;
+}
+.sv__routes a {
+  margin-top: auto;
+  font-family: var(--sv-mono);
+  font-size: 0.8125rem;
+  letter-spacing: -0.32px;
+  text-transform: uppercase;
+  color: var(--primary, rgb(255, 72, 139));
+  overflow-wrap: anywhere;
+}
+.sv__routes a:hover { text-decoration: underline; }
+
+/* Stack ------------------------------------------------------------------------- */
+.sv__band--stack { padding-top: 8px; }
+.sv__stack {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px 44px;
+  padding-top: 34px;
+  border-top: 1px solid var(--sv-line);
+  list-style: none;
+  color: var(--muted-foreground, rgb(88, 100, 144));
+}
+.sv__stack li {
+  opacity: 0.75;
+  transition: opacity 240ms ease, color 240ms ease;
+}
+.sv__stack li:hover { opacity: 1; color: var(--foreground, rgb(23, 43, 118)); }
+
+@media (prefers-reduced-motion: reduce) {
+  .sv__plates figure:hover img,
+  .sv__button:hover { transform: none; }
+}
