@@ -5,6 +5,7 @@ import ListRow2 from "../components/list-row2";
 import ReflowPreview from "../components/reflow-preview";
 import BenchmarkTabs from "../components/benchmark-tabs";
 import PipelinePreview from "../components/pipeline-preview";
+import MonitoringChart from "../components/monitoring-chart";
 import Illustration3 from "../svgs/svg-illustration3";
 import ListRow3, { type ListRow3Data } from "../components/list-row3";
 import Icon3 from "../svgs/svg-icon3";
@@ -678,101 +679,8 @@ export default function HomeSections({ listRow2Data = listRow2DataContent, listR
                   </div>
                   <div className="block" data-cid="n430" id="launch-and-growth">
                     <div className="h-full flex flex-col gap-6" data-cid="n431">
-                      <div className="flex relative py-6 rounded-[15px] justify-center gap-6 overflow-hidden bg-surface aspect-[707/600] max-md:py-2.5 max-md:aspect-square" data-cid="n432">
-                        <c-segmented-controls class="flex relative z-2 flex-col grow gap-y-6 w-full max-w-full" data-cid="n433" id="segmentedcontrols-77">
-                          <div className="flex relative p-1 rounded-[7px] self-center shrink-0 overflow-x-auto overflow-y-hidden bg-background" data-cid="n434" role="tablist">
-                            <div className="w-[4.8125rem] h-11 block absolute min-w-0 rounded-[7px] bg-muted-foreground pointer-events-none max-lg:w-[4.6875rem]" data-cid="n435" aria-hidden="true" />
-                            {" "}
-                            <c-segmented-tab class="min-h-11 flex relative z-1 py-2 px-5 rounded-[7px] justify-center items-center shrink-0 text-background text-[1.0625rem] font-normal leading-[1.4375rem] tracking-[0.17px] text-center cursor-pointer max-lg:leading-[1.375rem] max-lg:tracking-[0.16px] max-lg:[font-size:inherit] before:content-[''] before:block before:absolute before:inset-0 before:-z-1 before:w-[4.8rem] before:h-11 before:bg-muted-foreground before:opacity-0 before:rounded-tl-[7px] max-lg:before:w-[74.7px]" data-cid="n436" aria-controls="segmentedcontrols-77-panel-0" aria-selected="true" id="segmentedcontrols-77-tab-0" role="tab">
-                              {" Build "}
-                            </c-segmented-tab>
-                            <c-segmented-tab class="min-h-11 flex relative z-1 py-2 px-5 rounded-[7px] justify-center items-center shrink-0 text-[1.0625rem] font-normal leading-[1.4375rem] tracking-[0.17px] text-center cursor-pointer max-lg:leading-[1.375rem] max-lg:tracking-[0.16px] max-lg:[font-size:inherit] before:content-[''] before:block before:absolute before:inset-0 before:-z-1 before:w-[4.775rem] before:h-11 before:bg-surface-2 before:opacity-0 before:rounded-tl-[7px] max-lg:before:w-[4.6375rem]" data-cid="n437" aria-controls="segmentedcontrols-77-panel-1" aria-selected="false" id="segmentedcontrols-77-tab-1" role="tab">
-                              {" Design "}
-                            </c-segmented-tab>
-                            <c-segmented-tab class="min-h-11 flex relative z-1 py-2 px-5 rounded-[7px] justify-center items-center shrink-0 text-[1.0625rem] font-normal leading-[1.4375rem] tracking-[0.17px] text-center cursor-pointer max-lg:leading-[1.375rem] max-lg:tracking-[0.16px] max-lg:[font-size:inherit] before:content-[''] before:block before:absolute before:inset-0 before:-z-1 before:w-36 before:h-11 before:bg-surface-2 before:opacity-0 before:rounded-tl-[7px] max-lg:before:w-[8.625rem]" data-cid="n438" aria-controls="segmentedcontrols-77-panel-2" aria-selected="false" id="segmentedcontrols-77-tab-2" role="tab">
-                              {" Weeks elapsed "}
-                            </c-segmented-tab>
-                            {" "}
-                          </div>
-                          {" "}
-                          <div className="block overflow-hidden w-full h-full 2xl:relative" data-cid="n439">
-                            <c-segmented-panel class="flex relative pt-4 pb-18 px-22 flex-col justify-center h-full max-md:px-8.5" data-cid="n440" aria-labelledby="segmentedcontrols-77-tab-0" id="segmentedcontrols-77-panel-0" role="tabpanel">
-                              <span className="w-[121.1px] h-[1.625rem] block absolute left-7 min-w-0 pt-3 [font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] font-normal leading-3.5 tracking-[-0.32px] uppercase [translate:-50%] [rotate:-90deg] max-md:left-2.5" data-cid="n441">
-                                {" Scope changes "}
-                              </span>
-                              <span className="w-147.5 h-3.5 block absolute bottom-2 left-0 min-w-0 [font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] font-normal leading-3.5 tracking-[-0.32px] text-center uppercase max-md:w-[21.5625rem] max-md:bottom-11 md:max-lg:w-184.5 2xl:w-192" data-cid="n442">
-                                {" Time "}
-                              </span>
-                              <c-animated-chart class="block w-full aspect-[20/11]" data-cid="n443" id="animatedchart-72">
-                                <div className="block" data-cid="n444">
-                                  <Illustration3 cid={"n445"} />
-                                  {" "}
-                                </div>
-                                {" "}
-                              </c-animated-chart>
-                              {" "}
-                              <ul className="w-[136.7px] h-[1.875rem] flex absolute bottom-0 left-7 min-w-0 gap-2 [list-style-type:none] list-outside max-md:left-2.5" data-cid="n446">
-                                {listRow3Data.map((d, i) => <ListRow3 key={i} d={d} cids={ListRow3_cids[i]} styles={ListRow3_styles[i]} />)}
-                              </ul>
-                              {" "}
-                            </c-segmented-panel>
-                            <c-segmented-panel class="hidden relative pt-4 pb-18 px-22 flex-col justify-center h-full" data-cid="n453" aria-labelledby="segmentedcontrols-77-tab-1" id="segmentedcontrols-77-panel-1" role="tabpanel">
-                              <span className="block absolute left-7 pt-3 [font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] font-normal leading-3.5 tracking-[-0.32px] uppercase [translate:-50%] [rotate:-90deg]" data-cid="n454">
-                                {" Scope items "}
-                              </span>
-                              <span className="block absolute bottom-2 inset-x-0 [font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] font-normal leading-3.5 tracking-[-0.32px] text-center uppercase" data-cid="n455">
-                                {" Time "}
-                              </span>
-                              <c-animated-chart class="inline aspect-[20/11] w-full" data-cid="n456" id="animatedchart-73">
-                                {" "}
-                                <div className="block" data-cid="n457">
-                                  <Icon3 cid={"n458"} />
-                                  {" "}
-                                </div>
-                                {" "}
-                              </c-animated-chart>
-                              {" "}
-                              <ul className="flex absolute bottom-0 left-7 gap-2 [list-style-type:none] list-outside" data-cid="n459">
-                                {listRow4Data.map((d, i) => <ListRow4 key={i} d={d} cids={ListRow4_cids[i]} styles={ListRow4_styles[i]} />)}
-                              </ul>
-                              {" "}
-                            </c-segmented-panel>
-                            <c-segmented-panel class="hidden relative pt-4 pb-18 px-22 flex-col justify-center h-full" data-cid="n466" aria-labelledby="segmentedcontrols-77-tab-2" id="segmentedcontrols-77-panel-2" role="tabpanel">
-                              <span className="block absolute left-7 pt-3 [font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] font-normal leading-3.5 tracking-[-0.32px] uppercase [translate:-50%] [rotate:-90deg]" data-cid="n467">
-                                {" Weeks to first release "}
-                              </span>
-                              <span className="block absolute bottom-2 inset-x-0 [font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] font-normal leading-3.5 tracking-[-0.32px] text-center uppercase" data-cid="n468">
-                                {" Time "}
-                              </span>
-                              <c-animated-chart class="inline aspect-[20/11] w-full" data-cid="n469" id="animatedchart-74">
-                                {" "}
-                                <div className="block" data-cid="n470">
-                                  <Icon4 cid={"n471"} />
-                                  {" "}
-                                </div>
-                                {" "}
-                              </c-animated-chart>
-                              {" "}
-                              <ul className="flex absolute bottom-0 left-7 gap-2 [list-style-type:none] list-outside" data-cid="n472">
-                                <li className="list-item min-w-0" data-cid="n473">
-                                  <span className="inline-flex p-2 rounded-[7px] text-background [font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] font-normal leading-3.5 tracking-[-0.32px] uppercase bg-clr-7" data-cid="n474">
-                                    {" P50 "}
-                                  </span>
-                                  {" "}
-                                </li>
-                                <li className="list-item min-w-0" data-cid="n475">
-                                  <span className="inline-flex p-2 rounded-[7px] text-background [font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] font-normal leading-3.5 tracking-[-0.32px] uppercase bg-primary" data-cid="n476">
-                                    {" P90 "}
-                                  </span>
-                                  {" "}
-                                </li>
-                              </ul>
-                              {" "}
-                            </c-segmented-panel>
-                            {" "}
-                          </div>
-                          {" "}
-                        </c-segmented-controls>
+                      <div className="aspect-[707/600] flex relative py-6 rounded-[15px] items-center justify-center gap-6 overflow-hidden bg-surface max-md:py-2.5 max-md:aspect-square" data-cid="n432">
+                        <MonitoringChart />
                         {" "}
                       </div>
                       {" "}

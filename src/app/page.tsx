@@ -27,10 +27,9 @@ export default function Page() {
         <HomeSections />
       </div>
 
-      {/* Captured interaction specs, replayed against the markup above. */}
-      {homeTabSpecs.map((spec, i) => (
-        <InteractionRuntime key={`tabs-${i}`} spec={spec} />
-      ))}
+      {/* The one captured interaction spec still in use: the case-study filter tabs.
+          The other two controls on this page are components now. */}
+      <InteractionRuntime spec={homeTabSpecs[1]} />
       <ScrollReveal spec={homeMotionSpec} />
     </>
   );

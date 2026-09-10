@@ -678,6 +678,7 @@ c-inner-parallax img {
   flex-direction: column;
   gap: 20px;
   width: min(100%, 500px);
+  margin: auto;
   padding: 24px;
   border: 1px solid var(--hair);
   border-radius: 12px;
@@ -856,4 +857,264 @@ c-inner-parallax img {
   .ct-pipe__detail,
   .ct-pipe__badge { transition: none; }
   .ct-pipe__stage[data-state="run"] .ct-pipe__dot { animation: none; }
+}
+
+/* Monitoring chart ------------------------------------------------------------
+   The visual on the launch block. Everything is centred in the card on both axes,
+   and the lines draw themselves in whenever the chart mounts, which is what makes a
+   tab change read as a redraw. */
+.ct-chart {
+  --ink: rgb(23, 43, 118);
+  --muted: rgba(23, 43, 118, 0.45);
+  --hair: rgba(23, 43, 118, 0.13);
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  width: 100%;
+  height: 100%;
+  padding: 0 24px;
+  color: var(--ink);
+}
+
+/* Tabs ----------------------------------------------------------------------- */
+.ct-chart__tabs {
+  position: relative;
+  display: flex;
+  flex: 0 0 auto;
+  padding: 4px;
+  border-radius: 7px;
+  background: var(--background, #fff);
+}
+.ct-chart__pill {
+  position: absolute;
+  inset-block: 4px;
+  left: 0;
+  border-radius: 7px;
+  background: var(--muted-foreground, rgb(88, 100, 144));
+  transition:
+    transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 200ms ease;
+  pointer-events: none;
+}
+.ct-chart__tab {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 8px 18px;
+  border-radius: 7px;
+  color: var(--ink);
+  font-size: 0.9375rem;
+  line-height: 1.25;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 280ms ease;
+}
+.ct-chart__tab[aria-selected="true"] { color: var(--background, #fff); }
+
+/* Panel ---------------------------------------------------------------------- */
+.ct-chart__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 480px;
+}
+.ct-chart__caption {
+  font-family: "Suisse Int'l Mono", monospace;
+  font-weight: 400;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  animation: chart-fade 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.ct-chart__caption span { color: var(--muted); }
+
+.ct-chart__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* Grid ----------------------------------------------------------------------- */
+.ct-chart__grid line {
+  stroke: var(--hair);
+  stroke-width: 1;
+  stroke-dasharray: 4 5;
+}
+.ct-chart__grid text {
+  fill: var(--muted);
+  font-family: "Suisse Int'l Mono", monospace;
+  font-size: 10px;
+}
+.ct-chart__grid { animation: chart-fade 520ms ease both; }
+
+.ct-chart__xtick {
+  fill: var(--muted);
+  font-family: "Suisse Int'l Mono", monospace;
+  font-size: 10px;
+  animation: chart-fade 520ms ease both;
+}
+
+/* Lines ---------------------------------------------------------------------- */
+.ct-chart__area {
+  animation: chart-fade 900ms ease 500ms both;
+}
+.ct-chart__line {
+  fill: none;
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  /* Long enough to cover any path this chart draws, so the dash offset can hide it. */
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  animation: chart-draw 1200ms cubic-bezier(0.33, 1, 0.68, 1) both;
+}
+.ct-chart__line--p50 { stroke: var(--muted-foreground, rgb(88, 100, 144)); }
+.ct-chart__line--p90 { stroke: var(--clr-7, rgb(144, 170, 222)); }
+.ct-chart__line--max { stroke: var(--primary, rgb(255, 72, 139)); }
+
+@keyframes chart-draw {
+  from { stroke-dashoffset: 1400; }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes chart-fade {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Legend --------------------------------------------------------------------- */
+.ct-chart__legend {
+  display: flex;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: "Suisse Int'l Mono", monospace;
+  font-weight: 400;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.ct-chart__legend li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  animation: chart-fade 500ms ease both;
+}
+.ct-chart__swatch {
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+}
+.ct-chart__swatch.ct-chart__line--p50 { background: var(--muted-foreground, rgb(88, 100, 144)); }
+.ct-chart__swatch.ct-chart__line--p90 { background: var(--clr-7, rgb(144, 170, 222)); }
+.ct-chart__swatch.ct-chart__line--max { background: var(--primary, rgb(255, 72, 139)); }
+
+@media (max-width: 571.98px) {
+  .ct-chart { gap: 16px; padding: 0 14px; }
+  .ct-chart__tab { padding: 8px 11px; font-size: 0.8125rem; }
+  .ct-chart__legend { gap: 13px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-chart__line { stroke-dasharray: none; stroke-dashoffset: 0; animation: none; }
+  .ct-chart__grid,
+  .ct-chart__xtick,
+  .ct-chart__area,
+  .ct-chart__caption,
+  .ct-chart__legend li { animation: none; }
+  .ct-chart__pill { transition: none; }
+}
+
+/* Pipeline entrance and glow --------------------------------------------------
+   The panel and its rows arrive when the card is first scrolled to, rather than
+   appearing fully formed. The delay on each row is set inline; the row has no other
+   transition, so it only paces the entrance and never the run itself. */
+.ct-pipe {
+  opacity: 0;
+  transform: translateY(16px) scale(0.985);
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ct-pipe[data-entered] {
+  opacity: 1;
+  transform: none;
+}
+
+.ct-pipe__head,
+.ct-pipe__foot {
+  opacity: 0;
+  transition: opacity 520ms ease;
+}
+.ct-pipe[data-entered] .ct-pipe__head { opacity: 1; transition-delay: 140ms; }
+.ct-pipe[data-entered] .ct-pipe__foot { opacity: 1; transition-delay: 600ms; }
+
+.ct-pipe__stage {
+  opacity: 0;
+  transform: translateY(9px);
+  transition:
+    opacity 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ct-pipe[data-entered] .ct-pipe__stage {
+  opacity: 1;
+  transform: none;
+}
+
+/* A light travelling around the panel's edge. Drawn as a conic gradient masked to
+   the 1px border, so it costs one compositor layer and no layout. Browsers without
+   @property simply hold it still. */
+@property --pipe-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+.ct-pipe::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: 13px;
+  background: conic-gradient(
+    from var(--pipe-angle),
+    transparent 58%,
+    rgba(255, 72, 139, 0.7) 76%,
+    rgba(227, 58, 219, 0.35) 84%,
+    transparent 92%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: pipe-sweep 6s linear infinite;
+}
+@keyframes pipe-sweep {
+  to { --pipe-angle: 360deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-pipe,
+  .ct-pipe__head,
+  .ct-pipe__foot,
+  .ct-pipe__stage {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .ct-pipe::before { animation: none; }
 }

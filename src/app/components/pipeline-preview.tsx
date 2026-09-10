@@ -34,6 +34,7 @@ const HOLD_MS = 2600;
 export default function PipelinePreview() {
   // -1 is the idle frame before the run starts; STAGES.length means every stage done.
   const [step, setStep] = useState(-1);
+  const [entered, setEntered] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -60,6 +61,7 @@ export default function PipelinePreview() {
     // Off-screen the loop is pure waste, so it only runs while the card is in view.
     const io = new IntersectionObserver(
       ([entry]) => {
+        if (entry.isIntersecting) setEntered(true);
         if (entry.isIntersecting && !running) {
           running = true;
           timer = setTimeout(tick, 240);
@@ -81,7 +83,7 @@ export default function PipelinePreview() {
   const complete = step >= STAGES.length;
 
   return (
-    <div className="ct-pipe" ref={rootRef} aria-hidden="true">
+    <div className="ct-pipe" ref={rootRef} aria-hidden="true" data-entered={entered ? "" : undefined}>
       <div className="ct-pipe__head">
         <span className="ct-pipe__branch">main</span>
         <span className="ct-pipe__sha">a3f19c2</span>
@@ -92,7 +94,12 @@ export default function PipelinePreview() {
         {STAGES.map((stage, i) => {
           const state = step > i ? "done" : step === i ? "run" : "idle";
           return (
-            <li className="ct-pipe__stage" data-state={state} key={stage.name}>
+            <li
+              className="ct-pipe__stage"
+              data-state={state}
+              key={stage.name}
+              style={{ transitionDelay: `${180 + i * 70}ms` }}
+            >
               <span className="ct-pipe__dot">
                 <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true">
                   <path
