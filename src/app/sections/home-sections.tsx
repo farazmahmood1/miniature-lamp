@@ -6,6 +6,7 @@ import ReflowPreview from "../components/reflow-preview";
 import BenchmarkTabs from "../components/benchmark-tabs";
 import PipelinePreview from "../components/pipeline-preview";
 import MonitoringChart from "../components/monitoring-chart";
+import WorkFilter from "../components/work-filter";
 import Illustration3 from "../svgs/svg-illustration3";
 import ListRow3, { type ListRow3Data } from "../components/list-row3";
 import Icon3 from "../svgs/svg-icon3";
@@ -13,7 +14,6 @@ import ListRow4, { type ListRow4Data } from "../components/list-row4";
 import Icon4 from "../svgs/svg-icon4";
 import Icon5 from "../svgs/svg-icon5";
 import MediaTile, { type MediaTileData } from "../components/media-tile";
-import MediaCard from "../components/media-card";
 import MediaCard2, { type MediaCard2Data } from "../components/media-card2";
 import MediaCard3, { type MediaCard3Data } from "../components/media-card3";
 import Icon6 from "../svgs/svg-icon6";
@@ -22,9 +22,9 @@ import Icon8 from "../svgs/svg-icon8";
 import MediaCard4, { type MediaCard4Data } from "../components/media-card4";
 import MediaTile2 from "../components/media-tile2";
 import FeatureGridItem from "../components/feature-grid-item";
-import { Logo_cids, Logo2_cids, ListRow2_cids, FeatureCard_cids, ListRow3_cids, ListRow4_cids, MediaTile_cids, MediaCard_cids, MediaCard2_cids, MediaCard3_cids, MediaCard4_cids, MediaTile2_cids } from "../node-ids";
-import { ListRow3_styles, ListRow4_styles, MediaCard_styles, MediaCard2_styles, MediaCard4_styles } from "../node-styles";
-import { listRow2Data as listRow2DataContent, cards as cardsContent, mediaTile2Data as mediaTile2DataContent, features as featuresContent, homeCaseStudies } from "../content";
+import { Logo_cids, Logo2_cids, ListRow2_cids, FeatureCard_cids, ListRow3_cids, ListRow4_cids, MediaTile_cids, MediaCard2_cids, MediaCard3_cids, MediaCard4_cids, MediaTile2_cids } from "../node-ids";
+import { ListRow3_styles, ListRow4_styles, MediaCard2_styles, MediaCard4_styles } from "../node-styles";
+import { listRow2Data as listRow2DataContent, mediaTile2Data as mediaTile2DataContent, features as featuresContent, homeCaseStudies } from "../content";
 /** The rail runs the same list twice; the second track is the seamless-loop copy. */
 /** The rail runs two tracks; the second is the seamless-loop copy. */
 const techRail: TechRailItemData[] = [
@@ -101,7 +101,7 @@ const MediaCard4_data: MediaCard4Data[] = homeCaseStudies;
  * four capability blocks with their sticky rail, the trust tiles, the case-study
  * carousel and the blog teasers.
  */
-export default function HomeSections({ listRow2Data = listRow2DataContent, listRow3Data = ListRow3_data, listRow4Data = ListRow4_data, mediaTileData = MediaTile_data, cards = cardsContent, mediaCard2Data = MediaCard2_data, mediaCard3Data = MediaCard3_data, mediaCard4Data = MediaCard4_data, mediaTile2Data = mediaTile2DataContent, features = featuresContent } = {}) {
+export default function HomeSections({ listRow2Data = listRow2DataContent, listRow3Data = ListRow3_data, listRow4Data = ListRow4_data, mediaTileData = MediaTile_data, mediaCard2Data = MediaCard2_data, mediaCard3Data = MediaCard3_data, mediaCard4Data = MediaCard4_data, mediaTile2Data = mediaTile2DataContent, features = featuresContent } = {}) {
   return (
     <main className="block" data-cid="n5">
       <div className="block" data-cid="n66">
@@ -550,7 +550,7 @@ export default function HomeSections({ listRow2Data = listRow2DataContent, listR
                       {" "}
                     </div>
                     {" "}
-                    <ul className="block [list-style-type:none] list-outside max-lg:hidden" data-cid="n325">
+                    <ul className="block [list-style-type:none] list-outside max-lg:hidden" data-cid="n325" data-rail>
                       {listRow2Data.map((d, i) => <ListRow2 key={i} d={d} cids={ListRow2_cids[i]} />)}
                     </ul>
                     {" "}
@@ -568,7 +568,7 @@ export default function HomeSections({ listRow2Data = listRow2DataContent, listR
                             <picture className="w-147.5 h-142.5 block absolute top-0 left-0 text-clr-3 bg-cover [background-position:50%_50%] bg-no-repeat transform-[matrix(1,0,0,1,0,80)] max-md:w-[21.5625rem] max-md:h-124 max-lg:transform-[none] md:max-lg:w-184.5 md:max-lg:h-[32.9375rem] 2xl:w-192 2xl:h-125 2xl:transform-[matrix(1,0,0,1,0,108)]" style={{ backgroundImage: "url(data:image/jpeg" }} data-cid="n340">
                               <source className="inline" data-cid="n341" sizes="(max-width: 100px) 100vw, 33vw" srcSet="/assets/site/images/c028a10be1fe.jpg 325w, /assets/site/images/c136d0304eaf.jpg 650w, /assets/site/images/b801ad8f31a6.jpg 975w, /assets/site/images/b4e3c148cedf.jpg 1300w" />
                               {" "}
-                              <img className="w-full h-190.5 block absolute -top-24 max-w-full overflow-clip object-cover align-middle max-md:h-124 max-lg:top-0 md:max-lg:h-[32.9375rem] 2xl:h-173" data-cid="n342" data-component="image" alt="" src="/assets/site/images/b4e3c148cedf.jpg" />
+                              <img loading="lazy" decoding="async" className="w-full h-190.5 block absolute -top-24 max-w-full overflow-clip object-cover align-middle max-md:h-124 max-lg:top-0 md:max-lg:h-[32.9375rem] 2xl:h-173" data-cid="n342" data-component="image" alt="" src="/assets/site/images/b4e3c148cedf.jpg" />
                               {" "}
                             </picture>
                             {" "}
@@ -917,48 +917,7 @@ export default function HomeSections({ listRow2Data = listRow2DataContent, listR
                   Selected work
                 </h2>
                 {" "}
-                <c-segmented-controls class="flex flex-col gap-y-[78.1px] w-full max-w-full max-md:gap-y-14 md:max-lg:gap-y-[4.0875rem] 2xl:gap-y-[5.875rem]" data-cid="n646" id="segmentedcontrols-78">
-                  <div className="flex relative p-1 rounded-[7px] self-center shrink-0 overflow-x-auto overflow-y-hidden bg-surface" data-cid="n647" role="tablist">
-                    <div className="w-[5.3125rem] h-11 block absolute min-w-0 rounded-[7px] bg-muted-foreground pointer-events-none max-lg:w-[5.1875rem]" data-cid="n648" aria-hidden="true" />
-                    {" "}
-                    <c-segmented-tab class="min-h-11 flex relative z-1 py-2 px-5 rounded-[7px] justify-center items-center shrink-0 text-background text-[1.0625rem] font-normal leading-[1.4375rem] tracking-[0.17px] text-center cursor-pointer max-lg:leading-[1.375rem] max-lg:tracking-[0.16px] max-lg:[font-size:inherit] before:content-[''] before:block before:absolute before:inset-0 before:-z-1 before:w-[85.3px] before:h-11 before:bg-muted-foreground before:opacity-0 before:rounded-tl-[7px] max-lg:before:w-[5.1625rem]" data-cid="n649" aria-controls="segmentedcontrols-78-panel-0" aria-selected="true" id="segmentedcontrols-78-tab-0" role="tab">
-                      {" AI "}
-                    </c-segmented-tab>
-                    <c-segmented-tab class="min-h-11 flex relative z-1 py-2 px-5 rounded-[7px] justify-center items-center shrink-0 text-[1.0625rem] font-normal leading-[1.4375rem] tracking-[0.17px] text-center cursor-pointer max-lg:leading-[1.375rem] max-lg:tracking-[0.16px] max-lg:[font-size:inherit] before:content-[''] before:block before:absolute before:inset-0 before:-z-1 before:w-[5.4125rem] before:h-11 before:bg-color-002 before:opacity-0 before:rounded-tl-[7px] max-lg:before:w-[83.9px]" data-cid="n650" aria-controls="segmentedcontrols-78-panel-1" aria-selected="false" id="segmentedcontrols-78-tab-1" role="tab">
-                      {" Product "}
-                    </c-segmented-tab>
-                    <c-segmented-tab class="min-h-11 flex relative z-1 py-2 px-5 rounded-[7px] justify-center items-center shrink-0 text-[1.0625rem] font-normal leading-[1.4375rem] tracking-[0.17px] text-center cursor-pointer max-lg:leading-[1.375rem] max-lg:tracking-[0.16px] max-lg:[font-size:inherit] before:content-[''] before:block before:absolute before:inset-0 before:-z-1 before:w-[86.1px] before:h-11 before:bg-color-002 before:opacity-0 before:rounded-tl-[7px] max-lg:before:w-[5.2125rem]" data-cid="n651" aria-controls="segmentedcontrols-78-panel-2" aria-selected="false" id="segmentedcontrols-78-tab-2" role="tab">
-                      {" Growth "}
-                    </c-segmented-tab>
-                    {" "}
-                  </div>
-                  {" "}
-                  <div className="block overflow-hidden 2xl:relative" data-cid="n652">
-                    <c-segmented-panel class="block" data-cid="n653" aria-labelledby="segmentedcontrols-78-tab-0" id="segmentedcontrols-78-panel-0" role="tabpanel">
-                      <div className="w-full grid gap-5 max-lg:gap-[0.9375rem] grid-cols-1 md:grid-cols-2" data-cid="n654">
-                        {cards.map((d, i) => <MediaCard key={i} d={d} cids={MediaCard_cids[i]} styles={MediaCard_styles[i]} />)}
-                        {" "}
-                      </div>
-                      {" "}
-                    </c-segmented-panel>
-                    <c-segmented-panel class="hidden" data-cid="n735" aria-labelledby="segmentedcontrols-78-tab-1" id="segmentedcontrols-78-panel-1" role="tabpanel">
-                      <div className="grid gap-5 grid-cols-2" data-cid="n736">
-                        {mediaCard2Data.map((d, i) => <MediaCard2 key={i} d={d} cids={MediaCard2_cids[i]} styles={MediaCard2_styles[i]} />)}
-                        {" "}
-                      </div>
-                      {" "}
-                    </c-segmented-panel>
-                    <c-segmented-panel class="hidden" data-cid="n817" aria-labelledby="segmentedcontrols-78-tab-2" id="segmentedcontrols-78-panel-2" role="tabpanel">
-                      <div className="grid gap-5 grid-cols-2" data-cid="n818">
-                        {mediaCard3Data.map((d, i) => <MediaCard3 key={i} d={d} cids={MediaCard3_cids[i]} />)}
-                        {" "}
-                      </div>
-                      {" "}
-                    </c-segmented-panel>
-                    {" "}
-                  </div>
-                  {" "}
-                </c-segmented-controls>
+                <WorkFilter />
                 {" "}
               </div>
               {" "}
@@ -1064,7 +1023,7 @@ export default function HomeSections({ listRow2Data = listRow2DataContent, listR
                                 <picture className="w-full block h-full" data-cid="n919">
                                   <source className="inline" data-cid="n920" sizes="(max-width: 512px) 100vw, 512px" srcSet="/assets/brand/marks/mark-04.svg 128w" />
                                   {" "}
-                                  <img className="w-full block max-w-full overflow-clip object-contain aspect-[512/65] align-middle h-full" data-cid="n921" data-component="image" alt="" src="/assets/brand/marks/mark-04.svg" />
+                                  <img loading="lazy" decoding="async" className="w-full block max-w-full overflow-clip object-contain aspect-[512/65] align-middle h-full" data-cid="n921" data-component="image" alt="" src="/assets/brand/marks/mark-04.svg" />
                                   {" "}
                                 </picture>
                                 {" "}

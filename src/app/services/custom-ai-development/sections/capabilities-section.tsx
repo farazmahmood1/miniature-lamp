@@ -289,7 +289,7 @@ export default function CapabilitiesSection({ logoData = Logo_data, listRow2Data
                         {" "}
                       </div>
                       {" "}
-                      <ul className="block [list-style-type:none] list-outside max-lg:hidden">
+                      <ul className="block [list-style-type:none] list-outside max-lg:hidden" data-rail>
                         {listRow2Data.map((d, i) => <ListRow2 key={i} d={d} />)}
                       </ul>
                       {" "}
@@ -362,7 +362,7 @@ export default function CapabilitiesSection({ logoData = Logo_data, listRow2Data
                               <picture className="w-147.5 h-[31.3125rem] block absolute top-0 left-0 text-clr-2 bg-cover [background-position:50%_50%] bg-no-repeat transform-[matrix(1,0,0,1,0,80)] max-md:w-[21.5625rem] max-md:h-[21.5625rem] max-lg:transform-[none] md:max-lg:w-184.5 md:max-lg:h-156.5 2xl:w-192 2xl:h-163 2xl:transform-[matrix(1,0,0,1,0,108)]" style={{ backgroundImage: "url(data:image/jpeg" }}>
                                 <source className="inline" sizes="(max-width: 100px) 100vw, 33vw" srcSet="/assets/custom-ai-development/images/b47f3edcfcc2.jpg 325w, /assets/custom-ai-development/images/8f6fcd4011bb.jpg 650w, /assets/custom-ai-development/images/29243a3e7b71.jpg 975w, /assets/custom-ai-development/images/9eaee82b4b29.jpg 1300w" />
                                 {" "}
-                                <img className="w-full h-[43.3125rem] block absolute -top-24 max-w-full overflow-clip object-cover align-middle max-md:h-[21.5625rem] max-lg:top-0 md:max-lg:h-156.5 2xl:h-211" data-component="image" alt="" src="/assets/custom-ai-development/images/9eaee82b4b29.jpg" />
+                                <img loading="lazy" decoding="async" className="w-full h-[43.3125rem] block absolute -top-24 max-w-full overflow-clip object-cover align-middle max-md:h-[21.5625rem] max-lg:top-0 md:max-lg:h-156.5 2xl:h-211" data-component="image" alt="" src="/assets/custom-ai-development/images/9eaee82b4b29.jpg" />
                                 {" "}
                               </picture>
                               {" "}
@@ -520,7 +520,7 @@ export default function CapabilitiesSection({ logoData = Logo_data, listRow2Data
                                 <div className="w-1/2 h-[3.1125rem] block relative max-md:h-[19.1px] md:max-lg:h-[1.325rem] 2xl:h-[5.6125rem]">
                                   <div className="h-full block bg-foreground" style={{ maskImage: "url(\"/assets/custom-ai-development/svg/d569fb7c4dea.svg\")" }} aria-hidden="true" />
                                   {" "}
-                                  <img className="w-full block absolute top-0 left-0 opacity-1 max-w-full overflow-clip object-contain aspect-[auto_32/32] align-middle h-full" data-component="image" alt="" height="32" src="/assets/custom-ai-development/svg/d569fb7c4dea.svg" width="32" />
+                                  <img loading="lazy" decoding="async" className="w-full block absolute top-0 left-0 opacity-1 max-w-full overflow-clip object-contain aspect-[auto_32/32] align-middle h-full" data-component="image" alt="" height="32" src="/assets/custom-ai-development/svg/d569fb7c4dea.svg" width="32" />
                                   {" "}
                                 </div>
                                 {" "}
@@ -640,7 +640,7 @@ export default function CapabilitiesSection({ logoData = Logo_data, listRow2Data
                                 <picture className="w-full block h-full">
                                   <source className="inline" sizes="(max-width: 512px) 100vw, 512px" srcSet="/assets/custom-ai-development/images/59a073098db5.avif 128w, /assets/custom-ai-development/images/11f98b26cc05.avif 256w, /assets/custom-ai-development/images/56c4bf0f22f3.avif 384w, /assets/custom-ai-development/images/0fcf43eceab2.avif 512w" />
                                   {" "}
-                                  <img className="w-full block max-w-full overflow-clip object-contain aspect-[512/103] align-middle h-full" data-component="image" alt="" src="/assets/custom-ai-development/images/0fcf43eceab2.avif" />
+                                  <img loading="lazy" decoding="async" className="w-full block max-w-full overflow-clip object-contain aspect-[512/103] align-middle h-full" data-component="image" alt="" src="/assets/custom-ai-development/images/0fcf43eceab2.avif" />
                                   {" "}
                                 </picture>
                                 {" "}
@@ -698,7 +698,7 @@ export default function CapabilitiesSection({ logoData = Logo_data, listRow2Data
                             <div className="w-1/2 h-[144.7px] block relative max-md:h-[95.3px] max-md:w-auto md:max-lg:h-[132.7px] 2xl:h-[14.675rem]">
                               <div className="h-full block bg-foreground" style={{ maskImage: "url(\"/assets/custom-ai-development/svg/b5a2c37372fd.svg\")" }} aria-hidden="true" />
                               {" "}
-                              <img className="w-full block absolute top-0 left-0 opacity-1 max-w-full overflow-clip object-contain aspect-[auto_2471/489] align-middle h-full" data-component="image" alt="" height="489" src="/assets/custom-ai-development/svg/b5a2c37372fd.svg" width="2471" />
+                              <img loading="lazy" decoding="async" className="w-full block absolute top-0 left-0 opacity-1 max-w-full overflow-clip object-contain aspect-[auto_2471/489] align-middle h-full" data-component="image" alt="" height="489" src="/assets/custom-ai-development/svg/b5a2c37372fd.svg" width="2471" />
                               {" "}
                             </div>
                             {" "}
@@ -752,7 +752,7 @@ export default function CapabilitiesSection({ logoData = Logo_data, listRow2Data
                             <div className="w-1/2 h-[144.7px] block relative max-md:h-[95.3px] max-lg:w-auto md:max-lg:h-[132.7px] 2xl:h-[14.675rem]">
                               <div className="h-full block bg-foreground" style={{ maskImage: "url(\"/assets/custom-ai-development/svg/2d60944a7d85.svg\")" }} aria-hidden="true" />
                               {" "}
-                              <img className="w-full block absolute top-0 left-0 opacity-1 max-w-full overflow-clip object-contain aspect-[auto_415/119] align-middle h-full" data-component="image" alt="" height="119" src="/assets/custom-ai-development/svg/2d60944a7d85.svg" width="415" />
+                              <img loading="lazy" decoding="async" className="w-full block absolute top-0 left-0 opacity-1 max-w-full overflow-clip object-contain aspect-[auto_415/119] align-middle h-full" data-component="image" alt="" height="119" src="/assets/custom-ai-development/svg/2d60944a7d85.svg" width="415" />
                               {" "}
                             </div>
                             {" "}

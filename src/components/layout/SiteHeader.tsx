@@ -177,13 +177,19 @@ export default function SiteHeader() {
   );
 }
 
-/** The services mega-panel. Absolutely positioned against the nav <ul>. */
+/**
+ * The services mega-panel, positioned against the nav <ul>.
+ *
+ * Anchored to the nav's right edge, not its left. The nav sits at the right of the
+ * header, so a left-anchored panel of this width ran off the viewport and clipped
+ * the badge on the last column.
+ */
 function ServicesPanel({ open }: { open: boolean }) {
   return (
     <div
-      className="absolute left-0 right-0 top-[54px] z-[100] pt-2"
+      className="absolute right-0 top-[54px] z-[100] pt-2"
       style={{
-        width: "620px",
+        width: "min(620px, calc(100vw - 40px))",
         visibility: open ? "visible" : "hidden",
         transition: open ? "visibility 0s" : "visibility 0s 0.2s",
       }}

@@ -172,16 +172,22 @@ export default function SmoothScroll() {
           // so the rail never told you which card you were looking at. Each label
           // already links to its card by id, so that mapping drives the highlight
           // rather than a second hand-maintained list.
-          const spyLinks = Array.from(
-            document.querySelectorAll<HTMLAnchorElement>('[data-cid="n325"] a[href^="#"]'),
-          );
-          if (spyLinks.length) {
+          // Every page with a rail carries `data-rail` on it, so this works on the
+          // home page and on each service page rather than being scoped to one
+          // captured node id.
+          for (const rail of Array.from(document.querySelectorAll<HTMLElement>("[data-rail]"))) {
+            const spyLinks = Array.from(
+              rail.querySelectorAll<HTMLAnchorElement>('a[href^="#"]'),
+            );
+            if (!spyLinks.length) continue;
+
             const light = (active: HTMLAnchorElement) => {
               for (const a of spyLinks) {
                 if (a === active) a.setAttribute("data-spy-active", "");
                 else a.removeAttribute("data-spy-active");
               }
             };
+
             for (const link of spyLinks) {
               const card = document.querySelector<HTMLElement>(link.hash);
               if (!card) continue;

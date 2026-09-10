@@ -626,7 +626,7 @@ export default function CapabilitiesSection({ listRow2Data = listRow2DataContent
                         {" "}
                       </div>
                       {" "}
-                      <ul className="block [list-style-type:none] list-outside max-lg:hidden">
+                      <ul className="block [list-style-type:none] list-outside max-lg:hidden" data-rail>
                         {listRow2Data.map((d, i) => <ListRow2 key={i} d={d} styles={ListRow2_styles[i]} />)}
                       </ul>
                       {" "}
@@ -695,7 +695,7 @@ export default function CapabilitiesSection({ listRow2Data = listRow2DataContent
                               <picture className="w-147.5 h-150.5 block absolute top-0 left-0 text-clr-2 bg-cover [background-position:50%_50%] bg-no-repeat transform-[matrix(1,0,0,1,0,-80)] max-md:w-[21.5625rem] max-md:h-[26.6875rem] max-lg:transform-[none] md:max-lg:w-184.5 md:max-lg:h-144 2xl:w-192 2xl:h-[41.1875rem] 2xl:transform-[matrix(1,0,0,1,0,-108)]" style={{ backgroundImage: "url(data:image/jpeg" }}>
                                 <source className="inline" sizes="(max-width: 100px) 100vw, 33vw" srcSet="/assets/ai-automation/images/067176fd130b.jpg 325w, /assets/ai-automation/images/4b6a8895a7ac.jpg 650w, /assets/ai-automation/images/01ee14449280.jpg 975w, /assets/ai-automation/images/0adef3306d7e.jpg 1300w" />
                                 {" "}
-                                <img className="w-full h-198.5 block absolute -top-24 max-w-full overflow-clip object-cover align-middle max-md:h-[26.6875rem] max-lg:top-0 md:max-lg:h-144 2xl:h-[53.1875rem]" data-component="image" alt="" src="/assets/ai-automation/images/0adef3306d7e.jpg" />
+                                <img loading="lazy" decoding="async" className="w-full h-198.5 block absolute -top-24 max-w-full overflow-clip object-cover align-middle max-md:h-[26.6875rem] max-lg:top-0 md:max-lg:h-144 2xl:h-[53.1875rem]" data-component="image" alt="" src="/assets/ai-automation/images/0adef3306d7e.jpg" />
                                 {" "}
                               </picture>
                               {" "}
@@ -909,7 +909,7 @@ export default function CapabilitiesSection({ listRow2Data = listRow2DataContent
                                 <picture className="w-full block h-full">
                                   <source className="inline" sizes="(max-width: 512px) 100vw, 512px" srcSet="/assets/ai-automation/images/7405a5326b27.avif 128w, /assets/ai-automation/images/c42f2019d058.avif 256w, /assets/ai-automation/images/5af7aef5c3e1.avif 384w, /assets/ai-automation/images/687e66466c86.avif 512w" />
                                   {" "}
-                                  <img className="w-full block max-w-full overflow-clip object-contain aspect-[512/65] align-middle h-full" data-component="image" alt="" src="/assets/ai-automation/images/687e66466c86.avif" />
+                                  <img loading="lazy" decoding="async" className="w-full block max-w-full overflow-clip object-contain aspect-[512/65] align-middle h-full" data-component="image" alt="" src="/assets/ai-automation/images/687e66466c86.avif" />
                                   {" "}
                                 </picture>
                                 {" "}
@@ -967,7 +967,7 @@ export default function CapabilitiesSection({ listRow2Data = listRow2DataContent
                             <div className="w-1/2 h-[144.7px] block relative max-md:h-[95.3px] max-md:w-auto md:max-lg:h-[132.7px] 2xl:h-[14.675rem]">
                               <div className="h-full block bg-foreground" style={{ maskImage: "url(\"/assets/ai-automation/svg/b5a2c37372fd.svg\")" }} aria-hidden="true" />
                               {" "}
-                              <img className="w-full block absolute top-0 left-0 opacity-1 max-w-full overflow-clip object-contain aspect-[auto_2471/489] align-middle h-full" data-component="image" alt="" height="489" src="/assets/ai-automation/svg/b5a2c37372fd.svg" width="2471" />
+                              <img loading="lazy" decoding="async" className="w-full block absolute top-0 left-0 opacity-1 max-w-full overflow-clip object-contain aspect-[auto_2471/489] align-middle h-full" data-component="image" alt="" height="489" src="/assets/ai-automation/svg/b5a2c37372fd.svg" width="2471" />
                               {" "}
                             </div>
                             {" "}
@@ -1025,7 +1025,7 @@ export default function CapabilitiesSection({ listRow2Data = listRow2DataContent
                                 <picture className="w-full block h-full">
                                   <source className="inline" sizes="(max-width: 512px) 100vw, 512px" srcSet="/assets/ai-automation/images/59a073098db5.avif 128w, /assets/ai-automation/images/11f98b26cc05.avif 256w, /assets/ai-automation/images/56c4bf0f22f3.avif 384w, /assets/ai-automation/images/0fcf43eceab2.avif 512w" />
                                   {" "}
-                                  <img className="w-full block max-w-full overflow-clip object-contain aspect-[512/103] align-middle h-full" data-component="image" alt="" src="/assets/ai-automation/images/0fcf43eceab2.avif" />
+                                  <img loading="lazy" decoding="async" className="w-full block max-w-full overflow-clip object-contain aspect-[512/103] align-middle h-full" data-component="image" alt="" src="/assets/ai-automation/images/0fcf43eceab2.avif" />
                                   {" "}
                                 </picture>
                                 {" "}

@@ -60,6 +60,8 @@ export default function FeatureGridItem({
                   <source className="inline" sizes="(max-width: 999px) 100vw, 33vw" srcSet={art.srcSet} />
                 )}
                 <img
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-[32.4375rem] block absolute -top-24 max-w-full overflow-clip object-cover align-middle max-md:h-[15.0625rem] max-lg:top-0 md:max-lg:h-65 2xl:h-[43.6875rem]"
                   data-component="image"
                   alt=""

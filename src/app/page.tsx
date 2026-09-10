@@ -3,12 +3,11 @@ import type { Metadata } from "next";
 import HeroCanvas from "../components/motion/HeroCanvas";
 import InteractiveDots from "../components/motion/InteractiveDots";
 import CaseStudyCarousel from "../components/motion/CaseStudyCarousel";
-import InteractionRuntime from "../components/motion/InteractionRuntime";
 import ScrollReveal from "../components/motion/ScrollReveal";
 import HeroBackdrop from "./sections/hero-backdrop";
 import HomeSections from "./sections/home-sections";
 import { site } from "../config/site";
-import { homeMotionSpec, homeTabSpecs } from "./motion-spec";
+import { homeMotionSpec } from "./motion-spec";
 
 export const metadata: Metadata = {
   title: `${site.name} — ${site.tagline}`,
@@ -26,10 +25,6 @@ export default function Page() {
         <div className="block" data-cid="n4" />
         <HomeSections />
       </div>
-
-      {/* The one captured interaction spec still in use: the case-study filter tabs.
-          The other two controls on this page are components now. */}
-      <InteractionRuntime spec={homeTabSpecs[1]} />
       <ScrollReveal spec={homeMotionSpec} />
     </>
   );

@@ -273,7 +273,7 @@ export default function CapabilitiesSection({ listRow2Data = listRow2DataContent
                         {" "}
                       </div>
                       {" "}
-                      <ul className="block [list-style-type:none] list-outside max-lg:hidden">
+                      <ul className="block [list-style-type:none] list-outside max-lg:hidden" data-rail>
                         {listRow2Data.map((d, i) => <ListRow2 key={i} d={d} />)}
                       </ul>
                       {" "}
@@ -291,7 +291,7 @@ export default function CapabilitiesSection({ listRow2Data = listRow2DataContent
                               <picture className="w-147.5 h-[31.3125rem] block absolute top-0 left-0 text-clr-2 bg-cover [background-position:50%_50%] bg-no-repeat transform-[matrix(1,0,0,1,0,-80)] max-md:w-[21.5625rem] max-md:h-[18.3125rem] max-lg:transform-[none] md:max-lg:w-184.5 md:max-lg:h-156.5 2xl:w-192 2xl:h-163 2xl:transform-[matrix(1,0,0,1,0,-108)]" style={{ backgroundImage: "url(data:image/jpeg" }}>
                                 <source className="inline" sizes="(max-width: 100px) 100vw, 33vw" srcSet="/assets/conversational-ai/images/66b5686b2f31.jpg 325w, /assets/conversational-ai/images/d6191539cbe2.jpg 650w, /assets/conversational-ai/images/527734c524b8.jpg 975w, /assets/conversational-ai/images/48ef972392c0.jpg 1300w" />
                                 {" "}
-                                <img className="w-full h-[43.3125rem] block absolute -top-24 max-w-full overflow-clip object-cover align-middle max-md:h-[18.3125rem] max-lg:top-0 md:max-lg:h-156.5 2xl:h-211" data-component="image" alt="" src="/assets/conversational-ai/images/48ef972392c0.jpg" />
+                                <img loading="lazy" decoding="async" className="w-full h-[43.3125rem] block absolute -top-24 max-w-full overflow-clip object-cover align-middle max-md:h-[18.3125rem] max-lg:top-0 md:max-lg:h-156.5 2xl:h-211" data-component="image" alt="" src="/assets/conversational-ai/images/48ef972392c0.jpg" />
                                 {" "}
                               </picture>
                               {" "}
@@ -409,7 +409,7 @@ export default function CapabilitiesSection({ listRow2Data = listRow2DataContent
                               <picture className="w-147.5 h-[31.3125rem] block absolute top-0 left-0 text-clr-2 bg-cover [background-position:50%_50%] bg-no-repeat transform-[matrix(1,0,0,1,0,80)] max-md:w-[21.5625rem] max-md:h-[18.3125rem] max-lg:transform-[none] md:max-lg:w-184.5 md:max-lg:h-156.5 2xl:w-192 2xl:h-163 2xl:transform-[matrix(1,0,0,1,0,108)]" style={{ backgroundImage: "url(data:image/jpeg" }}>
                                 <source className="inline" sizes="(max-width: 100px) 100vw, 33vw" srcSet="/assets/conversational-ai/images/e02da3a8ca29.jpg 325w, /assets/conversational-ai/images/146ca5c3ac39.jpg 650w, /assets/conversational-ai/images/76279b947570.jpg 975w, /assets/conversational-ai/images/a470a94c4455.jpg 1300w" />
                                 {" "}
-                                <img className="w-full h-[43.3125rem] block absolute -top-24 max-w-full overflow-clip object-cover align-middle max-md:h-[18.3125rem] max-lg:top-0 md:max-lg:h-156.5 2xl:h-211" data-component="image" alt="" src="/assets/conversational-ai/images/a470a94c4455.jpg" />
+                                <img loading="lazy" decoding="async" className="w-full h-[43.3125rem] block absolute -top-24 max-w-full overflow-clip object-cover align-middle max-md:h-[18.3125rem] max-lg:top-0 md:max-lg:h-156.5 2xl:h-211" data-component="image" alt="" src="/assets/conversational-ai/images/a470a94c4455.jpg" />
                                 {" "}
                               </picture>
                               {" "}
@@ -541,7 +541,7 @@ export default function CapabilitiesSection({ listRow2Data = listRow2DataContent
                             <div className="w-1/2 h-[144.7px] block relative max-md:h-[95.3px] md:max-lg:h-[132.7px] 2xl:h-[14.675rem]">
                               <div className="h-full block bg-foreground" style={{ maskImage: "url(\"/assets/conversational-ai/svg/b5a2c37372fd.svg\")" }} aria-hidden="true" />
                               {" "}
-                              <img className="w-full block absolute top-0 left-0 opacity-1 max-w-full overflow-clip object-contain aspect-[auto_2471/489] align-middle h-full" data-component="image" alt="" height="489" src="/assets/conversational-ai/svg/b5a2c37372fd.svg" width="2471" />
+                              <img loading="lazy" decoding="async" className="w-full block absolute top-0 left-0 opacity-1 max-w-full overflow-clip object-contain aspect-[auto_2471/489] align-middle h-full" data-component="image" alt="" height="489" src="/assets/conversational-ai/svg/b5a2c37372fd.svg" width="2471" />
                               {" "}
                             </div>
                             {" "}
@@ -599,7 +599,7 @@ export default function CapabilitiesSection({ listRow2Data = listRow2DataContent
                                 <picture className="w-full block h-full">
                                   <source className="inline" sizes="(max-width: 512px) 100vw, 512px" srcSet="/assets/conversational-ai/images/59a073098db5.avif 128w, /assets/conversational-ai/images/11f98b26cc05.avif 256w, /assets/conversational-ai/images/56c4bf0f22f3.avif 384w, /assets/conversational-ai/images/0fcf43eceab2.avif 512w" />
                                   {" "}
-                                  <img className="w-full block max-w-full overflow-clip object-contain aspect-[512/103] align-middle h-full" data-component="image" alt="" src="/assets/conversational-ai/images/0fcf43eceab2.avif" />
+                                  <img loading="lazy" decoding="async" className="w-full block max-w-full overflow-clip object-contain aspect-[512/103] align-middle h-full" data-component="image" alt="" src="/assets/conversational-ai/images/0fcf43eceab2.avif" />
                                   {" "}
                                 </picture>
                                 {" "}
@@ -657,7 +657,7 @@ export default function CapabilitiesSection({ listRow2Data = listRow2DataContent
                             <div className="w-1/2 h-[144.7px] block relative max-md:h-[95.3px] max-lg:w-auto md:max-lg:h-[132.7px] 2xl:h-[14.675rem]">
                               <div className="h-full block bg-foreground" style={{ maskImage: "url(\"/assets/conversational-ai/svg/2d60944a7d85.svg\")" }} aria-hidden="true" />
                               {" "}
-                              <img className="w-full block absolute top-0 left-0 opacity-1 max-w-full overflow-clip object-contain aspect-[auto_415/119] align-middle h-full" data-component="image" alt="" height="119" src="/assets/conversational-ai/svg/2d60944a7d85.svg" width="415" />
+                              <img loading="lazy" decoding="async" className="w-full block absolute top-0 left-0 opacity-1 max-w-full overflow-clip object-contain aspect-[auto_415/119] align-middle h-full" data-component="image" alt="" height="119" src="/assets/conversational-ai/svg/2d60944a7d85.svg" width="415" />
                               {" "}
                             </div>
                             {" "}
@@ -711,7 +711,7 @@ export default function CapabilitiesSection({ listRow2Data = listRow2DataContent
                             <div className="block relative h-1/2 w-1/2">
                               <div className="h-[144.7px] block bg-foreground max-md:h-[95.3px] md:max-lg:h-[132.7px] 2xl:h-[14.675rem]" style={{ maskImage: "url(\"/assets/conversational-ai/svg/b415e5819d2f.svg\")" }} aria-hidden="true" />
                               {" "}
-                              <img className="block absolute top-0 left-0 opacity-1 max-w-full overflow-clip object-contain aspect-[auto_900/364] align-middle h-full w-full" alt="" height="364" src="/assets/conversational-ai/svg/b415e5819d2f.svg" width="900" />
+                              <img loading="lazy" decoding="async" className="block absolute top-0 left-0 opacity-1 max-w-full overflow-clip object-contain aspect-[auto_900/364] align-middle h-full w-full" alt="" height="364" src="/assets/conversational-ai/svg/b415e5819d2f.svg" width="900" />
                               {" "}
                             </div>
                             {" "}

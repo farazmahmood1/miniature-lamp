@@ -392,22 +392,46 @@ export default function HeroCanvas() {
         raf = requestAnimationFrame(frame);
       }
 
-      // Pause when the tab is hidden — no point burning GPU on an unseen canvas.
-      const onVis = () => {
+      // Pause when the tab is hidden, and when the hero has scrolled away.
+      //
+      // The canvas is position:fixed, so it never leaves the viewport on its own
+      // terms — but the content below it is opaque, so past the hero it renders a
+      // frame nobody can see. Left running it held the GPU for the whole visit and
+      // made everything else on the page, navigation included, feel heavy.
+      let onScreen = true;
+      let visible = true;
+
+      const sync = () => {
         if (reduced) return;
-        if (document.hidden) {
-          running = false;
-          cancelAnimationFrame(raf);
-        } else if (!running) {
-          running = true;
-          raf = requestAnimationFrame(frame);
-        }
+        const shouldRun = onScreen && visible;
+        if (shouldRun === running) return;
+        running = shouldRun;
+        if (running) raf = requestAnimationFrame(frame);
+        else cancelAnimationFrame(raf);
+      };
+
+      const onVis = () => {
+        visible = !document.hidden;
+        sync();
       };
       document.addEventListener("visibilitychange", onVis);
+
+      // The hero block itself is the thing worth watching: once it is past, the
+      // backdrop is covered.
+      const hero = document.querySelector("c-hero-home") ?? host;
+      const heroIO = new IntersectionObserver(
+        ([entry]) => {
+          onScreen = entry.isIntersecting;
+          sync();
+        },
+        { rootMargin: "200px 0px" },
+      );
+      heroIO.observe(hero);
 
       cleanup = () => {
         running = false;
         cancelAnimationFrame(raf);
+        heroIO.disconnect();
         ro.disconnect();
         removeEventListener("scroll", onScroll);
         removeEventListener("pointermove", onPointer);

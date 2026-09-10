@@ -18,6 +18,8 @@ export type CaseStudy = {
   summary: string;
   /** Which service this engagement sat under. Links the case study back to the service. */
   serviceSlug: string;
+  /** Groups the case study under a filter on the home page and the work index. */
+  category: "ai" | "product" | "growth";
   /** Short labels shown as chips on the card. */
   tags: string[];
   industry: string;
@@ -47,6 +49,7 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "An agent pipeline that reads inbound quote requests, prices them against live carrier rates and drafts the reply for a human to approve.",
     serviceSlug: "ai-automation",
+    category: "ai",
     tags: ["AI Automation", "Operations", "Integrations"],
     industry: "Freight & logistics",
     year: "2025",
@@ -96,6 +99,7 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "After-hours call handling for a twelve-clinic group, answering, triaging and booking straight into the practice management system.",
     serviceSlug: "conversational-ai",
+    category: "ai",
     tags: ["Conversational AI", "Voice", "Healthcare"],
     industry: "Healthcare",
     year: "2025",
@@ -145,6 +149,7 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "A multi-tenant quoting platform with role-based access, usage billing and an assistant that explains how a price was reached.",
     serviceSlug: "custom-ai-development",
+    category: "product",
     tags: ["SaaS", "Custom AI", "Multi-tenant"],
     industry: "Industrial supply",
     year: "2026",
@@ -189,6 +194,7 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "A Shopify replatform that started with checkout analytics rather than with a design, and ended with a faster store on a smaller app footprint.",
     serviceSlug: "shopify-ecommerce",
+    category: "growth",
     tags: ["Shopify", "E-commerce", "Performance"],
     industry: "Outdoor retail",
     year: "2025",
@@ -238,6 +244,7 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "Demand forecasts built on the history they already had, delivered in the planning tool the team already used.",
     serviceSlug: "ai-data-analytics",
+    category: "product",
     tags: ["Forecasting", "Data", "Analytics"],
     industry: "Consumer goods",
     year: "2026",
@@ -282,6 +289,7 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "Positioning, identity and a component library delivered together, so the brand held its shape once engineers started building.",
     serviceSlug: "branding-design",
+    category: "growth",
     tags: ["Branding", "Design System", "UI"],
     industry: "Architecture software",
     year: "2025",
@@ -326,5 +334,16 @@ export const getCaseStudy = (slug: string) => caseStudies.find((c) => c.slug ===
 export const caseStudiesForService = (serviceSlug: string) =>
   caseStudies.filter((c) => c.serviceSlug === serviceSlug);
 
-/** The three shown on the home page. */
+/** The three shown on the home page carousel. */
 export const featuredCaseStudies = caseStudies.slice(0, 3);
+
+/** Filter groups for the work grid. "all" is synthesised, not stored. */
+export const workFilters = [
+  { id: "all", label: "All work" },
+  { id: "ai", label: "AI" },
+  { id: "product", label: "Product" },
+  { id: "growth", label: "Growth" },
+] as const;
+
+export const caseStudiesIn = (filter: string) =>
+  filter === "all" ? caseStudies : caseStudies.filter((c) => c.category === filter);

@@ -1118,3 +1118,148 @@ c-inner-parallax img {
   }
   .ct-pipe::before { animation: none; }
 }
+
+/* Selected work grid ----------------------------------------------------------
+   Sits on the dark hero backdrop, so the cards are light and the chrome is white. */
+.ct-work {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 44px;
+  width: 100%;
+}
+
+.ct-work__tabs {
+  position: relative;
+  display: flex;
+  padding: 4px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+.ct-work__pill {
+  position: absolute;
+  inset-block: 4px;
+  left: 0;
+  border-radius: 6px;
+  background: #fff;
+  transition:
+    transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 200ms ease;
+  pointer-events: none;
+}
+.ct-work__tab {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  min-height: 38px;
+  padding: 0 20px;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.72);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 280ms ease;
+}
+.ct-work__tab[aria-selected="true"] { color: var(--color-001, rgb(16, 20, 33)); }
+
+/* Cards ---------------------------------------------------------------------- */
+.ct-work__grid {
+  display: grid;
+  gap: 20px;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (max-width: 1024.98px) {
+  .ct-work__grid { grid-template-columns: minmax(0, 1fr); gap: 15px; }
+  .ct-work { gap: 30px; }
+}
+
+.ct-work__card {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  background: var(--surface, rgb(238, 242, 245));
+  color: var(--foreground, rgb(23, 43, 118));
+  transition:
+    background 280ms ease,
+    transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
+  animation: work-in 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.ct-work__card:hover {
+  background: var(--surface-2, rgb(219, 229, 237));
+  transform: translateY(-3px);
+}
+@keyframes work-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ct-work__mark {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 96px;
+  height: 96px;
+  border-radius: 8px;
+  background: var(--surface-2, rgb(219, 229, 237));
+}
+.ct-work__glyph {
+  display: block;
+  width: 54px;
+  height: 34px;
+  background: var(--muted-foreground, rgb(88, 100, 144));
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.ct-work__body {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 9px;
+}
+.ct-work__tags {
+  display: flex;
+  gap: 14px;
+  color: var(--muted-foreground, rgb(88, 100, 144));
+}
+.ct-work__title {
+  font-size: 1.1875rem;
+  line-height: 1.55rem;
+  letter-spacing: -0.4px;
+  text-wrap: balance;
+}
+.ct-work__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 6px;
+  color: var(--muted-foreground, rgb(88, 100, 144));
+}
+.ct-work__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.ct-work__more svg {
+  opacity: 0;
+  transition: opacity 240ms ease, transform 240ms ease;
+  transform: translate(-3px, 3px);
+}
+.ct-work__card:hover .ct-work__more svg { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-work__card { animation: none; transition: background 200ms ease; }
+  .ct-work__card:hover { transform: none; }
+  .ct-work__pill { transition: none; }
+}
