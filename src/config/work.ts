@@ -20,6 +20,12 @@ export type CaseStudy = {
   serviceSlug: string;
   /** Groups the case study under a filter on the home page and the work index. */
   category: "ai" | "product" | "growth";
+  /** Shown in the meta row on the case study page. */
+  location: string;
+  /** The three-phase breakdown, in the order the engagement ran. */
+  phases: { name: string; duration: string; items: string[] }[];
+  /** Artwork. Placeholder abstracts until real project imagery exists. */
+  images: { hero: string; gallery: string[] };
   /** Short labels shown as chips on the card. */
   tags: string[];
   industry: string;
@@ -50,6 +56,43 @@ export const caseStudies: CaseStudy[] = [
       "An agent pipeline that reads inbound quote requests, prices them against live carrier rates and drafts the reply for a human to approve.",
     serviceSlug: "ai-automation",
     category: "ai",
+    location: "Manchester, UK",
+    images: {
+      hero: "/assets/site/images/4d8a8180db80.jpg",
+      gallery: [
+        "/assets/site/images/191ec76fa273.jpg",
+        "/assets/site/images/ca1833da6f43.jpg",
+      ],
+    },
+    phases: [
+      {
+        name: "Discovery",
+        duration: "2 weeks",
+        items: [
+          "Intake mapping across four channels",
+          "Volume and error-cost ranking",
+          "Shadow-run baseline",
+        ],
+      },
+      {
+        name: "Design",
+        duration: "3 weeks",
+        items: [
+          "Extraction schema",
+          "Confidence thresholds",
+          "Exception queue for humans",
+        ],
+      },
+      {
+        name: "Build",
+        duration: "9 weeks",
+        items: [
+          "Rating-tool integration",
+          "Reply drafting in-template",
+          "Logging and drift alerts",
+        ],
+      },
+    ],
     tags: ["AI Automation", "Operations", "Integrations"],
     industry: "Freight & logistics",
     year: "2025",
@@ -100,6 +143,43 @@ export const caseStudies: CaseStudy[] = [
       "After-hours call handling for a twelve-clinic group, answering, triaging and booking straight into the practice management system.",
     serviceSlug: "conversational-ai",
     category: "ai",
+    location: "Twelve clinics, UK",
+    images: {
+      hero: "/assets/site/images/ca1833da6f43.jpg",
+      gallery: [
+        "/assets/site/images/3f516d703cfa.jpg",
+        "/assets/site/images/9b60c7e691bd.jpg",
+      ],
+    },
+    phases: [
+      {
+        name: "Discovery",
+        duration: "2 weeks",
+        items: [
+          "Call-recording review",
+          "Clinical governance constraints",
+          "Booking-system audit",
+        ],
+      },
+      {
+        name: "Design",
+        duration: "2 weeks",
+        items: [
+          "Triage classifier boundary",
+          "Transfer path to the nurse line",
+          "Latency budget per stage",
+        ],
+      },
+      {
+        name: "Build",
+        duration: "6 weeks",
+        items: [
+          "Streaming voice pipeline",
+          "Live availability lookup",
+          "Transcript review workflow",
+        ],
+      },
+    ],
     tags: ["Conversational AI", "Voice", "Healthcare"],
     industry: "Healthcare",
     year: "2025",
@@ -150,6 +230,43 @@ export const caseStudies: CaseStudy[] = [
       "A multi-tenant quoting platform with role-based access, usage billing and an assistant that explains how a price was reached.",
     serviceSlug: "custom-ai-development",
     category: "product",
+    location: "Rotterdam, NL",
+    images: {
+      hero: "/assets/site/images/191ec76fa273.jpg",
+      gallery: [
+        "/assets/site/images/b4e3c148cedf.jpg",
+        "/assets/site/images/4d8a8180db80.jpg",
+      ],
+    },
+    phases: [
+      {
+        name: "Discovery",
+        duration: "3 weeks",
+        items: [
+          "Prototype audit",
+          "Contract and tier modelling",
+          "Cost-per-action ceiling",
+        ],
+      },
+      {
+        name: "Design",
+        duration: "4 weeks",
+        items: [
+          "Tenancy and role model",
+          "Quote and explanation flows",
+          "Billing surfaces",
+        ],
+      },
+      {
+        name: "Build",
+        duration: "13 weeks",
+        items: [
+          "Multi-tenant application",
+          "Audit trail on every price",
+          "Stripe usage billing",
+        ],
+      },
+    ],
     tags: ["SaaS", "Custom AI", "Multi-tenant"],
     industry: "Industrial supply",
     year: "2026",
@@ -195,6 +312,43 @@ export const caseStudies: CaseStudy[] = [
       "A Shopify replatform that started with checkout analytics rather than with a design, and ended with a faster store on a smaller app footprint.",
     serviceSlug: "shopify-ecommerce",
     category: "growth",
+    location: "Cumbria, UK",
+    images: {
+      hero: "/assets/site/images/3f516d703cfa.jpg",
+      gallery: [
+        "/assets/site/images/ca1833da6f43.jpg",
+        "/assets/site/images/b801ad8f31a6.jpg",
+      ],
+    },
+    phases: [
+      {
+        name: "Discovery",
+        duration: "2 weeks",
+        items: [
+          "Funnel instrumentation",
+          "App script-weight audit",
+          "Two leaks isolated",
+        ],
+      },
+      {
+        name: "Design",
+        duration: "2 weeks",
+        items: [
+          "Theme on their own brand",
+          "Merchandiser-editable templates",
+          "Checkout and express paths",
+        ],
+      },
+      {
+        name: "Build",
+        duration: "5 weeks",
+        items: [
+          "Custom theme",
+          "Eleven apps removed",
+          "Performance budget in CI",
+        ],
+      },
+    ],
     tags: ["Shopify", "E-commerce", "Performance"],
     industry: "Outdoor retail",
     year: "2025",
@@ -245,6 +399,43 @@ export const caseStudies: CaseStudy[] = [
       "Demand forecasts built on the history they already had, delivered in the planning tool the team already used.",
     serviceSlug: "ai-data-analytics",
     category: "product",
+    location: "Leeds, UK",
+    images: {
+      hero: "/assets/site/images/9b60c7e691bd.jpg",
+      gallery: [
+        "/assets/site/images/4d8a8180db80.jpg",
+        "/assets/site/images/191ec76fa273.jpg",
+      ],
+    },
+    phases: [
+      {
+        name: "Discovery",
+        duration: "3 weeks",
+        items: [
+          "Data audit",
+          "Override-rate baseline",
+          "Promotional calendar recovery",
+        ],
+      },
+      {
+        name: "Design",
+        duration: "2 weeks",
+        items: [
+          "Driver attribution",
+          "Planner-facing view",
+          "Two dashboards retired",
+        ],
+      },
+      {
+        name: "Build",
+        duration: "7 weeks",
+        items: [
+          "Warehouse pipelines",
+          "Validated forecast model",
+          "Delivery into the planning tool",
+        ],
+      },
+    ],
     tags: ["Forecasting", "Data", "Analytics"],
     industry: "Consumer goods",
     year: "2026",
@@ -290,6 +481,43 @@ export const caseStudies: CaseStudy[] = [
       "Positioning, identity and a component library delivered together, so the brand held its shape once engineers started building.",
     serviceSlug: "branding-design",
     category: "growth",
+    location: "Copenhagen, DK",
+    images: {
+      hero: "/assets/site/images/b4e3c148cedf.jpg",
+      gallery: [
+        "/assets/site/images/3f516d703cfa.jpg",
+        "/assets/site/images/ca1833da6f43.jpg",
+      ],
+    },
+    phases: [
+      {
+        name: "Discovery",
+        duration: "2 weeks",
+        items: [
+          "Audience argument settled",
+          "Screen and surface inventory",
+          "Four button styles catalogued",
+        ],
+      },
+      {
+        name: "Design",
+        duration: "3 weeks",
+        items: [
+          "Positioning and messaging",
+          "Identity system",
+          "Token set for colour and type",
+        ],
+      },
+      {
+        name: "Build",
+        duration: "3 weeks",
+        items: [
+          "62 Storybook components",
+          "Figma library on one token set",
+          "Eleven-page guidelines",
+        ],
+      },
+    ],
     tags: ["Branding", "Design System", "UI"],
     industry: "Architecture software",
     year: "2025",
@@ -347,3 +575,32 @@ export const workFilters = [
 
 export const caseStudiesIn = (filter: string) =>
   filter === "all" ? caseStudies : caseStudies.filter((c) => c.category === filter);
+
+/**
+ * The case-study page reads its overview, challenge and impact from the write-up
+ * rather than storing them twice.
+ */
+export const overviewOf = (c: CaseStudy) => c.sections[0]?.body[0] ?? c.summary;
+export const challengeOf = (c: CaseStudy) =>
+  c.sections[0]?.body[1] ?? c.sections[0]?.body[0] ?? c.summary;
+export const impactOf = (c: CaseStudy) =>
+  c.sections[c.sections.length - 1]?.body[0] ?? c.summary;
+
+/** The next study in the list, wrapping at the end. */
+export const nextCaseStudy = (slug: string) => {
+  const i = caseStudies.findIndex((c) => c.slug === slug);
+  return caseStudies[(i + 1) % caseStudies.length];
+};
+
+/**
+ * The write-up with the paragraphs the case-study page already shows as pull
+ * statements removed, so nothing is printed twice. Matching on the text rather
+ * than on an index keeps this correct if the accessors above ever change which
+ * paragraph they take. A section left with no body drops out entirely.
+ */
+export const narrativeOf = (c: CaseStudy) => {
+  const used = new Set([overviewOf(c), challengeOf(c), impactOf(c)]);
+  return c.sections
+    .map((s) => ({ ...s, body: s.body.filter((p) => !used.has(p)) }))
+    .filter((s) => s.body.length > 0);
+};

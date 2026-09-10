@@ -8,7 +8,11 @@
 export type Engagement = {
   slug: string;
   name: string;
-  price: string;
+  /** The number, so the delivery-speed toggle can act on it. */
+  amount: number;
+  /** Rendered before and after the formatted amount. */
+  pricePrefix: string;
+  priceSuffix: string;
   priceNote: string;
   description: string;
   includes: string[];
@@ -24,7 +28,9 @@ export const engagements: Engagement[] = [
   {
     slug: "discovery",
     name: "Discovery",
-    price: "$2,500",
+    amount: 2500,
+    pricePrefix: "",
+    priceSuffix: "",
     priceNote: "Two weeks, fixed",
     description:
       "A short, paid piece of work that ends with a scope you could hand to any competent team, including one that is not us.",
@@ -42,7 +48,9 @@ export const engagements: Engagement[] = [
   {
     slug: "project",
     name: "Project",
-    price: "From $12k",
+    amount: 12000,
+    pricePrefix: "From ",
+    priceSuffix: "",
     priceNote: "Fixed scope, fixed price",
     description:
       "A defined build with an agreed scope, an agreed price and a date. Change requests are priced and decided rather than absorbed quietly.",
@@ -62,7 +70,9 @@ export const engagements: Engagement[] = [
   {
     slug: "retainer",
     name: "Retainer",
-    price: "From $6k/mo",
+    amount: 6000,
+    pricePrefix: "From ",
+    priceSuffix: "/mo",
     priceNote: "Monthly, cancel any time",
     description:
       "A standing block of design and engineering time, spent against whatever the evidence says matters most that month.",
@@ -152,3 +162,132 @@ export const pricingFaqs = [
       "Discovery is the smallest thing we take on. Below that the setup cost outweighs the value, and we would rather point you to someone better suited than take a project neither of us will enjoy.",
   },
 ];
+/* ---------------------------------------------------------------------------
+ * Delivery speed
+ *
+ * PLACEHOLDER MULTIPLIER — confirm the accelerated premium before launch.
+ * Compressing a timeline means more people working in parallel, which costs more
+ * per unit of work. The toggle above the plans applies this to the numeric prices
+ * so the page states the premium rather than leaving it to be discovered on a call.
+ * ------------------------------------------------------------------------- */
+
+export type DeliverySpeed = {
+  id: string;
+  label: string;
+  /** Applied to every numeric price on the page. */
+  multiplier: number;
+  note: string;
+};
+
+export const deliverySpeeds: DeliverySpeed[] = [
+  {
+    id: "standard",
+    label: "Standard",
+    multiplier: 1,
+    note: "Our normal cadence. One team, sequenced work, weekly demos.",
+  },
+  {
+    id: "accelerated",
+    label: "Accelerated",
+    multiplier: 1.35,
+    note: "More people in parallel to hit a fixed date. Costs more per unit of work.",
+  },
+];
+
+/* ---------------------------------------------------------------------------
+ * Estimator
+ *
+ * Indicative only. It exists so a visitor can sanity-check whether we are in their
+ * range before booking a call, not to produce a quote. Every real number comes out
+ * of discovery.
+ * ------------------------------------------------------------------------- */
+
+export type EstimatorInput = {
+  id: string;
+  label: string;
+  help: string;
+  min: number;
+  max: number;
+  step: number;
+  initial: number;
+  /** Added to the base estimate per unit. */
+  unitCost: number;
+  /** How the value reads next to the slider. */
+  unit: (n: number) => string;
+};
+
+/** Every estimate starts here: project setup, environments, CI and handover. */
+export const ESTIMATE_BASE = 9000;
+
+/** The band we quote around the midpoint, because a single number would be a lie. */
+export const ESTIMATE_SPREAD = 0.25;
+
+export const estimatorInputs: EstimatorInput[] = [
+  {
+    id: "screens",
+    label: "Screens or workflows",
+    help: "Distinct things a user can do, not pages of marketing copy.",
+    min: 3,
+    max: 40,
+    step: 1,
+    initial: 10,
+    unitCost: 950,
+    unit: (n) => `${n}`,
+  },
+  {
+    id: "integrations",
+    label: "Systems to integrate",
+    help: "Anything with its own authentication: a CRM, an ERP, a payment provider.",
+    min: 0,
+    max: 10,
+    step: 1,
+    initial: 2,
+    unitCost: 3200,
+    unit: (n) => `${n}`,
+  },
+  {
+    id: "ai",
+    label: "AI or agent workflows",
+    help: "Each one needs evaluation, guardrails and an exception path for humans.",
+    min: 0,
+    max: 8,
+    step: 1,
+    initial: 1,
+    unitCost: 5400,
+    unit: (n) => `${n}`,
+  },
+];
+
+/** Options that change the total by a proportion rather than a unit count. */
+export const estimatorOptions = [
+  {
+    id: "compliance",
+    label: "Regulated data",
+    help: "GDPR, HIPAA or SOC 2 in scope from the first sprint.",
+    multiplier: 1.22,
+  },
+  {
+    id: "mobile",
+    label: "Native mobile app",
+    help: "A React Native build alongside the web application.",
+    multiplier: 1.4,
+  },
+  {
+    id: "migration",
+    label: "Data migration",
+    help: "Moving live records off an existing system without downtime.",
+    multiplier: 1.15,
+  },
+];
+
+/**
+ * Prices read as thousands from $5k up, which is how they get said out loud, with one
+ * decimal where the delivery multiplier produces one. Rounded to the nearest hundred
+ * so a multiplier cannot produce more precision than the estimate actually has.
+ */
+export const formatPrice = (amount: number) => {
+  const rounded = Math.round(amount / 100) * 100;
+  if (rounded < 5000) return `$${rounded.toLocaleString("en-US")}`;
+  const thousands = Math.round(rounded / 100) / 10;
+  return `$${thousands % 1 === 0 ? thousands.toFixed(0) : thousands.toFixed(1)}k`;
+};

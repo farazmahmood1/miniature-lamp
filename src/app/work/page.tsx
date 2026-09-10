@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { caseStudies } from "../../config/work";
+import { SITE_ORIGIN } from "../../config/site";
+import { primaryCta } from "../../config/navigation";
 import { pageMetadata } from "../../lib/metadata";
-import PageHero from "../../components/ui/PageHero";
-import ContentCard from "../../components/ui/ContentCard";
+import RevealOnScroll from "../../components/motion/RevealOnScroll";
+import WorkIndex from "./work-index";
 
 export const metadata: Metadata = pageMetadata({
   title: "Work",
@@ -12,33 +15,63 @@ export const metadata: Metadata = pageMetadata({
   path: "/work",
 });
 
+/** Every case study, as an item list, so the index is legible to search engines. */
+const listJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Codilated case studies",
+  itemListElement: caseStudies.map((study, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: study.title,
+    url: `${SITE_ORIGIN}/work/${study.slug}`,
+  })),
+};
+
 export default function Page() {
   return (
-    <div className="block relative" id="content">
-      <PageHero
-        eyebrow="Work"
-        title="Projects, and what they changed"
-        gradient={{ from: 3, to: 4 }}
-        intro="Each of these is written up the same way: the situation we walked into, what we built, and the numbers afterwards."
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(listJsonLd) }}
       />
 
-      <main className="block bg-clr-1 pb-[10.2125rem] pt-20 text-foreground max-lg:pb-14 max-lg:pt-14">
-        <div className="block max-w-500 px-10 max-lg:px-[0.9375rem]">
-          <ul className="grid gap-5 grid-cols-2 max-lg:gap-[0.9375rem] max-lg:grid-cols-1 [list-style-type:none] list-outside">
-            {caseStudies.map((study) => (
-              <li className="list-item" key={study.slug}>
-                <ContentCard
-                  href={`/work/${study.slug}`}
-                  eyebrow={`${study.industry} · ${study.year}`}
-                  title={study.title}
-                  description={study.summary}
-                  meta={study.results[0] ? `${study.results[0].value} ${study.results[0].label.toLowerCase()}` : study.duration}
-                />
-              </li>
-            ))}
-          </ul>
-        </div>
+      <RevealOnScroll />
+
+      <main className="cs" id="content">
+        <header className="cs__head">
+          <p className="cs__kicker">
+            <span className="cs__dot" aria-hidden="true" />
+            Work
+          </p>
+
+          <h1 className="cs__title">Projects, and what they changed</h1>
+
+          <p className="cs__intro">
+            Each of these is written up the same way: the situation we walked into, what we
+            built, and the numbers afterwards.
+          </p>
+        </header>
+
+        <section data-reveal className="cs__section" aria-label="Case studies">
+          <WorkIndex />
+        </section>
+
+        <section data-reveal className="cs__next" aria-labelledby="work-cta">
+          <p className="cs__label" id="work-cta">
+            Start yours
+          </p>
+          <p className="cs__statement">Tell us what is slow, and we will scope the fix.</p>
+          <div className="cs__actions">
+            <Link className="cs__cta" href={primaryCta.href}>
+              {primaryCta.label}
+            </Link>
+            <Link className="cs__ghost" href="/services">
+              All services
+            </Link>
+          </div>
+        </section>
       </main>
-    </div>
+    </>
   );
 }

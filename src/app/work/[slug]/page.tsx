@@ -2,16 +2,20 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { caseStudies, getCaseStudy } from "../../../config/work";
+import {
+  caseStudies,
+  getCaseStudy,
+  overviewOf,
+  challengeOf,
+  impactOf,
+  narrativeOf,
+  nextCaseStudy,
+} from "../../../config/work";
 import { getService } from "../../../config/services";
 import { SITE_ORIGIN } from "../../../config/site";
 import { caseStudyMetadata } from "../../../lib/metadata";
 import { primaryCta } from "../../../config/navigation";
-import PageHero from "../../../components/ui/PageHero";
-import ContentCard from "../../../components/ui/ContentCard";
-
-const MONO =
-  "[font-family:'Suisse_Int'l_Mono',_monospace] text-[0.8125rem] font-normal leading-3.5 tracking-[-0.32px] uppercase";
+import RevealOnScroll from "../../../components/motion/RevealOnScroll";
 
 export function generateStaticParams() {
   return caseStudies.map((c) => ({ slug: c.slug }));
@@ -27,13 +31,22 @@ export async function generateMetadata({
   return study ? caseStudyMetadata(study) : {};
 }
 
+/**
+ * A case study, laid out as an editorial piece on the dark ground rather than as a
+ * page of body copy: title and tags, hero, overview, the phases the engagement ran
+ * through, the challenge, the numbers, the impact, the stack, and the next project.
+ *
+ * The narrative fields are derived from `sections` (see `overviewOf` and friends in
+ * `config/work.ts`) so the page and the write-up cannot drift apart. Artwork is
+ * abstract placeholder imagery; swapping in real screenshots is an edit to `images`.
+ */
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const study = getCaseStudy(slug);
   if (!study) notFound();
 
   const service = getService(study.serviceSlug);
-  const more = caseStudies.filter((c) => c.slug !== study.slug).slice(0, 3);
+  const next = nextCaseStudy(study.slug);
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -57,148 +70,222 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      <div className="block relative" id="content">
-        <PageHero
-          eyebrow={`${study.industry} · ${study.year}`}
-          title={study.title}
-          intro={study.summary}
-          breadcrumbs={[
-            { label: "Home", href: "/" },
-            { label: "Work", href: "/work" },
-            { label: study.client },
-          ]}
-        >
-          <ul className={`flex flex-wrap gap-2 ${MONO} [list-style-type:none] list-outside`}>
+      <RevealOnScroll />
+
+      <main className="cs" id="content">
+        {/* Title ------------------------------------------------------------ */}
+        <header className="cs__head">
+          <nav aria-label="Breadcrumb" className="cs__crumbs">
+            <Link href="/">Home</Link>
+            <span aria-hidden="true">/</span>
+            <Link href="/work">Work</Link>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">{study.client}</span>
+          </nav>
+
+          <p className="cs__kicker">
+            <span className="cs__dot" aria-hidden="true" />
+            {study.industry} · {study.year}
+          </p>
+
+          <h1 className="cs__title">{study.title}</h1>
+
+          <ul data-reveal className="cs__chips">
             {study.tags.map((tag) => (
-              <li
-                className="rounded-full border border-solid border-clr-8 px-3 py-2 opacity-80"
-                key={tag}
-              >
-                {tag}
-              </li>
+              <li key={tag}>{tag}</li>
             ))}
           </ul>
-        </PageHero>
+        </header>
 
-        <main className="block bg-clr-1 pb-[10.2125rem] pt-20 text-foreground max-lg:pb-14 max-lg:pt-14">
-          <div className="flex max-w-500 flex-col gap-24 px-10 max-lg:gap-16 max-lg:px-[0.9375rem]">
-            {/* Headline numbers */}
-            <section aria-label="Results">
-              <dl className="grid gap-5 grid-cols-3 max-lg:gap-[0.9375rem] max-md:grid-cols-1">
-                {study.results.map((result) => (
-                  <div className="rounded-[10px] bg-surface p-6 max-lg:p-5" key={result.label}>
-                    <dt className={`${MONO} mb-4 text-muted-foreground`}>{result.label}</dt>
-                    <dd className="block [font-family:'ABC_Favorit_Trial',_sans-serif] text-[3.25rem] font-light leading-[3.375rem] tracking-[-1.29px] max-md:text-[2.5rem] max-md:leading-10.5">
-                      {result.value}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </section>
+        {/* Hero ------------------------------------------------------------- */}
+        <figure data-reveal className="cs__hero">
+          <img src={study.images.hero} alt="" width={1600} height={900} decoding="async" />
+        </figure>
 
-            {/* Engagement facts */}
-            <section aria-label="Engagement" className="grid gap-5 grid-cols-4 border-y border-solid border-y-clr-2 py-8 max-md:grid-cols-2 max-md:gap-8">
-              {[
-                { label: "Client", value: study.client },
-                { label: "Industry", value: study.industry },
-                { label: "Duration", value: study.duration },
-                { label: "Practice", value: service?.shortName ?? "—" },
-              ].map((fact) => (
-                <div key={fact.label}>
-                  <p className={`${MONO} mb-2 text-muted-foreground`}>{fact.label}</p>
-                  <p className="block text-[1.0625rem] leading-[1.4375rem]">{fact.value}</p>
-                </div>
-              ))}
-            </section>
+        {/* Overview --------------------------------------------------------- */}
+        <section data-reveal className="cs__section" aria-labelledby="cs-overview">
+          <p className="cs__label" id="cs-overview">
+            Project overview
+          </p>
+          <div className="cs__split">
+            <p className="cs__lede">{overviewOf(study)}</p>
+            <dl className="cs__meta">
+              <div>
+                <dt>Client</dt>
+                <dd>{study.client}</dd>
+              </div>
+              <div>
+                <dt>Location</dt>
+                <dd>{study.location}</dd>
+              </div>
+              <div>
+                <dt>Duration</dt>
+                <dd>{study.duration}</dd>
+              </div>
+              <div>
+                <dt>Practice</dt>
+                <dd>{service?.shortName ?? "—"}</dd>
+              </div>
+            </dl>
+          </div>
+        </section>
 
-            {/* The write-up */}
-            {study.sections.map((section) => (
-              <section
-                className="grid gap-5 grid-cols-12 max-lg:grid-cols-1 max-lg:gap-6"
-                key={section.heading}
-                aria-labelledby={`s-${section.heading.replace(/\W+/g, "-")}`}
-              >
-                <div className="col-start-1 col-end-5 max-lg:[grid-column-start:initial] max-lg:[grid-column-end:initial]">
-                  <h2
-                    id={`s-${section.heading.replace(/\W+/g, "-")}`}
-                    className="block sticky top-24.5 text-[2.125rem] font-light leading-[2.5rem] tracking-[-0.86px] text-balance max-lg:static max-lg:text-[1.5625rem] max-lg:leading-[1.8125rem]"
-                  >
-                    {section.heading}
-                  </h2>
-                </div>
-                <div className="col-start-6 col-end-13 max-lg:[grid-column-start:initial] max-lg:[grid-column-end:initial]">
+        {/* Process ---------------------------------------------------------- */}
+        <section data-reveal className="cs__section" aria-labelledby="cs-process">
+          <h2 className="cs__display" id="cs-process">
+            How the engagement ran
+          </h2>
+          <ol className="cs__phases">
+            {study.phases.map((phase, i) => (
+              <li className="cs__phase" key={phase.name}>
+                <span className="cs__phase-no" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="cs__phase-head">
+                  <span className="cs__phase-name">{phase.name}</span>
+                  <span className="cs__phase-time">{phase.duration}</span>
+                </span>
+                <ul className="cs__phase-items">
+                  {phase.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        {/* Challenge -------------------------------------------------------- */}
+        <section data-reveal className="cs__section cs__section--center" aria-labelledby="cs-challenge">
+          <p className="cs__label" id="cs-challenge">
+            The challenge
+          </p>
+          <p className="cs__statement">{challengeOf(study)}</p>
+          {service && (
+            <Link className="cs__ghost" href={service.href}>
+              {service.shortName}
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" aria-hidden="true">
+                <path
+                  d="M8 16 16 8M9 8h7v7"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </Link>
+          )}
+        </section>
+
+        {/* Gallery ---------------------------------------------------------- */}
+        <section data-reveal className="cs__gallery" aria-label="Project imagery">
+          {study.images.gallery.map((src) => (
+            <figure key={src}>
+              <img src={src} alt="" width={1200} height={800} loading="lazy" decoding="async" />
+            </figure>
+          ))}
+        </section>
+
+        {/* Results ---------------------------------------------------------- */}
+        <section data-reveal className="cs__section" aria-labelledby="cs-results">
+          <p className="cs__label" id="cs-results">
+            What changed
+          </p>
+          <dl className="cs__results">
+            {study.results.map((result) => (
+              <div key={result.label}>
+                <dt>{result.value}</dt>
+                <dd>{result.label}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
+        {/* The write-up ----------------------------------------------------- */}
+        <section data-reveal className="cs__section" aria-label="Write-up">
+          <div className="cs__body">
+            {narrativeOf(study).map((section) => (
+              <article className="cs__article" key={section.heading}>
+                <h2>{section.heading}</h2>
+                <div>
                   {section.body.map((paragraph, i) => (
-                    <p
-                      className="block my-[22.5px] text-lg font-normal leading-[1.6875rem] tracking-[0.18px] first:mt-0 max-lg:my-[21.3px] max-lg:text-[1.0625rem] max-lg:leading-[1.625rem]"
-                      key={i}
-                    >
-                      {paragraph}
-                    </p>
+                    <p key={i}>{paragraph}</p>
                   ))}
                 </div>
-              </section>
+              </article>
             ))}
-
-            {study.quote && (
-              <blockquote className="rounded-[15px] bg-surface p-12 max-lg:p-6">
-                <p className="mb-6 block text-[2.125rem] font-light leading-[2.5rem] tracking-[-0.86px] text-balance max-md:text-[1.5625rem] max-md:leading-[1.8125rem]">
-                  {study.quote.text}
-                </p>
-                <footer className={`${MONO} text-muted-foreground`}>
-                  {study.quote.author} · {study.quote.role}
-                </footer>
-              </blockquote>
-            )}
-
-            {/* Route back into the matching service */}
-            {service && (
-              <section className="rounded-[15px] bg-color-001 p-12 text-background max-lg:p-6">
-                <p className="mb-8 block max-w-180 text-[2.125rem] font-light leading-[2.5rem] tracking-[-0.86px] text-balance max-md:text-[1.5625rem] max-md:leading-[1.8125rem]">
-                  This was {service.shortName} work. Yours would start with the same
-                  conversation.
-                </p>
-                <div className="flex flex-wrap gap-4">
-                  <Link
-                    className="h-13.5 min-h-13.5 inline-flex relative isolate px-5 rounded-[7px] justify-center items-center gap-2 overflow-hidden bg-primary text-color-001 cursor-pointer max-lg:h-10.5 max-lg:min-h-10.5 max-lg:px-3.5"
-                    href={`${primaryCta.href}?service=${service.slug}`}
-                  >
-                    <c-scramble-text class={`block z-2 ${MONO}`}>
-                      {` ${primaryCta.label} `}
-                    </c-scramble-text>
-                  </Link>
-                  <Link
-                    className="h-13.5 min-h-13.5 inline-flex relative isolate px-5 rounded-[7px] justify-center items-center gap-2 overflow-hidden bg-color-003 cursor-pointer max-lg:h-10.5 max-lg:min-h-10.5 max-lg:px-3.5"
-                    href={service.href}
-                  >
-                    <c-scramble-text class={`block z-2 ${MONO}`}>
-                      {` ${service.shortName} `}
-                    </c-scramble-text>
-                  </Link>
-                </div>
-              </section>
-            )}
-
-            <section aria-labelledby="more-work">
-              <h2 id="more-work" className={`${MONO} mb-8 text-muted-foreground`}>
-                More work
-              </h2>
-              <ul className="grid gap-5 grid-cols-3 max-lg:grid-cols-1 max-lg:gap-[0.9375rem] md:max-lg:grid-cols-2 [list-style-type:none] list-outside">
-                {more.map((c) => (
-                  <li className="list-item" key={c.slug}>
-                    <ContentCard
-                      href={`/work/${c.slug}`}
-                      eyebrow={c.industry}
-                      title={c.title}
-                      description={c.summary}
-                      meta={`${c.year} · ${c.duration}`}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </section>
           </div>
-        </main>
-      </div>
+        </section>
+
+        {/* Impact ----------------------------------------------------------- */}
+        <section data-reveal className="cs__section cs__section--center" aria-labelledby="cs-impact">
+          <p className="cs__label" id="cs-impact">
+            The impact
+          </p>
+          <p className="cs__statement">{impactOf(study)}</p>
+        </section>
+
+        {study.quote && (
+          <section data-reveal className="cs__section" aria-label="Client quote">
+            <blockquote className="cs__quote">
+              <p>{study.quote.text}</p>
+              <footer>
+                {study.quote.author} · {study.quote.role}
+              </footer>
+            </blockquote>
+          </section>
+        )}
+
+        {/* Stack ------------------------------------------------------------ */}
+        {service && (
+          <section data-reveal className="cs__section" aria-labelledby="cs-stack">
+            <p className="cs__label" id="cs-stack">
+              Tech stack
+            </p>
+            <ul className="cs__stack">
+              {service.detail.stack.map((tool) => (
+                <li key={tool}>{tool}</li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {/* Next ------------------------------------------------------------- */}
+        <section data-reveal className="cs__next" aria-labelledby="cs-next">
+          <p className="cs__label" id="cs-next">
+            Ready for the next one?
+          </p>
+
+          <Link className="cs__next-link" href={`/work/${next.slug}`}>
+            <span className="cs__next-name">{next.client}</span>
+            <span className="cs__next-badge" aria-hidden="true">
+              <span>Next project</span>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+                <path
+                  d="M5 12h13M12 6l6 6-6 6"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+          </Link>
+          <p className="cs__next-title">{next.title}</p>
+
+          <div className="cs__actions">
+            <Link
+              className="cs__cta"
+              href={service ? `${primaryCta.href}?service=${service.slug}` : primaryCta.href}
+            >
+              {primaryCta.label}
+            </Link>
+            <Link className="cs__ghost" href="/work">
+              All work
+            </Link>
+          </div>
+        </section>
+      </main>
     </>
   );
 }
