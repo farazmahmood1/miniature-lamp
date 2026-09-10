@@ -2923,7 +2923,10 @@ c-inner-parallax img {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: min(74vh, 680px);
+  /* Taller than the viewport, so the panel below shows only as a lip until the
+     reader scrolls. min-height rather than height: long copy still grows the band
+     instead of spilling out of it. */
+  min-height: 105vh;
   margin-top: calc(var(--cs-pad-top) * -1);
   padding-top: var(--cs-pad-top);
   padding-bottom: 80px;
@@ -2931,7 +2934,7 @@ c-inner-parallax img {
   isolation: isolate;
 }
 @media (max-width: 767.98px) {
-  .wk-hero { min-height: auto; padding-bottom: 40px; }
+  .wk-hero { padding-bottom: 40px; }
 }
 
 .wk-hero__field {

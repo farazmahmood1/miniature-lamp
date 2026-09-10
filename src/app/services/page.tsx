@@ -18,7 +18,7 @@ export const metadata: Metadata = pageMetadata({
 /** The three plates in the imagery row. Placeholder abstracts until real work exists. */
 const PLATES = [
   "/assets/site/images/4d8a8180db80.jpg",
-  "/assets/site/images/191ec76fa273.jpg",
+  "/assets/site/images/b4e3c148cedf.jpg",
   "/assets/site/images/3f516d703cfa.jpg",
 ];
 
